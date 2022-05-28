@@ -2,11 +2,36 @@ package epam.project.bookshop.dao.impl;
 
 import epam.project.bookshop.dao.BookDao;
 import epam.project.bookshop.entity.Book;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookDaoImpl implements BookDao {
+
+    static BookDaoImpl instance;
+    static ReentrantLock lock = new ReentrantLock();
+    static AtomicBoolean isCreated = new AtomicBoolean();
+
+    public static BookDaoImpl getInstance() {
+        if (!isCreated.get()) {
+            lock.lock();
+            try {
+                if (instance == null) {
+                    instance = new BookDaoImpl();
+                    isCreated.set(true);
+                }
+            } finally {
+                lock.unlock();
+            }
+        }
+        return instance;
+    }
+
     @Override
     public boolean save(Book book) {
         return false;

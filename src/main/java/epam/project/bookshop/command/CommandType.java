@@ -1,17 +1,32 @@
 package epam.project.bookshop.command;
 
-import epam.project.bookshop.command.impl.AddBookCommand;
-import epam.project.bookshop.command.impl.AddUserCommand;
-import epam.project.bookshop.command.impl.LoginCommand;
-import epam.project.bookshop.command.impl.LogoutCommand;
+import epam.project.bookshop.command.impl.*;
 
 public enum CommandType {
-    ADD_USER(new AddUserCommand()),
-    ADD_BOOK(new AddBookCommand()),
+    // Authentication commands
     LOGOUT(new LogoutCommand()),
-    LOGIN(new LoginCommand());
+    LOGIN(new LoginCommand()),
+    SIGNUP(new SignUpCommand()),
 
-    // todo every command must be here -> There may be ADD_BOOK, DELETE_BOOK, ....
+    // User commands
+    ADD_USER(new AddUserCommand()),
+    DELETE_USER(new DeleteUserCommand()),
+    UPDATE_USER(new UpdateUserCommand()),
+
+    // Book commands
+    ADD_BOOK(new AddBookCommand()),
+    DELETE_BOOK(new DeleteBookCommand()),
+    UPDATE_BOOK(new UpdateBookCommand()),
+
+    // Author commands
+    ADD_AUTHOR(new AddAuthorCommand()),
+    DELETE_AUTHOR(new DeleteAuthorCommand()),
+    UPDATE_AUTHOR(new UpdateAuthorCommand()),
+
+    // Genre commands
+    ADD_GENRE(new AddGenreCommand()),
+    DELETE_GENRE(new DeleteGenreCommand()),
+    UPDATE_GENRE(new UpdateGenreCommand());
 
     final Command command;
 

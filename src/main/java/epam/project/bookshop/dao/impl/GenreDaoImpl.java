@@ -1,7 +1,7 @@
 package epam.project.bookshop.dao.impl;
 
-import epam.project.bookshop.dao.UserDao;
-import epam.project.bookshop.entity.User;
+import epam.project.bookshop.dao.GenreDao;
+import epam.project.bookshop.entity.Genre;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
@@ -11,18 +11,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDaoImpl implements UserDao {
+public class GenreDaoImpl implements GenreDao {
 
-    static UserDaoImpl instance;
+    static GenreDaoImpl instance;
     static ReentrantLock lock = new ReentrantLock();
     static AtomicBoolean isCreated = new AtomicBoolean();
 
-    public static UserDaoImpl getInstance() {
+    public static GenreDaoImpl getInstance() {
         if (!isCreated.get()) {
             lock.lock();
             try {
                 if (instance == null) {
-                    instance = new UserDaoImpl();
+                    instance = new GenreDaoImpl();
                     isCreated.set(true);
                 }
             } finally {
@@ -33,32 +33,32 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean save(User user) {
+    public boolean save(Genre genre) {
         return false;
     }
 
     @Override
-    public boolean updated(User user) {
+    public boolean updated(Genre genre) {
         return false;
     }
 
     @Override
-    public boolean deleteById(User user) {
+    public boolean deleteById(Genre genre) {
         return false;
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<Genre> findById(Long id) {
         return Optional.empty();
     }
 
     @Override
-    public List<User> findAll() {
+    public List<Genre> findAll() {
         return null;
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
+    public Optional<Genre> findByName(String name) {
         return Optional.empty();
     }
 }
