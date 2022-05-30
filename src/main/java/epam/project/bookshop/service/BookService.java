@@ -1,4 +1,7 @@
 package epam.project.bookshop.service;
 
-public interface BookService {
+import epam.project.bookshop.entity.Book;
+import epam.project.bookshop.entity.User;
+
+public interface BookService extends GenericService<Book>{
 }

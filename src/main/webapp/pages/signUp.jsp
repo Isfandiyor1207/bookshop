@@ -15,8 +15,8 @@
 <div class="container">
 
     <form action="controller" style="border:1px solid #ccc">
-        <input type="hidden" name="command" value="signup">
         <div class="container">
+            <input type="hidden" name="command" value="add_user">
             <h1>Sign Up</h1>
             <p>Please fill in this form to create an account.</p>
             <hr>
@@ -41,7 +41,7 @@
             <div class="error"><small>${psw_error}</small></div>
 
             <label for="phoneNumber"><b>Phone number</b></label>
-            <input type="tel" name="phoneNumber" placeholder="phoneNumber" id="phoneNumber">
+            <input type="text" name="phoneNumber" placeholder="phoneNumber" id="phoneNumber">
 
             <label>
                 <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me

@@ -6,7 +6,7 @@ public enum CommandType {
     // Authentication commands
     LOGOUT(new LogoutCommand()),
     LOGIN(new LoginCommand()),
-    SIGNUP(new SignUpCommand()),
+//    SIGNUP(new SignUpCommand()),
 
     // User commands
     ADD_USER(new AddUserCommand()),

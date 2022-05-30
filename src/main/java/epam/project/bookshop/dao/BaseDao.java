@@ -8,7 +8,7 @@ public interface BaseDao<T> {
 
     boolean updated(T t);
 
-    boolean deleteById(T t);
+    boolean deleteById(Long id);
 
     Optional<T> findById(Long id);
 

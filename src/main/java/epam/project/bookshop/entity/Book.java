@@ -18,11 +18,13 @@ public class Book extends BaseDomain{
 
     String publisher;
 
-    String publishingYear;
+    int publishingYear;
 
-    String genreId;
+    Long genreId;
 
     Long authorId;
 
     Long attachmentId;
+
+    Long userId;
 }
