@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="bookshop" target="1.8" />
+      <module name="bookshop" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -2,6 +2,7 @@ package epam.project.bookshop.dao.impl;
 
 import epam.project.bookshop.dao.BookDao;
 import epam.project.bookshop.entity.Book;
+import epam.project.bookshop.exception.DaoException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
@@ -14,51 +15,41 @@ import java.util.concurrent.locks.ReentrantLock;
 public class BookDaoImpl implements BookDao {
 
     static BookDaoImpl instance;
-    static ReentrantLock lock = new ReentrantLock();
-    static AtomicBoolean isCreated = new AtomicBoolean();
 
     public static BookDaoImpl getInstance() {
-        if (!isCreated.get()) {
-            lock.lock();
-            try {
-                if (instance == null) {
-                    instance = new BookDaoImpl();
-                    isCreated.set(true);
-                }
-            } finally {
-                lock.unlock();
-            }
+        if (instance == null) {
+            instance = new BookDaoImpl();
         }
         return instance;
     }
 
     @Override
-    public boolean save(Book book) {
+    public boolean save(Book book) throws DaoException {
         return false;
     }
 
     @Override
-    public boolean updated(Book book) {
+    public boolean updated(Book book) throws DaoException {
         return false;
     }
 
     @Override
-    public boolean deleteById(Book book) {
+    public boolean deleteById(Long id) throws DaoException {
         return false;
     }
 
     @Override
-    public Optional<Book> findById(Long id) {
+    public Optional<Book> findById(Long id) throws DaoException {
         return Optional.empty();
     }
 
     @Override
-    public List<Book> findAll() {
+    public List<Book> findAll() throws DaoException {
         return null;
     }
 
     @Override
-    public Optional<Book> findByName(String name) {
+    public Optional<Book> findByName(String name) throws DaoException {
         return Optional.empty();
     }
 }

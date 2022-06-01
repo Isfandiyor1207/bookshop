@@ -2,6 +2,7 @@ package epam.project.bookshop.dao.impl;
 
 import epam.project.bookshop.dao.UserDao;
 import epam.project.bookshop.entity.User;
+import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.pool.ConnectionPool;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -11,38 +12,26 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDaoImpl implements UserDao {
 
-    static final String SELECT_BY_USERNAME = "SELECT * FROM users WHERE username = ? AND deleted = false";
-    public static final String SELECT_BY_ID = "SELECT * FROM users WHERE  id = ? AND deleted = false";
-    public static final String SELECT_ALL = "SELECT * FROM   users WHERE deleted=false";
-    public final String DELETE_USERS_BY_ID = "UPDATE users SET deleted = true WHERE id =? AND deleted = false";
-    public final String INSERT_USER = "INSERT INTO users(id, first_name, last_name, username, password, email, phone_number, deleted, created_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    static UserDaoImpl instance;
-    static ReentrantLock lock = new ReentrantLock();
-    static AtomicBoolean isCreated = new AtomicBoolean();
+    // fixme change * to smth which we need
+    private static final String SELECT_BY_USERNAME = "SELECT * FROM users WHERE username = ? AND deleted = false";
+    private static final String SELECT_BY_ID = "SELECT * FROM users WHERE  id = ? AND deleted = false";
+    private static final String SELECT_ALL = "SELECT * FROM   users WHERE deleted=false";
+    private static final String DELETE_USERS_BY_ID = "UPDATE users SET deleted = true WHERE id =? AND deleted = false";
+    private static final String INSERT_USER = "INSERT INTO users(id, first_name, last_name, username, password, email, phone_number, deleted, created_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static UserDaoImpl instance;
 
     public static UserDaoImpl getInstance() {
-        if (!isCreated.get()) {
-            lock.lock();
-            try {
-                if (instance == null) {
-                    instance = new UserDaoImpl();
-                    isCreated.set(true);
-                }
-            } finally {
-                lock.unlock();
-            }
+        if (instance == null) {
+            instance = new UserDaoImpl();
         }
         return instance;
     }
 
     @Override
-    public boolean save(User user) {
+    public boolean save(User user) throws DaoException {
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_USER)) {
@@ -59,19 +48,18 @@ public class UserDaoImpl implements UserDao {
 
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException(e);
         }
+    }
+
+    @Override
+    public boolean updated(User user) throws DaoException {
+
         return false;
     }
 
     @Override
-    public boolean updated(User user) {
-
-        return false;
-    }
-
-    @Override
-    public boolean deleteById(Long id) {
+    public boolean deleteById(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_USERS_BY_ID)) {
 
@@ -82,13 +70,13 @@ public class UserDaoImpl implements UserDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException(e);
         }
         return false;
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
             statement.setLong(1, id);
@@ -107,13 +95,12 @@ public class UserDaoImpl implements UserDao {
 
             return Optional.of(user);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException(e);
         }
-        return Optional.empty();
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAll() throws DaoException {
         List<User> userList = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -134,13 +121,13 @@ public class UserDaoImpl implements UserDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException(e);
         }
         return userList;
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
+    public Optional<User> findByUsername(String username) throws DaoException {
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_USERNAME)) {
@@ -160,8 +147,7 @@ public class UserDaoImpl implements UserDao {
 
             return Optional.of(user);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException(e);
         }
-        return Optional.empty();
     }
 }

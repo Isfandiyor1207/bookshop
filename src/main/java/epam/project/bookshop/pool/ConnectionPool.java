@@ -12,8 +12,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ConnectionPool {
     private static ConnectionPool instance;
     private static final int CAPACITY_OF_QUEUE = 8;
-    private BlockingQueue<Connection> free = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
-    private BlockingQueue<Connection> used = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
+    private BlockingQueue<ProxyConnection> free = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
+    private BlockingQueue<ProxyConnection> used = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
     private static ReentrantLock lock = new ReentrantLock();
     private static AtomicBoolean isCreated = new AtomicBoolean();
 
@@ -22,7 +22,8 @@ public class ConnectionPool {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            throw new ExceptionInInitializerError(e);
         }
     }
 
@@ -35,13 +36,12 @@ public class ConnectionPool {
         for (int i = 0; i < CAPACITY_OF_QUEUE; i++) {
             try {
                 Connection connection = DriverManager.getConnection(url, properties);
-                free.add(connection);
+                free.add((ProxyConnection) connection);
             } catch (SQLException e) {
-                e.printStackTrace();
+//                e.printStackTrace(); // todo logs
+                throw new ExceptionInInitializerError(e);
             }
-
         }
-
     }
 
     public static ConnectionPool getInstance() {
@@ -62,22 +62,37 @@ public class ConnectionPool {
     public Connection getConnection() {
         // todo Proxy Connection
 
-        Connection connection = null;
+        ProxyConnection connection = null;
         try {
             connection = free.take();
             used.put(connection);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace(); // todo lodo convensci
+            Thread.currentThread().interrupt();
         }
         return connection;
     }
 
+    // todo deregisterDriver
+
     public void realiseConnection(Connection connection) {
         try {
-            used.remove(connection);
-            free.put(connection);
+            used.remove((ProxyConnection)connection);
+            free.put((ProxyConnection) connection);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+                // todo lodo convensci
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void destroyPool() {
+        for (int i = 0; i < CAPACITY_OF_QUEUE; i++) {
+            try {
+                free.take().reallyClose();
+            } catch (InterruptedException e) {
+//                e.printStackTrace();
+                // todo log
+            }
         }
     }
 

@@ -2,63 +2,52 @@ package epam.project.bookshop.dao.impl;
 
 import epam.project.bookshop.dao.GenreDao;
 import epam.project.bookshop.entity.Genre;
+import epam.project.bookshop.exception.DaoException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GenreDaoImpl implements GenreDao {
 
     static GenreDaoImpl instance;
-    static ReentrantLock lock = new ReentrantLock();
-    static AtomicBoolean isCreated = new AtomicBoolean();
 
     public static GenreDaoImpl getInstance() {
-        if (!isCreated.get()) {
-            lock.lock();
-            try {
-                if (instance == null) {
-                    instance = new GenreDaoImpl();
-                    isCreated.set(true);
-                }
-            } finally {
-                lock.unlock();
-            }
+        if (instance == null) {
+            instance = new GenreDaoImpl();
         }
         return instance;
     }
 
     @Override
-    public boolean save(Genre genre) {
+    public boolean save(Genre genre) throws DaoException {
         return false;
     }
 
     @Override
-    public boolean updated(Genre genre) {
+    public boolean updated(Genre genre) throws DaoException {
         return false;
     }
 
     @Override
-    public boolean deleteById(Genre genre) {
+    public boolean deleteById(Long id) throws DaoException {
         return false;
     }
 
     @Override
-    public Optional<Genre> findById(Long id) {
+    public Optional<Genre> findById(Long id) throws DaoException {
         return Optional.empty();
     }
 
     @Override
-    public List<Genre> findAll() {
+    public List<Genre> findAll() throws DaoException {
         return null;
     }
 
     @Override
-    public Optional<Genre> findByName(String name) {
+    public Optional<Genre> findByName(String name) throws DaoException {
         return Optional.empty();
     }
 }

@@ -26,5 +26,9 @@ public class Book extends BaseDomain{
 
     Long attachmentId;
 
-    Long userId;
+    Long price;
+
+    Long numberOfBooks;
+
+//    Long userId;
 }

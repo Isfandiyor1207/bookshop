@@ -14,6 +14,19 @@ public class ProxyConnection implements Connection {
     }
 
     @Override
+    public void close() throws SQLException {
+        ConnectionPool.getInstance().realiseConnection(this);
+    }
+
+    public void reallyClose(){
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public Statement createStatement() throws SQLException {
         return connection.createStatement();
     }
@@ -25,7 +38,7 @@ public class ProxyConnection implements Connection {
 
     @Override
     public CallableStatement prepareCall(String sql) throws SQLException {
-        return (CallableStatement) connection.prepareStatement(sql);
+        return connection.prepareCall(sql);
     }
 
     @Override
@@ -35,6 +48,7 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
+        connection.setAutoCommit(autoCommit);
     }
 
     @Override
@@ -44,14 +58,12 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void commit() throws SQLException {
+        connection.commit();
     }
 
     @Override
     public void rollback() throws SQLException {
-    }
-
-    @Override
-    public void close() throws SQLException {
+        connection.rollback();
     }
 
     @Override
@@ -66,7 +78,7 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void setReadOnly(boolean readOnly) throws SQLException {
-
+        connection.setReadOnly(readOnly);
     }
 
     @Override
@@ -76,7 +88,7 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void setCatalog(String catalog) throws SQLException {
-
+        connection.setCatalog(catalog);
     }
 
     @Override
@@ -86,7 +98,7 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void setTransactionIsolation(int level) throws SQLException {
-
+        connection.setTransactionIsolation(level);
     }
 
     @Override
@@ -101,7 +113,7 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void clearWarnings() throws SQLException {
-
+        connection.clearWarnings();
     }
 
     @Override
@@ -126,12 +138,12 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
-
+        connection.setTypeMap(map);
     }
 
     @Override
     public void setHoldability(int holdability) throws SQLException {
-
+        connection.setHoldability(holdability);
     }
 
     @Override
@@ -151,12 +163,12 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void rollback(Savepoint savepoint) throws SQLException {
-
+        connection.rollback(savepoint);
     }
 
     @Override
     public void releaseSavepoint(Savepoint savepoint) throws SQLException {
-
+        connection.releaseSavepoint(savepoint);
     }
 
     @Override
@@ -216,12 +228,12 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void setClientInfo(String name, String value) throws SQLClientInfoException {
-
+        connection.setClientInfo(name, value);
     }
 
     @Override
     public void setClientInfo(Properties properties) throws SQLClientInfoException {
-
+        connection.setClientInfo(properties);
     }
 
     @Override
@@ -236,7 +248,7 @@ public class ProxyConnection implements Connection {
 
     @Override
     public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
-        return createArrayOf(typeName, elements);
+        return connection.createArrayOf(typeName, elements);
     }
 
     @Override
@@ -246,7 +258,7 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void setSchema(String schema) throws SQLException {
-
+        connection.setSchema(schema);
     }
 
     @Override
@@ -256,11 +268,12 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void abort(Executor executor) throws SQLException {
-
+        connection.abort(executor);
     }
 
     @Override
     public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
+        connection.setNetworkTimeout(executor, milliseconds);
     }
 
     @Override

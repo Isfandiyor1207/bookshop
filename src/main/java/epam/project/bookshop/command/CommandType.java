@@ -1,12 +1,13 @@
 package epam.project.bookshop.command;
 
 import epam.project.bookshop.command.impl.*;
+import epam.project.bookshop.validation.CommandValidation;
 
 public enum CommandType {
     // Authentication commands
     LOGOUT(new LogoutCommand()),
     LOGIN(new LoginCommand()),
-//    SIGNUP(new SignUpCommand()),
+    DEFAULT(new DefaultCommand()),
 
     // User commands
     ADD_USER(new AddUserCommand()),
@@ -34,9 +35,18 @@ public enum CommandType {
         this.command = command;
     }
 
-    public static Command define(String command) {
-        CommandType type = CommandType.valueOf(command.toUpperCase());
-        return type.command;
+    public static Command castToCommand(String command) {
+        // todo validation to null or empty
+        CommandValidation commandValidation = new CommandValidation();
+        boolean commandToValidation = commandValidation.checkCommandToValidation(command);
+
+        if (commandToValidation) {
+            CommandType type = CommandType.valueOf(command.toUpperCase());
+            return type.command;
+        }else {
+            return DEFAULT.command;
+        }
+
     }
 
 }

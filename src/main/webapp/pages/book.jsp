@@ -11,6 +11,12 @@
     <title>Book Page</title>
 </head>
 <body>
-${user}
+username (forward) = ${user}
+<br>
+username (redirect) = ${username}
+<form action="controller">
+    <input type="hidden" name="command" value="logout">
+    <input type="submit" value="logout">
+</form>
 </body>
 </html>

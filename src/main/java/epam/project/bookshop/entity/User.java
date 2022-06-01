@@ -1,6 +1,5 @@
 package epam.project.bookshop.entity;
 
-import epam.project.bookshop.type.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
