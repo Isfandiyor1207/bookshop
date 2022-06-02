@@ -55,6 +55,9 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
+        if (!validation.checkPhoneNumberToValidation(user.getPhoneNumber())){
+            return false;
+        }
 
         user.setPassword(Arrays.toString(DigestUtils.md5(password)));
         try {

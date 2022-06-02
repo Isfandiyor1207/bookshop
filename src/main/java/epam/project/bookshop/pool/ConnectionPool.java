@@ -12,8 +12,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ConnectionPool {
     private static ConnectionPool instance;
     private static final int CAPACITY_OF_QUEUE = 8;
-    private BlockingQueue<ProxyConnection> free = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
-    private BlockingQueue<ProxyConnection> used = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
+    private BlockingQueue<Connection> free = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
+    private BlockingQueue<Connection> used = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
     private static ReentrantLock lock = new ReentrantLock();
     private static AtomicBoolean isCreated = new AtomicBoolean();
 
@@ -36,7 +36,7 @@ public class ConnectionPool {
         for (int i = 0; i < CAPACITY_OF_QUEUE; i++) {
             try {
                 Connection connection = DriverManager.getConnection(url, properties);
-                free.add((ProxyConnection) connection);
+                free.add(connection);
             } catch (SQLException e) {
 //                e.printStackTrace(); // todo logs
                 throw new ExceptionInInitializerError(e);
@@ -62,7 +62,7 @@ public class ConnectionPool {
     public Connection getConnection() {
         // todo Proxy Connection
 
-        ProxyConnection connection = null;
+        Connection connection = null;
         try {
             connection = free.take();
             used.put(connection);
@@ -77,8 +77,8 @@ public class ConnectionPool {
 
     public void realiseConnection(Connection connection) {
         try {
-            used.remove((ProxyConnection)connection);
-            free.put((ProxyConnection) connection);
+            used.remove(connection);
+            free.put(connection);
         } catch (InterruptedException e) {
                 // todo lodo convensci
             Thread.currentThread().interrupt();
@@ -88,8 +88,8 @@ public class ConnectionPool {
     public void destroyPool() {
         for (int i = 0; i < CAPACITY_OF_QUEUE; i++) {
             try {
-                free.take().reallyClose();
-            } catch (InterruptedException e) {
+                free.take().close();
+            } catch (InterruptedException | SQLException e) {
 //                e.printStackTrace();
                 // todo log
             }

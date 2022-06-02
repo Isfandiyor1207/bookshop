@@ -9,11 +9,17 @@ import epam.project.bookshop.pool.ConnectionPool;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @WebServlet(name = "helloServlet", value = "/controller")
 public class Controller extends HttpServlet {
 
+    static Logger logger= LogManager.getLogger();
+
     public void init() {
+//        logger.info("<---------- ConnectionPool created");
+//        ConnectionPool.getInstance();
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -46,15 +52,7 @@ public class Controller extends HttpServlet {
     }
 
     public void destroy() {
-        ConnectionPool.getInstance().destroyPool();
+//        ConnectionPool.getInstance().destroyPool();
     }
-
-//    public static String getBaseUrl(HttpServletRequest request) {
-//        String scheme = request.getScheme() + "://";
-//        String serverName = request.getServerName();
-//        String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
-//        String contextPath = request.getContextPath();
-//        return scheme + serverName + serverPort + contextPath;
-//    }
 
 }

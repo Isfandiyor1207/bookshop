@@ -34,7 +34,7 @@
 
             <div class="container" style="background-color:#f1f1f1">
                 <div>
-                    <span><a href="pages/signUp.jsp">Sign Up</a></span>
+                    <span><a href="signUp.jsp">Sign Up</a></span>
                     <span class="password">Forgot <a href="#">password?</a></span>
                 </div>
             </div>

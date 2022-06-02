@@ -18,7 +18,7 @@ public class ProxyConnection implements Connection {
         ConnectionPool.getInstance().realiseConnection(this);
     }
 
-    public void reallyClose(){
+    public void reallyClose() {
         try {
             connection.close();
         } catch (SQLException e) {
