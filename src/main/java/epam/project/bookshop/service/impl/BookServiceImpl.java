@@ -5,6 +5,7 @@ import epam.project.bookshop.exception.ServiceException;
 import epam.project.bookshop.service.BookService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class BookServiceImpl implements BookService {
@@ -18,18 +19,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public boolean add(Book entity) {
-        return false;
-    }
-
-    @Override
     public boolean deleteById(Long id) {
         return false;
     }
 
     @Override
-    public void update(Book entity) {
-
+    public boolean update(Map<String, String> update) throws ServiceException {
+        return false;
     }
 
     @Override
@@ -40,5 +36,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<Book> findById(Long id) throws ServiceException {
         return Optional.empty();
+    }
+
+    @Override
+    public boolean add(Map<String, String> entity) throws ServiceException {
+        return false;
     }
 }

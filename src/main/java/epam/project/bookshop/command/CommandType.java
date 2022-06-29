@@ -1,5 +1,6 @@
 package epam.project.bookshop.command;
 
+import com.oracle.wls.shaded.org.apache.bcel.generic.NEW;
 import epam.project.bookshop.command.impl.*;
 import epam.project.bookshop.validation.CommandValidation;
 
@@ -13,21 +14,28 @@ public enum CommandType {
     ADD_USER(new AddUserCommand()),
     DELETE_USER(new DeleteUserCommand()),
     UPDATE_USER(new UpdateUserCommand()),
+    READ_USER(new FindAllUsersCommand()),
 
     // Book commands
     ADD_BOOK(new AddBookCommand()),
     DELETE_BOOK(new DeleteBookCommand()),
     UPDATE_BOOK(new UpdateBookCommand()),
+//    READ_BOOK(),
 
     // Author commands
     ADD_AUTHOR(new AddAuthorCommand()),
     DELETE_AUTHOR(new DeleteAuthorCommand()),
     UPDATE_AUTHOR(new UpdateAuthorCommand()),
+    READ_AUTHOR(new FindAllAuthorsCommand()),
 
     // Genre commands
     ADD_GENRE(new AddGenreCommand()),
     DELETE_GENRE(new DeleteGenreCommand()),
-    UPDATE_GENRE(new UpdateGenreCommand());
+    UPDATE_GENRE(new UpdateGenreCommand()),
+    READ_GENRE(new FindAllGenresCommand()),
+
+    //File commands
+    FILE_UPLOAD(new FileUploadCommand());
 
     final Command command;
 
@@ -36,7 +44,6 @@ public enum CommandType {
     }
 
     public static Command castToCommand(String command) {
-        // todo validation to null or empty
         CommandValidation commandValidation = new CommandValidation();
         boolean commandToValidation = commandValidation.checkCommandToValidation(command);
 

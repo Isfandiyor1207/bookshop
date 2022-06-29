@@ -8,8 +8,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookDaoImpl implements BookDao {
@@ -29,7 +27,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public boolean updated(Book book) throws DaoException {
+    public boolean updated(String query, Long id) throws DaoException {
         return false;
     }
 

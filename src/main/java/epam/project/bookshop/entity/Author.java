@@ -1,19 +1,39 @@
 package epam.project.bookshop.entity;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
+import java.util.Objects;
+import java.util.StringJoiner;
 
-@Getter
-@Setter
-@SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class Author extends BaseDomain{
+public class Author extends BaseDomain {
 
-    String firstName;
+    private String fio;
 
-    String lastName;
+    public String getFio() {
+        return fio;
+    }
 
+    public void setFio(String fio) {
+        this.fio = fio;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Author author = (Author) o;
+        return Objects.equals(fio, author.fio);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), fio);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Author.class.getSimpleName() + "[", "]")
+                .add("id='" + id + "'")
+                .add("fio='" + fio + "'")
+                .toString();
+    }
 }

@@ -1,58 +1,51 @@
 package epam.project.bookshop.controller;
 
-import java.io.*;
-
 import epam.project.bookshop.command.Command;
 import epam.project.bookshop.command.CommandType;
 import epam.project.bookshop.exception.CommandException;
-import epam.project.bookshop.pool.ConnectionPool;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "helloServlet", value = "/controller")
+import java.io.IOException;
+
+@WebServlet(name = "helloServlet", value = {"/controller", "*.do"})
 public class Controller extends HttpServlet {
 
-    static Logger logger= LogManager.getLogger();
-
     public void init() {
-//        logger.info("<---------- ConnectionPool created");
-//        ConnectionPool.getInstance();
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        response.setContentType("text/html");
-
-        String command = request.getParameter("command");// input dagi name
-        Command execute = CommandType.castToCommand(command);
-        String page;
-        try {
-            page = execute.execute(request);
-            request.getRequestDispatcher(page).forward(request, response);
-        } catch (CommandException e) {
-            throw new ServletException(e); // 2
-        }
+        controllerCommand(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        controllerCommand(req, resp);
+    }
+
+    public void destroy() {
+    }
+
+    private void controllerCommand(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
 
         String command = req.getParameter("command");// input dagi name
         Command execute = CommandType.castToCommand(command);
+
         String page;
         try {
             page = execute.execute(req);
+
+//            resp.sendRedirect(req.getRequestURL() +"/" + page);
             req.getRequestDispatcher(page).forward(req, resp);
+
         } catch (CommandException e) {
             throw new ServletException(e); // 2
         }
-    }
-
-    public void destroy() {
-//        ConnectionPool.getInstance().destroyPool();
     }
 
 }

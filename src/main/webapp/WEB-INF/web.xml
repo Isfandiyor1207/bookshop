@@ -6,10 +6,16 @@
 
     <error-page>
         <error-code>404</error-code>
-        <location>/errors/error_404.jsp</location>
+        <location>/pages/error/error_404.jsp</location>
     </error-page>
 
-<!--    <error-page>-->
+    <error-page>
+        <error-code>403</error-code>
+        <location>/errors/error_403.jsp</location>
+    </error-page>
+
+
+    <!--    <error-page>-->
 <!--        <error-code>500</error-code>-->
 <!--        <location>/errors/error_500.jsp</location>-->
 <!--    </error-page>-->

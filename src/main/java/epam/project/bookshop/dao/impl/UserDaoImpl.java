@@ -3,24 +3,29 @@ package epam.project.bookshop.dao.impl;
 import epam.project.bookshop.dao.UserDao;
 import epam.project.bookshop.entity.User;
 import epam.project.bookshop.exception.DaoException;
+import epam.project.bookshop.mapper.UserMapper;
 import epam.project.bookshop.pool.ConnectionPool;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static epam.project.bookshop.command.ParameterName.USER_ROLE_ID_IN_DB;
+
 public class UserDaoImpl implements UserDao {
 
-    // fixme change * to smth which we need
-    private static final String SELECT_BY_USERNAME = "SELECT * FROM users WHERE username = ? AND deleted = false";
-    private static final String SELECT_BY_ID = "SELECT * FROM users WHERE  id = ? AND deleted = false";
-    private static final String SELECT_ALL = "SELECT * FROM   users WHERE deleted=false";
+    public static final Logger logger = LogManager.getLogger();
+
+    private static final String SELECT_BY_USERNAME = "SELECT id, firstname, lastname, password, phoneNumber, email, username, roleid FROM users WHERE username = ? AND deleted = false";
+    private static final String SELECT_BY_ID = "SELECT id, firstname, lastname, phoneNumber, email, username, roleid, password FROM users WHERE  id = ? AND deleted = false";
+    private static final String SELECT_ALL = "SELECT id, firstname, lastname, phoneNumber, email, username, roleid, password FROM  users WHERE deleted=false order by id";
+    private static final String SELECT_ROLE_ID = "SELECT roleid FROM users WHERE username = ? AND deleted=false;";
     private static final String DELETE_USERS_BY_ID = "UPDATE users SET deleted = true WHERE id =? AND deleted = false";
-    private static final String INSERT_USER = "INSERT INTO users(id, first_name, last_name, username, password, email, phone_number, deleted, created_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_USERS_BY_ID = "UPDATE users SET %s WHERE id =%s, updated_time = now() AND deleted = false";
+    private static final String INSERT_USER = "INSERT INTO users(firstname, lastname, username, password, email, phoneNumber) VALUES (?, ?, ?, ?, ?, ?)";
     private static UserDaoImpl instance;
 
     public static UserDaoImpl getInstance() {
@@ -36,26 +41,36 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_USER)) {
 
-            statement.setObject(1, user.getId());
-            statement.setString(2, user.getFirstName());
-            statement.setString(3, user.getLastName());
-            statement.setString(4, user.getUsername());
-            statement.setString(5, user.getPassword());
-            statement.setString(6, user.getEmail());
-            statement.setString(7, user.getEmail());
-            statement.setBoolean(8, false);
-            statement.setTime(9, Time.valueOf(LocalTime.now()));
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getUsername());
+            statement.setString(4, user.getPassword());
+            statement.setString(5, user.getEmail());
+            statement.setString(6, user.getPhoneNumber());
 
-            return true;
+            int numberOfRow = statement.executeUpdate();
+
+            return numberOfRow > 0;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
 
     @Override
-    public boolean updated(User user) throws DaoException {
+    public boolean updated(String query, Long id) throws DaoException {
 
-        return false;
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             Statement statement = connection.createStatement()) {
+
+            String queryFormat = String.format(UPDATE_USERS_BY_ID, query, id);
+
+            int row = statement.executeUpdate(queryFormat);
+            return row > 0;
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
     }
 
     @Override
@@ -63,16 +78,16 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_USERS_BY_ID)) {
 
+            int resultSet = 0;
             if (findById(id).isPresent()) {
                 statement.setObject(1, id);
-                statement.executeQuery();
-                return true;
+                resultSet = statement.executeUpdate();
             }
+            return resultSet > 0;
 
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return false;
     }
 
     @Override
@@ -85,12 +100,7 @@ public class UserDaoImpl implements UserDao {
 
             User user = new User();
             while (resultSet.next()) {
-                user.setId(resultSet.getLong("id"));
-                user.setFirstName(resultSet.getString("first_name"));
-                user.setUsername(resultSet.getString("username"));
-                user.setLastName(resultSet.getString("last_name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPhoneNumber(resultSet.getString("phone_number"));
+                user = UserMapper.getInstance().resultSetToEntity(resultSet);
             }
 
             return Optional.of(user);
@@ -104,20 +114,12 @@ public class UserDaoImpl implements UserDao {
         List<User> userList = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
 
-            ResultSet resultSet = statement.executeQuery(SELECT_ALL);
-
-            User user = new User();
+            ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                user.setId(resultSet.getLong("id"));
-                user.setFirstName(resultSet.getString("first_name"));
-                user.setUsername(resultSet.getString("username"));
-                user.setLastName(resultSet.getString("last_name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPhoneNumber(resultSet.getString("phone_number"));
-                userList.add(user);
+                userList.add(UserMapper.getInstance().resultSetToEntity(resultSet));
             }
 
         } catch (SQLException e) {
@@ -137,17 +139,39 @@ public class UserDaoImpl implements UserDao {
 
             User user = new User();
             while (resultSet.next()) {
-                user.setId(resultSet.getLong("id"));
-                user.setFirstName(resultSet.getString("first_name"));
-                user.setUsername(resultSet.getString("username"));
-                user.setLastName(resultSet.getString("last_name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPhoneNumber(resultSet.getString("phone_number"));
+                user = UserMapper.getInstance().resultSetToEntity(resultSet);
             }
 
-            return Optional.of(user);
+            logger.info("user in dao " + user);
+
+            if (user.getId() != null) {
+                return Optional.of(user);
+            } else return Optional.empty();
+
         } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
+
+    @Override
+    public Optional<Long> findUserRoleByUsername(String username) throws DaoException {
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ROLE_ID)) {
+
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+
+            Long role = null;
+            while (resultSet.next()) {
+                role = resultSet.getLong(USER_ROLE_ID_IN_DB);
+            }
+
+            logger.info("role id:" + role);
+            return Optional.ofNullable(role);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
 }

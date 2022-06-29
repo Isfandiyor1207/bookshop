@@ -14,7 +14,6 @@ public class SessionListenerImpl implements HttpSessionListener {
     @Override
     public void sessionCreated(HttpSessionEvent se) {
         logger.info(" ----------> sessionCreated: " + se.getSession().getId());
-        ConnectionPool.getInstance();
     }
 
     @Override
