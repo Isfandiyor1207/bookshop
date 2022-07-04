@@ -2,8 +2,10 @@ package epam.project.bookshop.command;
 
 public final class ParameterName {
 
-    /* Parameters for jsp file */
+    /* Unique parameters */
     public static final String ID = "id";
+    public static final String DELETE_ID = "delete_by_id";
+    public static final String UPDATE_BY_ID = "update_by_id";
 
     /* User parameters */
     public static final String EMAIL = "email";
@@ -20,15 +22,23 @@ public final class ParameterName {
 
     /* Genre parameters */
     public static final String GENRE_NAME = "name";
+    public static final String GENRE_ID = "genre_id";
     public static final String GENRE_LIST = "genre_list";
-
 
     /* Author parameters */
     public static final String AUTHOR_LIST = "author_list";
     public static final String AUTHOR_FIO = "fio";
+    public static final String AUTHOR_ID = "author_id";
 
-    /* Unique parameters */
-    public static final String DELETE_ID = "delete_by_id";
+    /* Book parameters */
+    public static final String BOOK_LIST = "book_list";
+    public static final String BOOK_TOTAL = "total";
+    public static final String BOOK_PRICE = "price";
+    public static final String BOOK_PUBLISHING_YEAR = "publishing_year";
+    public static final String BOOK_PUBLISHER_NAME = "publisher";
+    public static final String BOOK_ISBN = "isbn";
+    public static final String BOOK_NAME = "name";
+
 
     private ParameterName() {
     }

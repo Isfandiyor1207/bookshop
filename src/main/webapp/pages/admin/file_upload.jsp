@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 29.06.2022
-  Time: 17:55
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -47,7 +40,8 @@
         </div>
         <ul class="list-unstyled components">
             <li class="active">
-                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message key="label.dashboard"/></span></a>
+                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message
+                        key="label.dashboard"/></span></a>
             </li>
 
             <div class="small-screen navbar-display">
@@ -85,19 +79,9 @@
 
 
             <li class="dropdown">
-                <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="material-icons">aspect_ratio</i><span><fmt:message key="label.books"/></span></a>
-                <ul class="collapse list-unstyled menu" id="homeSubmenu1">
-                    <li>
-                        <a href="#">Home 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Home 2</a>
-                    </li>
-                    <li>
-                        <a href="#">Home 3</a>
-                    </li>
-                </ul>
+                <a href="${pageContext.request.contextPath}/pages/admin/book.jsp">
+                    <i class="material-icons">aspect_ratio</i><span><fmt:message key="label.books"/></span>
+                </a>
             </li>
 
             <li class="dropdown">
@@ -204,9 +188,9 @@
         <div class="main-content">
 
             <form action="${pageContext.request.contextPath}/fileUpload" enctype="multipart/form-data" method="post">
-                <input type="hidden" name="command" value="file_upload">
-                <label>Choose file:</label>
+                                <input type="hidden" name="command" value="file_upload">
                 <input type="file">
+                <label>Choose file:</label>
                 <input type="submit" class="btn btn-primary" placeholder="Upload">
             </form>
 

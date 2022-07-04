@@ -23,8 +23,6 @@ public class Book extends BaseDomain {
 
     private Long numberOfBooks;
 
-    //    Long userId;
-
     public String getName() {
         return name;
     }

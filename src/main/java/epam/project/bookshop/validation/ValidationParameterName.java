@@ -42,6 +42,27 @@ public final class ValidationParameterName {
     public static final String ERROR_AUTHOR_FIO_EXIST="Author by this name already existed!";
     public static final String ERROR_AUTHOR_NAME_IS_NOT_AVAILABLE="Author by this id is not available.";
 
+    /* Book WARN */
+    public static final String WARN_BOOK_NAME = "book_name_error";
+    public static final String WARN_BOOK_ISBN = "book_isbn_error";
+    public static final String WARN_BOOK_PUBLISHER_NAME = "book_publisher_name_error";
+    public static final String WARN_BOOK_PUBLISHING_YEAR = "book_publishing_year_error";
+    public static final String WARN_BOOK_PRICE = "book_price_error";
+    public static final String WARN_BOOK_TOTAL = "book_total_error";
+    public static final String WARN_BOOK_IS_NOT_ADDED = "book_added_error";
+    public static final String WARN_BOOK_IS_AVAILABLE_BY_ISBN = "book_isbn_exists_error";
+    public static final String WARN_BOOK_IS_AVAILABLE_BY_NAME = "book_name_exists_error";
 
+    /* Book ERROR */
+    public static final String ERROR_BOOK_NAME = "Book name is empty!";
+    public static final String ERROR_BOOK_ISBN = "Book isbn is empty!";
+    public static final String ERROR_BOOK_PUBLISHER_NAME = "Book publisher is empty!";
+    public static final String ERROR_BOOK_PUBLISHING_YEAR = "Book publishing year is empty!";
+    public static final String ERROR_BOOK_PRICE = "Book price is empty!";
+    public static final String ERROR_BOOK_TOTAL = "Book total is empty!";
+    public static final String ERROR_BOOK_IS_NOT_ADDED = "Book is not added!";
+    public static final String ERROR_BOOK_IS_NOT_DELETED = "Book is not deleted!";
+    public static final String ERROR_BOOK_IS_AVAILABLE_BY_ISBN = "Book is already exists by this isbn!";
+    public static final String ERROR_BOOK_IS_AVAILABLE_BY_NAME = "Book is already exists by this name!";
 
 }

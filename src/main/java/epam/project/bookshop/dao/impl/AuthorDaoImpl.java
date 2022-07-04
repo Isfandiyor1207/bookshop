@@ -29,6 +29,7 @@ public class AuthorDaoImpl implements AuthorDao {
     private static final String DELETE_AUTHOR_BY_ID = "UPDATE author SET deleted = true WHERE id =? AND deleted = false";
     private static final String UPDATE_AUTHOR_BY_ID = "UPDATE author SET fio = ?, updated_time = now() WHERE id = ? AND deleted = false";
     private static final String INSERT_AUTHOR = "INSERT INTO author(fio) VALUES (?)";
+    private static final String ATTACH_BOOK_AUTHOR = "INSERT INTO author_book_list(author_id, book_id) VALUES (?, ?)";
     private static AuthorDaoImpl instance;
 
     public static AuthorDaoImpl getInstance() {
@@ -148,6 +149,22 @@ public class AuthorDaoImpl implements AuthorDao {
                 return Optional.of(author);
             } else return Optional.empty();
 
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public boolean attachBookToAuthor(Long bookId, Long authorId) throws DaoException {
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(ATTACH_BOOK_AUTHOR)) {
+
+            statement.setLong(1, authorId);
+            statement.setLong(2, bookId);
+
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             logger.error(e);
             throw new DaoException(e);

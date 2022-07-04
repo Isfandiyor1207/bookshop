@@ -1,10 +1,11 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 25.06.2022
-  Time: 15:57
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="epam.project.bookshop.service.AuthorService" %>
+<%@ page import="epam.project.bookshop.service.impl.AuthorServiceImpl" %>
+<%@ page import="epam.project.bookshop.service.GenreService" %>
+<%@ page import="epam.project.bookshop.service.impl.GenreServiceImpl" %>
+<%@ page import="epam.project.bookshop.entity.Author" %>
+<%@ page import="epam.project.bookshop.entity.Genre" %>
+<%@ page import="java.util.List" %>
+<%@ page import="epam.project.bookshop.exception.ServiceException" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -12,6 +13,26 @@
 
 <fmt:setLocale value="uz"/>
 <fmt:setBundle basename="prop.message"/>
+
+<%
+    AuthorService authorService = AuthorServiceImpl.getInstance();
+    GenreService genreService = GenreServiceImpl.getInstance();
+
+    List<Author> authorList = null;
+    List<Genre> genreList = null;
+
+    try {
+        authorList = authorService.findAll();
+        request.setAttribute("authorList", authorList);
+
+        genreList = genreService.findAll();
+        request.setAttribute("genreList", genreList);
+
+    } catch (ServiceException e) {
+        throw new RuntimeException(e);
+    }
+%>
+
 <html>
 <head>
     <!-- Required meta tags -->
@@ -43,12 +64,11 @@
     <nav id="sidebar">
         <div class="sidebar-header">
             <h3><img src="${pageContext.request.contextPath}/pages/img/logo.png"
-                     class="img-fluid" alt=""/><span><fmt:message key="label.admin"/></span></h3>
+                     class="img-fluid"/><span><fmt:message key="label.admin"/></span></h3>
         </div>
         <ul class="list-unstyled components">
             <li class="active">
-                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message
-                        key="label.dashboard"/></span></a>
+                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message key="label.dashboard"/></span></a>
             </li>
 
             <div class="small-screen navbar-display">
@@ -102,6 +122,7 @@
                     <i class="material-icons">equalizer</i><span><fmt:message key="label.genre"/></span>
                 </a>
             </li>
+
             <li class="dropdown">
                 <a href="${pageContext.request.contextPath}/pages/admin/user.jsp">
                     <i class="material-icons">extension</i><span><fmt:message key="label.users"/></span>
@@ -110,7 +131,8 @@
 
             <li class="dropdown">
                 <a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="material-icons">content_copy</i><span><fmt:message key="label.pages"/></span></a>
+                    <i class="material-icons">content_copy</i><span><fmt:message key="label.pages"/></span>
+                </a>
                 <ul class="collapse list-unstyled menu" id="pageSubmenu7">
                     <li>
                         <a href="#">Page 1</a>
@@ -194,59 +216,73 @@
 
         <div class="main-content">
 
-            <div class="">
-                <form action="${pageContext.request.contextPath}/controller" method="get">
-                    <input type="hidden" name="command" value="read_genre">
-                    <input type="submit" class="btn btn-primary" value="<fmt:message key="label.show_all_btn"/>">
-                </form>
+            <div class="container">
+                <form action="${pageContext.request.contextPath}/controller">
+                    <input type="hidden" name="command" value="update_book">
 
-                <form>
-                    <a href="${pageContext.request.contextPath}/pages/admin/genre_create.jsp"
-                       style="text-transform: none"
-                       class="btn btn-success"><fmt:message key="label.create_btn"/></a>
-                </form>
+                    <div class="container">
+                        <label style="width: 30% !important;">Book name: </label>
+                        <input type="text" name="name" style="width: 50% !important;" placeholder="Book name">
+                    </div>
+                    <small style="color: red">${book_name_error}</small>
 
+                    <div class="container">
+                        <label style="width: 30% !important;">ISBN: </label>
+                        <input type="text" name="isbn" style="width: 50% !important;" placeholder="ISBN">
+                    </div>
+                    <small style="color: red">${book_isbn_error}</small>
+                    <small style="color: red">${book_isbn_exists_error}</small>
+
+                    <div class="container">
+                        <label style="width: 30% !important;">Publisher: </label>
+                        <input type="text" name="publisher" style="width: 50% !important;" placeholder="Publisher">
+                    </div>
+                    <small style="color: red">${book_publisher_name_error}</small>
+
+                    <div class="container">
+                        <label style="width: 30% !important;">Publishing Year: </label>
+                        <input type="text" name="publishing_year" style="width: 50% !important;" placeholder="Publishing year">
+                    </div>
+                    <small style="color: red">${book_publishing_year_error}</small>
+
+                    <div class="container">
+                        <label style="width: 30% !important;">Price: </label>
+                        <input type="text" name="price" style="width: 50% !important;" placeholder="Book price">
+                    </div>
+                    <small style="color: red">${book_price_error}</small>
+
+                    <div class="container">
+                        <label style="width: 30% !important;">Total book: </label>
+                        <input type="text" name="total" style="width: 50% !important;" placeholder="Total of books">
+                    </div>
+                    <small style="color: red">${book_total_error}</small>
+
+                    <div class="container">
+                        <label style="width: 30% !important;">Author:</label>
+                        <select id="author_id" name="author_id"
+                                style="width: 150px; padding: 5px 5px; text-transform: capitalize">
+                            <option value="0"></option>
+                            <c:forEach var="item" items="${authorList}">
+                                <option value="${item.id}">${item.fio}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
+                    <div class="container">
+                        <label style="width: 30% !important;">Genre:</label>
+                        <select id="genre_id" name="genre_id"
+                                style="width: 150px; padding: 5px 5px; text-transform: capitalize">
+                            <option value="0"></option>
+                            <c:forEach var="item" items="${genreList}">
+                                <option value="${item.id}">${item.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
+                    <input class="btn btn-primary" type="submit" value="Push">
+                </form>
             </div>
 
-            <b><small style="color: red">${deleted_error}</small></b>
-
-            <table class="table table-light table-bordered">
-                <thead class="table-primary">
-                <tr>
-                    <th scope="col"><fmt:message key="label.id"/></th>
-                    <th scope="col"><fmt:message key="label.genre_name"/></th>
-                    <th scope="col"><fmt:message key="label.delete_btn"/></th>
-                    <th scope="col"><fmt:message key="label.update_btn"/></th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <c:forEach items="${genre_list}" var="item">
-                    <tr>
-                        <td style="text-transform: capitalize"><c:out value="${item.id}"/></td>
-                        <td style="text-transform: capitalize"><c:out value="${item.name}"/></td>
-                        <td>
-                            <form action="${pageContext.request.contextPath}/controller">
-                                <input type="hidden" name="command" value="delete_genre">
-                                    <%--                                <label type="submit"><i class="bi bi-trash"></i></label>--%>
-                                <button type="submit" name="delete_by_id" class="btn btn-outline-danger"
-                                        value="${item.id}"><fmt:message key="label.delete_btn"/></button>
-                            </form>
-                        </td>
-                        <td style="text-transform: none">
-                            <form>
-                                    <%--                                <input type="hidden" name="command" value="update_user">--%>
-                                <button class="btn btn-outline-warning">
-                                    <a href="${pageContext.request.contextPath}/pages/admin/genre_update.jsp">
-                                        <fmt:message key="label.update_btn"/>
-                                    </a>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
         </div>
 
     </div>
@@ -278,3 +314,4 @@
 
 </body>
 </html>
+

@@ -11,5 +11,4 @@ public interface UserDao extends BaseDao<User>{
 
     Optional<Long> findUserRoleByUsername(String username) throws DaoException;
 
-
 }

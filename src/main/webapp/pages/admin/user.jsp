@@ -47,7 +47,8 @@
         </div>
         <ul class="list-unstyled components">
             <li class="active">
-                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message key="label.dashboard"/></span></a>
+                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message
+                        key="label.dashboard"/></span></a>
             </li>
 
             <div class="small-screen navbar-display">
@@ -85,19 +86,9 @@
 
 
             <li class="dropdown">
-                <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="material-icons">aspect_ratio</i><span><fmt:message key="label.books"/></span></a>
-                <ul class="collapse list-unstyled menu" id="homeSubmenu1">
-                    <li>
-                        <a href="#">Home 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Home 2</a>
-                    </li>
-                    <li>
-                        <a href="#">Home 3</a>
-                    </li>
-                </ul>
+                <a href="${pageContext.request.contextPath}/pages/admin/book.jsp">
+                    <i class="material-icons">aspect_ratio</i><span><fmt:message key="label.books"/></span>
+                </a>
             </li>
 
             <li class="dropdown">
@@ -213,15 +204,15 @@
             <table class="table table-light table-bordered">
                 <thead class="table-primary">
                 <tr>
-                    <th scope="col" ><fmt:message key="label.id"/></th>
-                    <th scope="col" ><fmt:message key="label.firstname_table"/></th>
-                    <th scope="col" ><fmt:message key="label.lastname_table"/></th>
-                    <th scope="col" ><fmt:message key="label.username_table"/></th>
-                    <th scope="col" ><fmt:message key="label.email_table"/></th>
-                    <th scope="col" ><fmt:message key="label.contact_table"/></th>
-                    <th scope="col" ><fmt:message key="label.user_role_table"/></th>
-                    <th scope="col" ><fmt:message key="label.delete_btn"/></th>
-                    <th scope="col" ><fmt:message key="label.update_btn"/></th>
+                    <th scope="col"><fmt:message key="label.id"/></th>
+                    <th scope="col"><fmt:message key="label.firstname_table"/></th>
+                    <th scope="col"><fmt:message key="label.lastname_table"/></th>
+                    <th scope="col"><fmt:message key="label.username_table"/></th>
+                    <th scope="col"><fmt:message key="label.email_table"/></th>
+                    <th scope="col"><fmt:message key="label.contact_table"/></th>
+                    <th scope="col"><fmt:message key="label.user_role_table"/></th>
+                    <th scope="col"><fmt:message key="label.delete_btn"/></th>
+                    <th scope="col"><fmt:message key="label.update_btn"/></th>
                 </tr>
                 </thead>
 
@@ -238,14 +229,16 @@
                         <td>
                             <form action="${pageContext.request.contextPath}/controller">
                                 <input type="hidden" name="command" value="delete_user">
-<%--                                <label type="submit"><i class="bi bi-trash"></i></label>--%>
-                                <button type="submit" name="delete_by_id" class="btn btn-outline-danger" value="${item.id}"><fmt:message key="label.delete_btn"/></button>
+                                    <%--                                <label type="submit"><i class="bi bi-trash"></i></label>--%>
+                                <button type="submit" name="delete_by_id" class="btn btn-outline-danger"
+                                        value="${item.id}"><fmt:message key="label.delete_btn"/></button>
                             </form>
                         </td>
                         <td style="text-transform: none">
                             <form>
-<%--                                <input type="hidden" name="command" value="update_user">--%>
-                                <button class="btn btn-outline-warning"><a href="${pageContext.request.contextPath}/pages/user_update.jsp"><fmt:message key="label.update_btn"/></a></button>
+                                <button class="btn btn-outline-warning" name="id" value="${item.id}">
+                                    <a href="${pageContext.request.contextPath}/pages/user_update.jsp"><fmt:message
+                                        key="label.update_btn"/></a></button>
                             </form>
                         </td>
                     </tr>

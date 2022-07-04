@@ -34,8 +34,6 @@ public class AuthorValidation {
             isValid = false;
         }
         return isValid;
-
-//        return !baseValidation.isEmpty(fio) && fio.matches(AUTHOR_FULL_NAME_REGEX);
     }
 
     public boolean authorCreateValidation(Map<String, String> authorMap) {

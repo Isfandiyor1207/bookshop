@@ -14,6 +14,9 @@ public final class WebPageName {
     public static final String AUTHOR_PAGE="/pages/admin/author.jsp";
     public static final String AUTHOR_UPDATE_PAGE="/pages/admin/author_update.jsp";
     public static final String AUTHOR_CREATE_PAGE="/pages/admin/author_create.jsp";
+    public static final String BOOK_PAGE="/pages/admin/book.jsp";
+    public static final String BOOK_UPDATE_PAGE="/pages/admin/book_update.jsp";
+    public static final String BOOK_CREATE_PAGE="/pages/admin/book_create.jsp";
 
 
     private WebPageName(){}

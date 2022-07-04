@@ -1,6 +1,5 @@
 package epam.project.bookshop.command;
 
-import com.oracle.wls.shaded.org.apache.bcel.generic.NEW;
 import epam.project.bookshop.command.impl.*;
 import epam.project.bookshop.validation.CommandValidation;
 
@@ -16,11 +15,12 @@ public enum CommandType {
     UPDATE_USER(new UpdateUserCommand()),
     READ_USER(new FindAllUsersCommand()),
 
-    // Book commands
+    // Book commands,
     ADD_BOOK(new AddBookCommand()),
     DELETE_BOOK(new DeleteBookCommand()),
     UPDATE_BOOK(new UpdateBookCommand()),
-//    READ_BOOK(),
+    READ_BOOK(new FindAllBooksCommand()),
+    FIND_BOOK_BY_ID(new FindBookByIdCommand()),
 
     // Author commands
     ADD_AUTHOR(new AddAuthorCommand()),

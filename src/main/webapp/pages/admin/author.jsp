@@ -86,19 +86,9 @@
 
 
             <li class="dropdown">
-                <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="material-icons">aspect_ratio</i><span><fmt:message key="label.books"/></span></a>
-                <ul class="collapse list-unstyled menu" id="homeSubmenu1">
-                    <li>
-                        <a href="#">Home 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Home 2</a>
-                    </li>
-                    <li>
-                        <a href="#">Home 3</a>
-                    </li>
-                </ul>
+                <a href="${pageContext.request.contextPath}/pages/admin/book.jsp">
+                    <i class="material-icons">aspect_ratio</i><span><fmt:message key="label.books"/></span>
+                </a>
             </li>
 
             <li class="dropdown">

@@ -70,7 +70,7 @@ figure {
 }
 
 input {
-    width: 100%;
+    width: 30%;
     display: block;
     border: none;
     border-bottom: 1px solid $grey-light;
@@ -135,8 +135,8 @@ input[type=checkbox]:not(old):checked + label > span:before{
 }
 
 label {
-    position: absolute;
-    left: 0;
+    //position: absolute;
+    //left: 0;
     top: 50%;
     @include transform(translateY(-50%));
     color: $black-color;

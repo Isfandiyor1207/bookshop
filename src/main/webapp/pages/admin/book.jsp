@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: User
-  Date: 25.06.2022
-  Time: 15:57
+  Date: 29.06.2022
+  Time: 19:21
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -43,12 +43,11 @@
     <nav id="sidebar">
         <div class="sidebar-header">
             <h3><img src="${pageContext.request.contextPath}/pages/img/logo.png"
-                     class="img-fluid" alt=""/><span><fmt:message key="label.admin"/></span></h3>
+                     class="img-fluid"/><span><fmt:message key="label.admin"/></span></h3>
         </div>
         <ul class="list-unstyled components">
             <li class="active">
-                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message
-                        key="label.dashboard"/></span></a>
+                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message key="label.dashboard"/></span></a>
             </li>
 
             <div class="small-screen navbar-display">
@@ -102,6 +101,7 @@
                     <i class="material-icons">equalizer</i><span><fmt:message key="label.genre"/></span>
                 </a>
             </li>
+
             <li class="dropdown">
                 <a href="${pageContext.request.contextPath}/pages/admin/user.jsp">
                     <i class="material-icons">extension</i><span><fmt:message key="label.users"/></span>
@@ -110,7 +110,8 @@
 
             <li class="dropdown">
                 <a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="material-icons">content_copy</i><span><fmt:message key="label.pages"/></span></a>
+                    <i class="material-icons">content_copy</i><span><fmt:message key="label.pages"/></span>
+                </a>
                 <ul class="collapse list-unstyled menu" id="pageSubmenu7">
                     <li>
                         <a href="#">Page 1</a>
@@ -194,53 +195,62 @@
 
         <div class="main-content">
 
-            <div class="">
-                <form action="${pageContext.request.contextPath}/controller" method="get">
-                    <input type="hidden" name="command" value="read_genre">
-                    <input type="submit" class="btn btn-primary" value="<fmt:message key="label.show_all_btn"/>">
-                </form>
+            <form action="${pageContext.request.contextPath}/controller" method="get">
+                <input type="hidden" name="command" value="read_book">
+                <input type="submit" class="btn btn-primary" value="<fmt:message key="label.show_all_btn"/>">
+            </form>
 
-                <form>
-                    <a href="${pageContext.request.contextPath}/pages/admin/genre_create.jsp"
-                       style="text-transform: none"
-                       class="btn btn-success"><fmt:message key="label.create_btn"/></a>
-                </form>
-
-            </div>
+            <form>
+                <a href="${pageContext.request.contextPath}/pages/admin/book_create.jsp"
+                   style="text-transform: none"
+                   class="btn btn-success"><fmt:message key="label.create_btn"/></a>
+            </form>
 
             <b><small style="color: red">${deleted_error}</small></b>
 
             <table class="table table-light table-bordered">
                 <thead class="table-primary">
                 <tr>
-                    <th scope="col"><fmt:message key="label.id"/></th>
-                    <th scope="col"><fmt:message key="label.genre_name"/></th>
-                    <th scope="col"><fmt:message key="label.delete_btn"/></th>
-                    <th scope="col"><fmt:message key="label.update_btn"/></th>
+                    <th scope="col" ><fmt:message key="label.id"/></th>
+                    <th scope="col" ><fmt:message key="label.book_name"/></th>
+                    <th scope="col" ><fmt:message key="label.book_isbn"/></th>
+                    <th scope="col" ><fmt:message key="label.book_publisher"/></th>
+                    <th scope="col" ><fmt:message key="label.book_publishingYear"/></th>
+                    <%--                    <th scope="col" ><fmt:message key="label.book_attachments"/></th>--%>
+                    <th scope="col" ><fmt:message key="label.book_price"/></th>
+                    <th scope="col" ><fmt:message key="label.book_numberOfBooks"/></th>
+                    <th scope="col" ><fmt:message key="label.book_genre"/></th>
+                    <th scope="col" ><fmt:message key="label.book_author"/></th>
+                    <th scope="col" ><fmt:message key="label.delete_btn"/></th>
+                    <th scope="col" ><fmt:message key="label.update_btn"/></th>
                 </tr>
                 </thead>
 
                 <tbody>
-                <c:forEach items="${genre_list}" var="item">
+                <c:forEach items="${book_list}" var="item">
                     <tr>
-                        <td style="text-transform: capitalize"><c:out value="${item.id}"/></td>
-                        <td style="text-transform: capitalize"><c:out value="${item.name}"/></td>
+                        <td><c:out value="${item.id}"/></td>
+                        <td><c:out value="${item.name}"/></td>
+                        <td><c:out value="${item.isbn}"/></td>
+                        <td><c:out value="${item.publisher}"/></td>
+                        <td><c:out value="${item.publishingYear}"/></td>
+                        <td><c:out value="${item.price}"/></td>
+                        <td><c:out value="${item.numberOfBooks}"/></td>
+                        <td><c:out value="${item.genreId}"/> </td>
+                        <td><c:out value="${item.authorId}"/></td>
+<%--                        <td><c:out value="${item.attachmentId}"/></td>--%>
+<%--                        <td><c:out value="${item.roleId}"/></td>--%>
                         <td>
                             <form action="${pageContext.request.contextPath}/controller">
-                                <input type="hidden" name="command" value="delete_genre">
+                                <input type="hidden" name="command" value="delete_book">
                                     <%--                                <label type="submit"><i class="bi bi-trash"></i></label>--%>
-                                <button type="submit" name="delete_by_id" class="btn btn-outline-danger"
-                                        value="${item.id}"><fmt:message key="label.delete_btn"/></button>
+                                <button type="submit" name="delete_by_id" class="btn btn-outline-danger" value="${item.id}"><fmt:message key="label.delete_btn"/></button>
                             </form>
                         </td>
                         <td style="text-transform: none">
                             <form>
-                                    <%--                                <input type="hidden" name="command" value="update_user">--%>
-                                <button class="btn btn-outline-warning">
-                                    <a href="${pageContext.request.contextPath}/pages/admin/genre_update.jsp">
-                                        <fmt:message key="label.update_btn"/>
-                                    </a>
-                                </button>
+                                <input type="hidden" name="command" value="find_book_by_id">
+                                <button type="submit" class="btn btn-outline-warning" name="book_id" value="${item.id}"><fmt:message key="label.update_btn"/></button>
                             </form>
                         </td>
                     </tr>
@@ -278,3 +288,4 @@
 
 </body>
 </html>
+

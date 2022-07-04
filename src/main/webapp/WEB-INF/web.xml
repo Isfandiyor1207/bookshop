@@ -6,12 +6,12 @@
 
     <error-page>
         <error-code>404</error-code>
-        <location>/pages/error/error_404.jsp</location>
+        <location>/pages/errors/error_404.jsp</location>
     </error-page>
 
     <error-page>
         <error-code>403</error-code>
-        <location>/errors/error_403.jsp</location>
+        <location>/pages/errors/error_403.jsp</location>
     </error-page>
 
 
@@ -29,4 +29,7 @@
         <session-timeout>30</session-timeout>
     </session-config>
 
+<!--    <welcome-file-list>-->
+<!--        <welcome-file>/pages/admin/file_upload.jsp</welcome-file>-->
+<!--    </welcome-file-list>-->
 </web-app>

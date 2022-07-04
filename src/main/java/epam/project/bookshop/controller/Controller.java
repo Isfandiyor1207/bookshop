@@ -13,6 +13,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "helloServlet", value = {"/controller", "*.do"})
+@MultipartConfig(fileSizeThreshold = 1024 * 1024,
+                 maxFileSize = 1024 * 1024 * 5,
+                 maxRequestSize = 1024 * 1024 * 5 * 5)
 public class Controller extends HttpServlet {
 
     public void init() {
@@ -39,8 +42,6 @@ public class Controller extends HttpServlet {
         String page;
         try {
             page = execute.execute(req);
-
-//            resp.sendRedirect(req.getRequestURL() +"/" + page);
             req.getRequestDispatcher(page).forward(req, resp);
 
         } catch (CommandException e) {
