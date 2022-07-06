@@ -3,11 +3,13 @@ package epam.project.bookshop.service.impl;
 import epam.project.bookshop.dao.BookDao;
 import epam.project.bookshop.dao.impl.BookDaoImpl;
 import epam.project.bookshop.entity.Book;
-import epam.project.bookshop.entity.User;
 import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.exception.ServiceException;
+import epam.project.bookshop.service.AttachmentService;
 import epam.project.bookshop.service.AuthorService;
 import epam.project.bookshop.service.BookService;
+import epam.project.bookshop.service.GenreService;
+import epam.project.bookshop.util.Utils;
 import epam.project.bookshop.validation.BaseValidation;
 import epam.project.bookshop.validation.BookValidation;
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +30,10 @@ public class BookServiceImpl implements BookService {
     private static final AuthorService authorService = AuthorServiceImpl.getInstance();
     private static final BookValidation bookValidation = BookValidation.getInstance();
     private static final BaseValidation baseValidation = BaseValidation.getInstance();
+    private static final AttachmentService attachmentService = AttachmentServiceImpl.getInstance();
+    private static final GenreService genreService = GenreServiceImpl.getInstance();
+
+    private static Utils utils = new Utils();
 
     private BookServiceImpl() {
     }
@@ -48,19 +54,19 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public boolean update(Map<String, String> update) throws ServiceException {
-        Map<String, String> query=new HashMap<>();
+        Map<String, String> query = new HashMap<>();
 
         boolean isValid = bookValidation.validationBookToUpdate(update, query);
 
-        if (!isValid){
+        if (!isValid) {
             logger.info("user update values is not valid:");
             return false;
         }
 
-        if (baseValidation.isEmpty(update.get(BOOK_NAME))){
+        if (baseValidation.isEmpty(update.get(BOOK_NAME))) {
             try {
                 Optional<Book> optionalUser = bookDao.findByName(update.get(USERNAME));
-                if (optionalUser.isPresent()){
+                if (optionalUser.isPresent()) {
                     update.put(WARN_BOOK_IS_AVAILABLE_BY_NAME, ERROR_BOOK_IS_AVAILABLE_BY_NAME);
                     logger.info(WARN_BOOK_IS_AVAILABLE_BY_NAME + ": " + ERROR_BOOK_IS_AVAILABLE_BY_NAME);
                     return false;
@@ -71,10 +77,10 @@ public class BookServiceImpl implements BookService {
             }
         }
 
-        if (baseValidation.isEmpty(update.get(BOOK_ISBN))){
+        if (baseValidation.isEmpty(update.get(BOOK_ISBN))) {
             try {
                 Optional<Book> optionalUser = bookDao.findByISBN(update.get(BOOK_ISBN));
-                if (optionalUser.isPresent()){
+                if (optionalUser.isPresent()) {
                     update.put(WARN_BOOK_IS_AVAILABLE_BY_ISBN, ERROR_BOOK_IS_AVAILABLE_BY_ISBN);
                     logger.info(WARN_BOOK_IS_AVAILABLE_BY_ISBN + ": " + ERROR_BOOK_IS_AVAILABLE_BY_ISBN);
                     return false;
@@ -85,7 +91,7 @@ public class BookServiceImpl implements BookService {
             }
         }
 
-        StringBuilder stringBuilder=new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
         query.forEach((key, value) -> stringBuilder.append(key)
                 .append("='")
@@ -94,8 +100,27 @@ public class BookServiceImpl implements BookService {
 
         logger.info("Query: " + query);
 
-        String queryString=stringBuilder.toString();
-        queryString = queryString.substring(0, stringBuilder.length()-2);
+        String queryString = stringBuilder.toString();
+
+        if (!queryString.isEmpty()){
+            queryString = queryString.substring(0, stringBuilder.length() - 2);
+        }
+
+        if (update.get(GENRE_ID) != null){
+            List<Long> updateGenre = utils.convertStringArrayToList(update.get(GENRE_ID));
+
+            updateGenre.forEach(id -> {
+                try {
+
+                    genreService.attachBookToGenre(Long.valueOf(update.get(ID)), id, true);
+
+                } catch (ServiceException e) {
+
+                    e.printStackTrace();
+                }
+            });
+
+        }
 
         try {
             return bookDao.updated(queryString, Long.valueOf(update.get(ID)));
@@ -103,6 +128,7 @@ public class BookServiceImpl implements BookService {
             logger.error(e.getMessage());
             throw new ServiceException(e);
         }
+
     }
 
     @Override
@@ -135,12 +161,17 @@ public class BookServiceImpl implements BookService {
             return false;
         }
 
-        try {
-            Optional<Book> daoByISBN = bookDao.findByISBN(bookMap.get(BOOK_ISBN));
+        logger.info(bookMap.get(BOOK_NAME));
 
-            if (daoByISBN.isPresent()) {
-                bookMap.put(WARN_BOOK_IS_AVAILABLE_BY_ISBN, ERROR_BOOK_IS_AVAILABLE_BY_ISBN);
+        try {
+            Optional<Book> daoByName = bookDao.findByName(bookMap.get(BOOK_NAME));
+
+            if (daoByName.isPresent()) {
+                logger.info("book is available by this name");
+                bookMap.put(WARN_BOOK_NAME, ERROR_BOOK_IS_AVAILABLE_BY_NAME);
                 return false;
+            } else {
+                logger.info("book is not available ");
             }
 
         } catch (DaoException e) {
@@ -156,15 +187,38 @@ public class BookServiceImpl implements BookService {
         book.setPublishingYear(Integer.parseInt(bookMap.get(BOOK_PUBLISHING_YEAR)));
         book.setPrice(Long.valueOf(bookMap.get(BOOK_PRICE)));
         book.setNumberOfBooks(Long.valueOf(bookMap.get(BOOK_TOTAL)));
-        book.setGenreId(Long.valueOf(bookMap.get(GENRE_ID)));
 
 
         boolean isAdded = false;
 
         try {
             if (bookDao.save(book)) {
+
                 Long bookId = bookDao.findIdByName(book.getName().toLowerCase());
-                authorService.attachBookToAuthor(bookId, Long.valueOf(bookMap.get(AUTHOR_ID)));
+
+                List<Long> genreIds = utils.convertStringArrayToList(bookMap.get(GENRE_ID));
+
+                genreIds.forEach(id -> {
+                    try {
+                        genreService.attachBookToGenre(bookId, id, false);
+                    } catch (ServiceException e) {
+
+                        // todo what type of error I must throw
+
+                        logger.error(e);
+                    }
+                });
+
+                List<Long> authorIds = utils.convertStringArrayToList(bookMap.get(AUTHOR_ID));
+
+                authorIds.forEach(id -> {
+                    try {
+                        authorService.attachBookToAuthor(bookId, id);
+                    } catch (ServiceException e) {
+                        logger.error(e);
+                    }
+                });
+
                 isAdded = true;
             } else {
                 bookMap.put(WARN_BOOK_IS_NOT_ADDED, ERROR_BOOK_IS_NOT_ADDED);

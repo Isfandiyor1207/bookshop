@@ -1,10 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 29.06.2022
-  Time: 19:21
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="epam.project.bookshop.service.GenreService" %>
+<%@ page import="epam.project.bookshop.service.impl.GenreServiceImpl" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -195,20 +190,27 @@
 
         <div class="main-content">
 
-            <form action="${pageContext.request.contextPath}/controller" method="get">
-                <input type="hidden" name="command" value="read_book">
-                <input type="submit" class="btn btn-primary" value="<fmt:message key="label.show_all_btn"/>">
-            </form>
+            <div>
+                <div style="width: 50% !important; display: grid">
+                    <form action="${pageContext.request.contextPath}/controller" method="get">
+                        <input type="hidden" name="command" value="read_book">
+                        <input type="submit" style="align-content: flex-start" class="btn btn-primary" value="<fmt:message key="label.show_all_btn"/>">
+                    </form>
+                </div>
 
-            <form>
-                <a href="${pageContext.request.contextPath}/pages/admin/book_create.jsp"
-                   style="text-transform: none"
-                   class="btn btn-success"><fmt:message key="label.create_btn"/></a>
-            </form>
+                <div style="width: 50% !important; display: grid">
+                    <form>
+                        <a href="${pageContext.request.contextPath}/pages/admin/book_create.jsp" style="text-transform: none; align-content: flex-end"
+                           class="btn btn-success"><fmt:message key="label.create_btn"/></a>
+                    </form>
+                </div>
+
+
+            </div>
 
             <b><small style="color: red">${deleted_error}</small></b>
 
-            <table class="table table-light table-bordered">
+            <table class="table table-light table-bordered" style="font-size: small">
                 <thead class="table-primary">
                 <tr>
                     <th scope="col" ><fmt:message key="label.id"/></th>
@@ -229,14 +231,14 @@
                 <tbody>
                 <c:forEach items="${book_list}" var="item">
                     <tr>
-                        <td><c:out value="${item.id}"/></td>
+                        <td style="text-transform: capitalize"><c:out value="${item.id}"/></td>
                         <td><c:out value="${item.name}"/></td>
                         <td><c:out value="${item.isbn}"/></td>
                         <td><c:out value="${item.publisher}"/></td>
                         <td><c:out value="${item.publishingYear}"/></td>
                         <td><c:out value="${item.price}"/></td>
                         <td><c:out value="${item.numberOfBooks}"/></td>
-                        <td><c:out value="${item.genreId}"/> </td>
+                        <td><c:out value="${item.genreId}" /></td>
                         <td><c:out value="${item.authorId}"/></td>
 <%--                        <td><c:out value="${item.attachmentId}"/></td>--%>
 <%--                        <td><c:out value="${item.roleId}"/></td>--%>
@@ -263,8 +265,6 @@
 </div>
 
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="${pageContext.request.contextPath}/pages/js/jquery-3.3.1.slim.min.js"></script>
 <script src="${pageContext.request.contextPath}/pages/js/popper.min.js"></script>
 <script src="${pageContext.request.contextPath}/pages/js/bootstrap.min.js"></script>

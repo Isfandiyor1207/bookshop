@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface GenreDao extends BaseDao<Genre>{
     Optional<Genre> findByName(String name) throws DaoException;
+
+    boolean attachBookToGenre(Long bookId, Long genreId, boolean isToUpdate) throws DaoException;
 }

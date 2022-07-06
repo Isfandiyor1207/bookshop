@@ -188,8 +188,8 @@
         <div class="main-content">
 
             <form action="${pageContext.request.contextPath}/fileUpload" enctype="multipart/form-data" method="post">
-                                <input type="hidden" name="command" value="file_upload">
-                <input type="file">
+                <input type="hidden" name="command" value="file_upload">
+                <input type="file" name="file">
                 <label>Choose file:</label>
                 <input type="submit" class="btn btn-primary" placeholder="Upload">
             </form>

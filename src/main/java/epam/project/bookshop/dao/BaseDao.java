@@ -2,7 +2,6 @@ package epam.project.bookshop.dao;
 
 import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.exception.ServiceException;
-import lombok.extern.java.Log;
 
 import java.util.List;
 import java.util.Optional;

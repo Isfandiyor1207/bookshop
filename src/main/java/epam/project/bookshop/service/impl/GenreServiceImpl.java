@@ -10,6 +10,7 @@ import epam.project.bookshop.validation.GenreValidation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -124,5 +125,15 @@ public class GenreServiceImpl implements GenreService {
             throw new ServiceException(e);
         }
 
+    }
+
+    @Override
+    public boolean attachBookToGenre(Long bookId, Long genreId, boolean isToUpdate) throws ServiceException {
+        try {
+            return genreDao.attachBookToGenre(bookId, genreId, isToUpdate);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
     }
 }

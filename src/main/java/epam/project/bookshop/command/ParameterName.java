@@ -39,6 +39,11 @@ public final class ParameterName {
     public static final String BOOK_ISBN = "isbn";
     public static final String BOOK_NAME = "name";
 
+    /* Attachment parameters */
+    public static final String ATTACHMENT = "file";
+    public static final String ATTACHMENT_CONTENT_TYPE = "file_content_type";
+    public static final String ATTACHMENT_NAME = "attachment_name";
+
 
     private ParameterName() {
     }

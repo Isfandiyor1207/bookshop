@@ -130,11 +130,10 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public boolean attachBookToAuthor(Long bookId, Long authorId) throws ServiceException {
         try {
-            authorDao.attachBookToAuthor(bookId, authorId);
+            return authorDao.attachBookToAuthor(bookId, authorId);
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e);
         }
-        return false;
     }
 }

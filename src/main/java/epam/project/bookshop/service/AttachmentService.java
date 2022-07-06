@@ -1,4 +1,6 @@
 package epam.project.bookshop.service;
 
-public interface AttachmentService extends GenreService{
+import epam.project.bookshop.entity.Attachment;
+
+public interface AttachmentService extends GenericService<Attachment>{
 }

@@ -29,6 +29,7 @@ public class GenreDaoImpl implements GenreDao {
     private static final String DELETE_GENRE_BY_ID = "UPDATE genre SET deleted = true WHERE id =? AND deleted = false";
     private static final String UPDATE_GENRE_BY_ID = "UPDATE genre SET name = ?, updated_time = now() WHERE id =? AND deleted = false";
     private static final String INSERT_GENRE = "INSERT INTO genre(name) VALUES (?)";
+    private static final String ATTACH_BOOK_TO_GENRE = "INSERT INTO genre_book_list(genre_id, book_id) VALUES (?, ?)";
 
     private static GenreDaoImpl instance;
 
@@ -42,7 +43,8 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public boolean save(Genre genre) throws DaoException {
 
-        try (PreparedStatement statement = createConnection().prepareStatement(INSERT_GENRE)) {
+        try (Connection connection=ConnectionPool.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(INSERT_GENRE)) {
 
             statement.setString(1, genre.getName().toLowerCase());
             int numberOfRow = statement.executeUpdate();
@@ -56,7 +58,8 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public boolean updated(String genre, Long id) throws DaoException {
-        try (PreparedStatement statement = createConnection().prepareStatement(UPDATE_GENRE_BY_ID)) {
+        try (Connection connection=ConnectionPool.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(UPDATE_GENRE_BY_ID)) {
 
             statement.setString(1, genre.toLowerCase());
             statement.setLong(2, id);
@@ -73,7 +76,8 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public boolean deleteById(Long id) throws DaoException {
-        try (PreparedStatement statement = createConnection().prepareStatement(DELETE_GENRE_BY_ID)) {
+        try (Connection connection=ConnectionPool.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(DELETE_GENRE_BY_ID)) {
 
             statement.setLong(1, id);
 
@@ -90,7 +94,8 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public Optional<Genre> findById(Long id) throws DaoException {
 
-        try (PreparedStatement statement = createConnection().prepareStatement(SELECT_BY_ID)) {
+        try (Connection connection=ConnectionPool.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
 
             statement.setObject(1, id);
 
@@ -114,7 +119,8 @@ public class GenreDaoImpl implements GenreDao {
     public List<Genre> findAll() throws DaoException {
         List<Genre> genreList = new ArrayList<>();
 
-        try (PreparedStatement statement = createConnection().prepareStatement(SELECT_ALL)) {
+        try ( Connection connection=ConnectionPool.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -131,7 +137,8 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public Optional<Genre> findByName(String name) throws DaoException {
 
-        try (PreparedStatement statement = createConnection().prepareStatement(SELECT_BY_GENRE_NAME)) {
+        try (Connection connection=ConnectionPool.getInstance().getConnection();
+                PreparedStatement statement =connection.prepareStatement(SELECT_BY_GENRE_NAME)) {
 
             statement.setObject(1, name.toLowerCase());
 
@@ -153,8 +160,22 @@ public class GenreDaoImpl implements GenreDao {
         }
     }
 
-    private Connection createConnection() {
-        return ConnectionPool.getInstance().getConnection();
+    @Override
+    public boolean attachBookToGenre(Long bookId, Long genreId, boolean isToUpdate) throws DaoException {
+
+        try (Connection connection=ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement=connection.prepareStatement(ATTACH_BOOK_TO_GENRE)) {
+
+            statement.setLong(1, genreId);
+            statement.setLong(2, bookId);
+
+            return statement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+
     }
 
 }

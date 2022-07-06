@@ -23,44 +23,17 @@ public class BookValidation {
     public static BookValidation getInstance() {
         return instance;
     }
-//
-//    public boolean checkBookNameToValidation(String name){
-//        boolean isValid=true;
-//        if (baseValidation.isEmpty(name)){
-//            logger.info("empty data: " + name);
-//            isValid = false;
-//        }
-//
-//        return isValid;
-//    }
 
     public boolean checkBookInformationToString(String data) {
-//        boolean isValid=true;
-//        if (baseValidation.isEmpty(data)){
-//            logger.info("empty data: " + data);
-//            isValid = false;
-//        }
-//
-//        return isValid;
-
         return !baseValidation.isEmpty(data);
     }
 
     public boolean checkBookInformationToNumber(String data) {
-//        boolean isValid=true;
-//        if (baseValidation.isEmpty(data)){
-//            logger.info("empty data: " + data);
-//            isValid = false;
-//        }
-//
-//        if (!data.matches(BOOK_NUMBER_REGEX)){
-//            logger.info("regex is not valid: " + data);
-//            isValid = false;
-//        }
-//
-//        return isValid;
-
         return !baseValidation.isEmpty(data) && data.matches(BOOK_NUMBER_REGEX);
+    }
+
+    public boolean checkFileContentType(String fileContentType) {
+        return fileContentType.substring(0, fileContentType.lastIndexOf("/")).equals("image");
     }
 
     public boolean validateBookInformation(Map<String, String> bookMap) {
@@ -77,31 +50,58 @@ public class BookValidation {
             bookMap.put(WARN_BOOK_ISBN, ERROR_BOOK_ISBN);
             isValid = false;
         }
+
         if (!checkBookInformationToString(bookMap.get(BOOK_PUBLISHER_NAME).trim())) {
             logger.info("book publisher name is not valid ");
             bookMap.put(WARN_BOOK_PUBLISHER_NAME, ERROR_BOOK_PUBLISHER_NAME);
             isValid = false;
         }
+
         if (!checkBookInformationToNumber(bookMap.get(BOOK_PUBLISHING_YEAR).trim())) {
             logger.info("book publishing year is not valid ");
             bookMap.put(WARN_BOOK_PUBLISHING_YEAR, ERROR_BOOK_PUBLISHING_YEAR);
             isValid = false;
         }
+
         if (!checkBookInformationToNumber(bookMap.get(BOOK_PRICE).trim())) {
             logger.info("book price is not valid ");
             bookMap.put(WARN_BOOK_PRICE, ERROR_BOOK_PRICE);
             isValid = false;
         }
+
         if (!checkBookInformationToNumber(bookMap.get(BOOK_TOTAL).trim())) {
             logger.info("book total is not valid ");
             bookMap.put(WARN_BOOK_TOTAL, ERROR_BOOK_TOTAL);
             isValid = false;
         }
+
+        if (!checkBookInformationToString(bookMap.get(ATTACHMENT_NAME).trim())) {
+            logger.info("attachment name is not valid ");
+            bookMap.put(WARN_ATTACHMENT, ERROR_ATTACHMENT);
+            isValid = false;
+        }
+
+        if (!checkBookInformationToString(bookMap.get(GENRE_ID).trim()) || bookMap.get(GENRE_ID).equals("0")) {
+            logger.info("genre id is not valid ");
+            bookMap.put(WARN_GENRE_ID, ERROR_GENRE_ID);
+            isValid = false;
+        }
+        if (!checkBookInformationToString(bookMap.get(AUTHOR_ID).trim()) || bookMap.get(AUTHOR_ID).equals("0")) {
+            logger.info("author id is not valid ");
+            bookMap.put(WORN_AUTHOR_ID, ERROR_AUTHOR_ID);
+            isValid = false;
+        }
+        if (!checkFileContentType(bookMap.get(ATTACHMENT_CONTENT_TYPE).trim())) {
+            logger.info("image type is not correct ");
+            bookMap.put(WARN_ATTACHMENT_CONTENT_TYPE, ERROR_ATTACHMENT_CONTENT_TYPE);
+            isValid = false;
+        }
+
         return isValid;
     }
 
-    public boolean validationBookToUpdate(Map<String, String> bookMap, Map<String, String> query){
-        boolean isValid=true;
+    public boolean validationBookToUpdate(Map<String, String> bookMap, Map<String, String> query) {
+        boolean isValid = true;
 
         if (checkBookInformationToString(bookMap.get(BOOK_NAME).trim())) {
             logger.info("book name is given to update ");
@@ -133,6 +133,19 @@ public class BookValidation {
             logger.info("book total is given to update");
 //            bookMap.put(WARN_BOOK_TOTAL, ERROR_BOOK_TOTAL);
             query.put(BOOK_TOTAL, bookMap.get(BOOK_TOTAL));
+        }
+
+        if (checkBookInformationToString(bookMap.get(GENRE_ID).trim()) || bookMap.get(GENRE_ID).equals("0")) {
+            logger.info("genre id is not valid ");
+            bookMap.put(WARN_GENRE_ID, ERROR_GENRE_ID);
+        }
+        if (checkBookInformationToString(bookMap.get(AUTHOR_ID).trim()) || bookMap.get(AUTHOR_ID).equals("0")) {
+            logger.info("author id is not valid ");
+            bookMap.put(WORN_AUTHOR_ID, ERROR_AUTHOR_ID);
+        }
+        if (checkFileContentType(bookMap.get(ATTACHMENT_CONTENT_TYPE).trim())) {
+            logger.info("image type is not correct ");
+            bookMap.put(WARN_ATTACHMENT_CONTENT_TYPE, ERROR_ATTACHMENT_CONTENT_TYPE);
         }
 
         return isValid;

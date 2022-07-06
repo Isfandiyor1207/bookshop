@@ -32,10 +32,10 @@ public enum CommandType {
     ADD_GENRE(new AddGenreCommand()),
     DELETE_GENRE(new DeleteGenreCommand()),
     UPDATE_GENRE(new UpdateGenreCommand()),
-    READ_GENRE(new FindAllGenresCommand()),
+    READ_GENRE(new FindAllGenresCommand());
 
     //File commands
-    FILE_UPLOAD(new FileUploadCommand());
+//    FILE_UPLOAD(new FileUploadCommand());
 
     final Command command;
 

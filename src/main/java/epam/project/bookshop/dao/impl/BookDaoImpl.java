@@ -22,13 +22,14 @@ public class BookDaoImpl implements BookDao {
     private static final Logger logger = LogManager.getLogger();
 
     private static final String SELECT_BY_BOOK = "SELECT id, firstname, lastname, password, phoneNumber, email, username, roleid FROM users WHERE username = ? AND deleted = false";
-    private static final String SELECT_BOOK_BY_NAME = "SELECT id FROM book WHERE name = ? AND deleted = false";
-    private static final String SELECT_BY_ID = "SELECT id, name, isbn, publisher, publishing_year, genre_id, price, total FROM book WHERE  id = ? AND deleted = false";
-    private static final String SELECT_BY_ISBN = "SELECT id, name, isbn, publisher, publishing_year, genre_id, price, total FROM book WHERE isbn = ? and deleted=false";
-    private static final String SELECT_ALL = "SELECT id, name, isbn, publisher, publishing_year, genre_id, price, total FROM book WHERE deleted=false order by id";
+    private static final String SELECT_BOOK_ID_BY_NAME = "SELECT id FROM book WHERE name = ? AND deleted = false";
+    private static final String SELECT_BOOK_BY_NAME = "SELECT id, name, isbn, publisher, publishing_year, price, total FROM book WHERE name = ? AND deleted = false";
+    private static final String SELECT_BY_ID = "SELECT id, name, isbn, publisher, publishing_year, price, total FROM book WHERE  id = ? AND deleted = false";
+    private static final String SELECT_BY_ISBN = "SELECT id, name, isbn, publisher, publishing_year, price, total FROM book WHERE isbn = ? and deleted=false";
+    private static final String SELECT_ALL = "SELECT id, name, isbn, publisher, publishing_year, price, total FROM book WHERE deleted=false order by id";
     private static final String DELETE_BOOK_BY_ID = "UPDATE book SET deleted = true WHERE id =? AND deleted = false";
     private static final String UPDATE_BOOK_BY_ID = "UPDATE users SET %s WHERE id =%s, updated_time = now() AND deleted = false";
-    private static final String INSERT_BOOK = "INSERT INTO book(name, isbn, publisher, publishing_year, price, total, genre_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_BOOK = "INSERT INTO book(name, isbn, publisher, publishing_year, price, total) VALUES (?, ?, ?, ?, ?, ?);";
 
     static BookDaoImpl instance;
 
@@ -51,7 +52,6 @@ public class BookDaoImpl implements BookDao {
             statement.setLong(4, book.getPublishingYear());
             statement.setLong(5, book.getPrice());
             statement.setLong(6, book.getNumberOfBooks());
-            statement.setLong(7, book.getGenreId());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -139,16 +139,37 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Optional<Book> findByName(String name) throws DaoException {
-        return Optional.empty();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_BOOK_BY_NAME)) {
+
+            statement.setString(1, name.toLowerCase());
+
+            ResultSet resultSet = statement.executeQuery();
+
+            Book book = new Book();
+
+            while (resultSet.next()) {
+                book = BookMapper.getInstance().resultSetToEntity(resultSet);
+            }
+
+            if (book.getName() != null) {
+                logger.info("Book name: " + book.getName());
+                return Optional.of(book);
+            } else return Optional.empty();
+
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
     }
 
     @Override
     public Long findIdByName(String name) throws DaoException {
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SELECT_BOOK_BY_NAME)) {
+             PreparedStatement statement = connection.prepareStatement(SELECT_BOOK_ID_BY_NAME)) {
 
-            statement.setString(1, name);
+            statement.setString(1, name.toLowerCase());
 
             ResultSet resultSet = statement.executeQuery();
             Long id = null;

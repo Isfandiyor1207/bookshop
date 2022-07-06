@@ -1,7 +1,5 @@
 package epam.project.bookshop.validation;
 
-import epam.project.bookshop.entity.User;
-
 public final class ValidationParameterName {
 
     /* User WORN */
@@ -25,22 +23,26 @@ public final class ValidationParameterName {
     public static final String ERROR_LOGIN_MSG = "Password is incorrect!";
 
     /* GENRE WORN */
-    public static final String WORN_GENRE_NAME="genre_name_error";
+    public static final String WORN_GENRE_NAME = "genre_name_error";
+    public static final String WARN_GENRE_ID = "genre_id_error";
 
     /* GENRE ERROR */
-    public static final String ERROR_GENRE_NAME="Genre name is not correct!";
-    public static final String ERROR_GENRE_NAME_EXIST="Genre by this name already existed!";
-    public static final String ERROR_GENRE_NAME_IS_NOT_AVAILABLE="Genre by this id is not available.";
+    public static final String ERROR_GENRE_NAME = "Genre name is not correct!";
+    public static final String ERROR_GENRE_ID = "Genre id is not correct!";
+    public static final String ERROR_GENRE_NAME_EXIST = "Genre by this name already existed!";
+    public static final String ERROR_GENRE_NAME_IS_NOT_AVAILABLE = "Genre by this id is not available.";
     public static final String ERROR_GENRE_NOT_DELETED_MSG = "Genre is not deleted";
 
     /* Author WORN */
     public static final String WORN_AUTHOR_FULL_NAME = "author_full_name_error";
+    public static final String WORN_AUTHOR_ID = "author_id_error";
 
     /* Author WORN */
-    public static final String ERROR_AUTHOR_FULL_NAME= "Author full name is empty!";
+    public static final String ERROR_AUTHOR_FULL_NAME = "Author full name is empty!";
+    public static final String ERROR_AUTHOR_ID = "Author id name is empty!";
     public static final String ERROR_AUTHOR_NOT_DELETED_MSG = "Author is not deleted";
-    public static final String ERROR_AUTHOR_FIO_EXIST="Author by this name already existed!";
-    public static final String ERROR_AUTHOR_NAME_IS_NOT_AVAILABLE="Author by this id is not available.";
+    public static final String ERROR_AUTHOR_FIO_EXIST = "Author by this name already existed!";
+    public static final String ERROR_AUTHOR_NAME_IS_NOT_AVAILABLE = "Author by this id is not available.";
 
     /* Book WARN */
     public static final String WARN_BOOK_NAME = "book_name_error";
@@ -64,5 +66,14 @@ public final class ValidationParameterName {
     public static final String ERROR_BOOK_IS_NOT_DELETED = "Book is not deleted!";
     public static final String ERROR_BOOK_IS_AVAILABLE_BY_ISBN = "Book is already exists by this isbn!";
     public static final String ERROR_BOOK_IS_AVAILABLE_BY_NAME = "Book is already exists by this name!";
+
+    /* Attachment WARN */
+    public static final String WARN_ATTACHMENT = "attachment_error";
+    public static final String WARN_ATTACHMENT_CONTENT_TYPE = "attachment_content_type";
+
+    /* Attachment ERROR */
+    public static final String ERROR_ATTACHMENT = "Attachment is empty!";
+    public static final String ERROR_ATTACHMENT_CONTENT_TYPE = "Attachment type is not correct! Please choose only images.";
+
 
 }
