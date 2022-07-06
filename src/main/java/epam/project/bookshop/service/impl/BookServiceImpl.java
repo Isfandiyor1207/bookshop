@@ -65,24 +65,10 @@ public class BookServiceImpl implements BookService {
 
         if (baseValidation.isEmpty(update.get(BOOK_NAME))) {
             try {
-                Optional<Book> optionalUser = bookDao.findByName(update.get(USERNAME));
+                Optional<Book> optionalUser = bookDao.findByName(update.get(BOOK_NAME));
                 if (optionalUser.isPresent()) {
                     update.put(WARN_BOOK_IS_AVAILABLE_BY_NAME, ERROR_BOOK_IS_AVAILABLE_BY_NAME);
                     logger.info(WARN_BOOK_IS_AVAILABLE_BY_NAME + ": " + ERROR_BOOK_IS_AVAILABLE_BY_NAME);
-                    return false;
-                }
-            } catch (DaoException e) {
-                logger.error(e);
-                throw new ServiceException(e);
-            }
-        }
-
-        if (baseValidation.isEmpty(update.get(BOOK_ISBN))) {
-            try {
-                Optional<Book> optionalUser = bookDao.findByISBN(update.get(BOOK_ISBN));
-                if (optionalUser.isPresent()) {
-                    update.put(WARN_BOOK_IS_AVAILABLE_BY_ISBN, ERROR_BOOK_IS_AVAILABLE_BY_ISBN);
-                    logger.info(WARN_BOOK_IS_AVAILABLE_BY_ISBN + ": " + ERROR_BOOK_IS_AVAILABLE_BY_ISBN);
                     return false;
                 }
             } catch (DaoException e) {
