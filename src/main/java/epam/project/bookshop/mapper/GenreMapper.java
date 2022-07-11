@@ -1,5 +1,6 @@
 package epam.project.bookshop.mapper;
 
+import epam.project.bookshop.dto.GenreDto;
 import epam.project.bookshop.entity.Genre;
 import epam.project.bookshop.exception.DaoException;
 
@@ -22,6 +23,17 @@ public class GenreMapper implements BaseMapper<Genre> {
     @Override
     public Genre resultSetToEntity(ResultSet resultSet) throws DaoException {
         Genre genre = new Genre();
+        try {
+            genre.setId(resultSet.getLong(ID));
+            genre.setName(resultSet.getString(GENRE_NAME));
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return genre;
+    }
+
+    public GenreDto resultSetToGenreDto(ResultSet resultSet) throws DaoException {
+        GenreDto genre = new GenreDto();
         try {
             genre.setId(resultSet.getLong(ID));
             genre.setName(resultSet.getString(GENRE_NAME));

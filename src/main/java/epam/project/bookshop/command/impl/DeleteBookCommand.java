@@ -22,7 +22,7 @@ public class DeleteBookCommand implements Command {
         String id = request.getParameter(DELETE_ID);
         BookService bookService = BookServiceImpl.getInstance();
 
-        logger.info("genre id: " + id);
+        logger.info("book id: " + id);
 
         try {
             if (!bookService.deleteById(Long.valueOf(id))) {

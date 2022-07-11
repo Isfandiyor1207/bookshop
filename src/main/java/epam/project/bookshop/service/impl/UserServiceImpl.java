@@ -1,6 +1,7 @@
 package epam.project.bookshop.service.impl;
 
 import epam.project.bookshop.dao.impl.UserDaoImpl;
+import epam.project.bookshop.dto.UserDto;
 import epam.project.bookshop.entity.User;
 import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.exception.ServiceException;
@@ -10,13 +11,16 @@ import epam.project.bookshop.validation.UserValidation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.*;
 
 public class UserServiceImpl implements UserService {
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     private static final BaseValidation baseValidation = BaseValidation.getInstance();
     private static final UserServiceImpl instance = new UserServiceImpl();
     private final UserDaoImpl userDao = UserDaoImpl.getInstance();
@@ -31,7 +35,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean authenticate(Map<String, String> userLogin) throws ServiceException {
-        Optional<User> dao;
 
         String username = userLogin.get(USERNAME);
         String password = userLogin.get(PASSWORD);
@@ -45,9 +48,11 @@ public class UserServiceImpl implements UserService {
         try {
             boolean isAuthenticated = true;
 
-            dao = userDao.findByUsername(username);
+            Optional<UserDto> dao = userDao.findByUsername(username);
             if (dao.isPresent()) {
-                User user = dao.get();
+
+                System.out.println(dao.get());
+                UserDto user = dao.get();
 
                 if (!user.getPassword().equals(password)) {
                     userLogin.put(WORN_LOGIN, ERROR_LOGIN_MSG);
@@ -57,6 +62,7 @@ public class UserServiceImpl implements UserService {
                 return isAuthenticated;
             } else {
                 userLogin.put(WORN_USER, ERROR_USER_NOT_EXIST_MSG);
+                System.out.println("service false");
                 return false;
             }
         } catch (DaoException e) {
@@ -83,7 +89,7 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            Optional<User> optionalUser = userDao.findByUsername(userData.get(USERNAME));
+            Optional<UserDto> optionalUser = userDao.findByUsername(userData.get(USERNAME));
             if (optionalUser.isPresent()) {
                 logger.info(optionalUser.get().getUsername() + " is available in database");
                 userData.put(WORN_USERNAME, ERROR_USERNAME_MSG);
@@ -103,7 +109,7 @@ public class UserServiceImpl implements UserService {
         user.setPhoneNumber(userData.get(PHONE_NUMBER));
 
         try {
-            return userDao.save(user);
+            return userDao.save(user) != null;
         } catch (DaoException e) {
             logger.error("User is not added to database.");
             throw new ServiceException(e);
@@ -122,39 +128,73 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean update(Map<String, String> update) throws ServiceException {
 
-        Map<String, String> query=new HashMap<>();
+        Map<String, String> query = new HashMap<>();
 
         boolean isValid = userValidation.checkUpdateUser(update, query);
 
-        if (!isValid){
+        if (!isValid) {
             logger.info("user update values is not valid:");
+            update.put(WORN_USER_UPDATE, ERROR_USER_UPDATE);
             return false;
         }
 
-        if (baseValidation.isEmpty(update.get(USERNAME))){
+        boolean repeatedValidation=true;
+
+        if (!baseValidation.isEmpty(update.get(USERNAME))) {
             try {
-                Optional<User> optionalUser = userDao.findByUsername(update.get(USERNAME));
-                if (optionalUser.isPresent()){
+                Optional<UserDto> optionalUser = userDao.findByUsername(update.get(USERNAME));
+                if (optionalUser.isPresent()) {
                     update.put(WORN_USERNAME, ERROR_USERNAME_MSG);
                     logger.info(WORN_USERNAME + ERROR_USERNAME_MSG);
-                    return false;
+                    repeatedValidation = false;
                 }
             } catch (DaoException e) {
                 logger.error(e);
                 throw new ServiceException(e);
             }
-
         }
 
-        StringBuilder stringBuilder=new StringBuilder();
+        if (!baseValidation.isEmpty(update.get(EMAIL))) {
+            try {
+                Optional<UserDto> optionalUser = userDao.findUserByEmail(update.get(EMAIL));
+                if (optionalUser.isPresent()) {
+                    update.put(WORN_EMAIL, ERROR_EMAIL_ALREADY_EXIST);
+                    logger.info(WORN_EMAIL + ERROR_EMAIL_ALREADY_EXIST);
+                    repeatedValidation = false;
+                }
+            } catch (DaoException e) {
+                logger.error(e);
+                throw new ServiceException(e);
+            }
+        }
+
+
+        if (!baseValidation.isEmpty(update.get(PHONE_NUMBER))){
+            try {
+                Optional<UserDto> optionalUser = userDao.findUserByPhoneNumber(update.get(PHONE_NUMBER));
+                if (optionalUser.isPresent()) {
+                    update.put(WORN_PHONE_NUMBER, ERROR_PHONE_NUMBER_ALREADY_EXIST);
+                    logger.info(WORN_PHONE_NUMBER + ERROR_PHONE_NUMBER_ALREADY_EXIST);
+                    repeatedValidation = false;
+                }
+            } catch (DaoException e) {
+                logger.error(e);
+                throw new ServiceException(e);
+            }
+        }
+
+        if (!repeatedValidation){
+            return repeatedValidation;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
 
         query.forEach((key, value) -> stringBuilder.append(key)
                 .append("='")
                 .append(value)
                 .append("', "));
 
-        String queryString=stringBuilder.toString();
-        queryString = queryString.substring(0, stringBuilder.length()-2);
+        String queryString = stringBuilder.toString();
 
         try {
             return userDao.updated(queryString, Long.valueOf(update.get(ID)));
@@ -165,7 +205,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() throws ServiceException {
+    public List<UserDto> findAll() throws ServiceException {
         try {
             return userDao.findAll();
         } catch (DaoException e) {
@@ -174,8 +214,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(Long id) throws ServiceException {
-        return Optional.empty();
+    public Optional<UserDto> findById(Long id) throws ServiceException {
+
+        try {
+            return userDao.findById(id);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
     }
 
 

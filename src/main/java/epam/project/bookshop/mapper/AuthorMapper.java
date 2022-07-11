@@ -1,5 +1,6 @@
 package epam.project.bookshop.mapper;
 
+import epam.project.bookshop.dto.AuthorDto;
 import epam.project.bookshop.entity.Author;
 import epam.project.bookshop.entity.Genre;
 import epam.project.bookshop.exception.DaoException;
@@ -23,14 +24,26 @@ public class AuthorMapper implements BaseMapper<Author>{
 
     @Override
     public Author resultSetToEntity(ResultSet resultSet) throws DaoException {
-        Author author = new Author();
         try {
+            Author author = new Author();
             author.setId(resultSet.getLong(ID));
             author.setFio(resultSet.getString(AUTHOR_FIO));
+            return author;
         } catch (SQLException e) {
             logger.info(e);
             throw new DaoException(e);
         }
-        return author;
+    }
+
+    public AuthorDto resultSetToDto(ResultSet resultSet) throws DaoException{
+        try {
+            AuthorDto authorDto=new AuthorDto();
+            authorDto.setId(resultSet.getLong(ID));
+            authorDto.setFio(resultSet.getString(AUTHOR_FIO));
+            return authorDto;
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
     }
 }

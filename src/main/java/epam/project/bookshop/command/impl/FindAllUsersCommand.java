@@ -3,6 +3,7 @@ package epam.project.bookshop.command.impl;
 import epam.project.bookshop.command.Command;
 import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.command.WebPageName;
+import epam.project.bookshop.dto.UserDto;
 import epam.project.bookshop.entity.User;
 import epam.project.bookshop.exception.CommandException;
 import epam.project.bookshop.exception.ServiceException;
@@ -19,7 +20,7 @@ public class FindAllUsersCommand implements Command {
         UserService userService = UserServiceImpl.getInstance();
 
         try {
-            List<User> userList = userService.findAll();
+            List<UserDto> userList = userService.findAll();
             request.setAttribute(ParameterName.USER_LIST, userList);
         } catch (ServiceException e) {
             throw new CommandException(e);

@@ -107,21 +107,10 @@
                     <i class="material-icons">extension</i><span><fmt:message key="label.users"/></span>
                 </a>
             </li>
-
             <li class="dropdown">
-                <a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="material-icons">content_copy</i><span><fmt:message key="label.pages"/></span></a>
-                <ul class="collapse list-unstyled menu" id="pageSubmenu7">
-                    <li>
-                        <a href="#">Page 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 2</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 3</a>
-                    </li>
-                </ul>
+                <a href="${pageContext.request.contextPath}/index.jsp">
+                    <i class="material-icons">extension</i><fmt:message key="label.main.page"/>
+                </a>
             </li>
         </ul>
 
@@ -225,24 +214,22 @@
                     <tr>
                         <td style="text-transform: capitalize"><c:out value="${item.id}"/></td>
                         <td style="text-transform: capitalize"><c:out value="${item.name}"/></td>
+                        <td style="text-transform: none">
+                            <form>
+                                <input type="hidden" name="command" value="find_genre_by_id">
+                                <button class="btn btn-outline-warning" name="genre_id" value="${item.id}">
+                                        <fmt:message key="label.update_btn"/>
+                                </button>
+                            </form>
+                        </td>
                         <td>
                             <form action="${pageContext.request.contextPath}/controller">
                                 <input type="hidden" name="command" value="delete_genre">
-                                    <%--                                <label type="submit"><i class="bi bi-trash"></i></label>--%>
                                 <button type="submit" name="delete_by_id" class="btn btn-outline-danger"
                                         value="${item.id}"><fmt:message key="label.delete_btn"/></button>
                             </form>
                         </td>
-                        <td style="text-transform: none">
-                            <form>
-                                    <%--                                <input type="hidden" name="command" value="update_user">--%>
-                                <button class="btn btn-outline-warning">
-                                    <a href="${pageContext.request.contextPath}/pages/admin/genre_update.jsp">
-                                        <fmt:message key="label.update_btn"/>
-                                    </a>
-                                </button>
-                            </form>
-                        </td>
+
                     </tr>
                 </c:forEach>
                 </tbody>

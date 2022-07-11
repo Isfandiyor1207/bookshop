@@ -1,5 +1,7 @@
 package epam.project.bookshop.validation;
 
+import javax.swing.plaf.PanelUI;
+
 public final class ValidationParameterName {
 
     /* User WORN */
@@ -11,6 +13,7 @@ public final class ValidationParameterName {
     public static final String WORN_DELETED = "deleted_error";
     public static final String WORN_LOGIN = "login_error";
     public static final String WORN_USER = "user_error";
+    public static final String WORN_USER_UPDATE = "user_update_error";
 
     /* User ERROR */
     public static final String ERROR_EMAIL_MSG = "Email is incorrect!";
@@ -20,11 +23,15 @@ public final class ValidationParameterName {
     public static final String ERROR_USERNAME_MSG = "User by this username already exists!";
     public static final String ERROR_USER_NOT_DELETED_MSG = "User is not deleted";
     public static final String ERROR_USER_NOT_EXIST_MSG = "User is not exist.";
+    public static final String ERROR_EMAIL_ALREADY_EXIST = "User by this email already exist";
+    public static final String ERROR_PHONE_NUMBER_ALREADY_EXIST = "User by this phone number already exist";
     public static final String ERROR_LOGIN_MSG = "Password is incorrect!";
+    public static final String ERROR_USER_UPDATE = "Please enter some fields to update!";
 
     /* GENRE WORN */
     public static final String WORN_GENRE_NAME = "genre_name_error";
     public static final String WARN_GENRE_ID = "genre_id_error";
+    public static final String WARN_GENRE_UPDATE = "genre_update_error";
 
     /* GENRE ERROR */
     public static final String ERROR_GENRE_NAME = "Genre name is not correct!";
@@ -32,10 +39,12 @@ public final class ValidationParameterName {
     public static final String ERROR_GENRE_NAME_EXIST = "Genre by this name already existed!";
     public static final String ERROR_GENRE_NAME_IS_NOT_AVAILABLE = "Genre by this id is not available.";
     public static final String ERROR_GENRE_NOT_DELETED_MSG = "Genre is not deleted";
+    public static final String ERROR_GENRE_IS_NOT_FOUND = "Genre is not found by this id!";
 
     /* Author WORN */
     public static final String WORN_AUTHOR_FULL_NAME = "author_full_name_error";
     public static final String WORN_AUTHOR_ID = "author_id_error";
+    public static final String WORN_AUTHOR_UPDATE = "author_update_error";
 
     /* Author WORN */
     public static final String ERROR_AUTHOR_FULL_NAME = "Author full name is empty!";
@@ -43,6 +52,7 @@ public final class ValidationParameterName {
     public static final String ERROR_AUTHOR_NOT_DELETED_MSG = "Author is not deleted";
     public static final String ERROR_AUTHOR_FIO_EXIST = "Author by this name already existed!";
     public static final String ERROR_AUTHOR_NAME_IS_NOT_AVAILABLE = "Author by this id is not available.";
+    public static final String ERROR_AUTHOR_IS_NOT_FOUND = "Author is not found.";
 
     /* Book WARN */
     public static final String WARN_BOOK_NAME = "book_name_error";
@@ -54,6 +64,9 @@ public final class ValidationParameterName {
     public static final String WARN_BOOK_IS_NOT_ADDED = "book_added_error";
     public static final String WARN_BOOK_IS_AVAILABLE_BY_ISBN = "book_isbn_exists_error";
     public static final String WARN_BOOK_IS_AVAILABLE_BY_NAME = "book_name_exists_error";
+    public static final String WARN_BOOK_UPDATE = "book_update_error";
+    public static final String WARN_BOOK_DESCRIPTION = "book_description_error";
+    public static final String WARN_BOOK_IS_NOT_AVAILABLE = "book_is_not_available_error";
 
     /* Book ERROR */
     public static final String ERROR_BOOK_NAME = "Book name is empty!";
@@ -62,10 +75,13 @@ public final class ValidationParameterName {
     public static final String ERROR_BOOK_PUBLISHING_YEAR = "Book publishing year is empty!";
     public static final String ERROR_BOOK_PRICE = "Book price is empty!";
     public static final String ERROR_BOOK_TOTAL = "Book total is empty!";
+    public static final String ERROR_BOOK_DESCRIPTION = "Book description is empty!";
     public static final String ERROR_BOOK_IS_NOT_ADDED = "Book is not added!";
     public static final String ERROR_BOOK_IS_NOT_DELETED = "Book is not deleted!";
     public static final String ERROR_BOOK_IS_AVAILABLE_BY_ISBN = "Book is already exists by this isbn!";
     public static final String ERROR_BOOK_IS_AVAILABLE_BY_NAME = "Book is already exists by this name!";
+    public static final String ERROR_BOOK_UPDATE = "Please enter update some fields of book!";
+    public static final String ERROR_BOOK_IS_NOT_AVAILABLE = "Book is not available!";
 
     /* Attachment WARN */
     public static final String WARN_ATTACHMENT = "attachment_error";

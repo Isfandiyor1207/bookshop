@@ -108,20 +108,9 @@
                 </a>
             </li>
             <li class="dropdown">
-                <a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="material-icons">content_copy</i><span><fmt:message key="label.pages"/></span>
+                <a href="${pageContext.request.contextPath}/index.jsp">
+                    <i class="material-icons">extension</i><fmt:message key="label.main.page"/>
                 </a>
-                <ul class="collapse list-unstyled menu" id="pageSubmenu7">
-                    <li>
-                        <a href="#">Page 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 2</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 3</a>
-                    </li>
-                </ul>
             </li>
         </ul>
 
@@ -220,12 +209,19 @@
                 <c:forEach items="${user_list}" var="item">
                     <tr>
                         <td><c:out value="${item.id}"/></td>
-                        <td><c:out value="${item.firstName}"/></td>
-                        <td><c:out value="${item.lastName}"/></td>
+                        <td><c:out value="${item.firstname}"/></td>
+                        <td><c:out value="${item.lastname}"/></td>
                         <td><c:out value="${item.username}"/></td>
                         <td><c:out value="${item.email}"/></td>
                         <td><c:out value="${item.phoneNumber}"/></td>
                         <td><c:out value="${item.roleId}"/></td>
+                        <td style="text-transform: none">
+                            <form>
+                                <input type="hidden" name="command" value="find_user_by_id">
+                                <button class="btn btn-outline-warning" name="user_id" value="${item.id}">
+                                    <fmt:message key="label.update_btn"/></button>
+                            </form>
+                        </td>
                         <td>
                             <form action="${pageContext.request.contextPath}/controller">
                                 <input type="hidden" name="command" value="delete_user">
@@ -234,13 +230,7 @@
                                         value="${item.id}"><fmt:message key="label.delete_btn"/></button>
                             </form>
                         </td>
-                        <td style="text-transform: none">
-                            <form>
-                                <button class="btn btn-outline-warning" name="id" value="${item.id}">
-                                    <a href="${pageContext.request.contextPath}/pages/user_update.jsp"><fmt:message
-                                        key="label.update_btn"/></a></button>
-                            </form>
-                        </td>
+
                     </tr>
                 </c:forEach>
                 </tbody>

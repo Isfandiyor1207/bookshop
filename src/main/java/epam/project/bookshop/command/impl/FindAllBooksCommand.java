@@ -3,6 +3,7 @@ package epam.project.bookshop.command.impl;
 import epam.project.bookshop.command.Command;
 import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.command.WebPageName;
+import epam.project.bookshop.dto.BookDto;
 import epam.project.bookshop.entity.Book;
 import epam.project.bookshop.exception.CommandException;
 import epam.project.bookshop.exception.ServiceException;
@@ -20,11 +21,11 @@ public class FindAllBooksCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-        BookService bookService = BookServiceImpl.getInstance();
+        BookServiceImpl bookService = BookServiceImpl.getInstance();
 
         try {
-            List<Book> bookList = bookService.findAll();
-            logger.info(bookList);
+            List<BookDto> bookList = bookService.findAll();
+
             request.setAttribute(ParameterName.BOOK_LIST, bookList);
         } catch (ServiceException e) {
             logger.error(e);

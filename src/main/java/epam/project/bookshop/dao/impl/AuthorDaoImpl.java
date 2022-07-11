@@ -1,6 +1,7 @@
 package epam.project.bookshop.dao.impl;
 
 import epam.project.bookshop.dao.AuthorDao;
+import epam.project.bookshop.dto.AuthorDto;
 import epam.project.bookshop.entity.Author;
 import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.mapper.AuthorMapper;
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static epam.project.bookshop.command.ParameterName.AUTHOR_ID;
+import static epam.project.bookshop.command.ParameterName.ID;
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthorDaoImpl implements AuthorDao {
 
@@ -25,10 +29,12 @@ public class AuthorDaoImpl implements AuthorDao {
 
     private static final String SELECT_BY_AUTHOR_NAME = "SELECT id, fio FROM author WHERE fio = ? AND deleted = false";
     private static final String SELECT_BY_ID = "SELECT id, fio FROM author WHERE  id = ? AND deleted = false";
+    private static final String SELECT_LIST_OF_AUTHOR_BY_BOOK_ID = "SELECT author_id FROM author_book_list WHERE  book_id = ?";
     private static final String SELECT_ALL = "SELECT id, fio FROM author WHERE deleted = false order by id";
     private static final String DELETE_AUTHOR_BY_ID = "UPDATE author SET deleted = true WHERE id =? AND deleted = false";
+    private static final String DELETE_LIST_OF_BOOK_AUTHOR = "DELETE FROM author_book_list WHERE book_id =?";
     private static final String UPDATE_AUTHOR_BY_ID = "UPDATE author SET fio = ?, updated_time = now() WHERE id = ? AND deleted = false";
-    private static final String INSERT_AUTHOR = "INSERT INTO author(fio) VALUES (?)";
+    private static final String INSERT_AUTHOR = "INSERT INTO author(fio) VALUES (?) RETURNING id";
     private static final String ATTACH_BOOK_AUTHOR = "INSERT INTO author_book_list(author_id, book_id) VALUES (?, ?)";
     private static AuthorDaoImpl instance;
 
@@ -41,14 +47,20 @@ public class AuthorDaoImpl implements AuthorDao {
 
 
     @Override
-    public boolean save(Author author) throws DaoException {
+    public Long save(Author author) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_AUTHOR)) {
 
-            statement.setString(1, author.getFio().toLowerCase());
-            int numberOfRow = statement.executeUpdate();
+            statement.setString(1, author.getFio().trim().toLowerCase());
+            ResultSet resultSet = statement.executeQuery();
 
-            return numberOfRow > 0;
+            Long id = null;
+
+            while (resultSet.next()) {
+                id = resultSet.getLong(ID);
+            }
+
+            return id;
         } catch (SQLException e) {
             logger.error(e);
             throw new DaoException(e);
@@ -89,20 +101,20 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public Optional<Author> findById(Long id) throws DaoException {
+    public Optional<AuthorDto> findById(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
 
             statement.setLong(1, id);
 
             ResultSet resultSet = statement.executeQuery();
-            Author author = new Author();
+            AuthorDto authorDto = new AuthorDto();
             while (resultSet.next()) {
-                author = AuthorMapper.getInstance().resultSetToEntity(resultSet);
+                authorDto = AuthorMapper.getInstance().resultSetToDto(resultSet);
             }
 
-            if (author.getFio() != null) {
-                return Optional.of(author);
+            if (authorDto.getFio() != null) {
+                return Optional.of(authorDto);
             } else return Optional.empty();
 
         } catch (SQLException e) {
@@ -112,15 +124,15 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public List<Author> findAll() throws DaoException {
-        List<Author> authorList = new ArrayList<>();
+    public List<AuthorDto> findAll() throws DaoException {
+        List<AuthorDto> authorList = new ArrayList<>();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
 
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                authorList.add(AuthorMapper.getInstance().resultSetToEntity(resultSet));
+                authorList.add(AuthorMapper.getInstance().resultSetToDto(resultSet));
             }
 
         } catch (SQLException e) {
@@ -131,7 +143,7 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public Optional<Author> findByFio(String fio) throws DaoException {
+    public Optional<AuthorDto> findByFio(String fio) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_AUTHOR_NAME)) {
 
@@ -139,14 +151,14 @@ public class AuthorDaoImpl implements AuthorDao {
 
             ResultSet resultSet = statement.executeQuery();
 
-            Author author=new Author();
+            AuthorDto authorDto = new AuthorDto();
 
-            while (resultSet.next()){
-                author = AuthorMapper.getInstance().resultSetToEntity(resultSet);
+            while (resultSet.next()) {
+                authorDto = AuthorMapper.getInstance().resultSetToDto(resultSet);
             }
 
-            if (author.getFio() != null) {
-                return Optional.of(author);
+            if (authorDto.getFio() != null) {
+                return Optional.of(authorDto);
             } else return Optional.empty();
 
         } catch (SQLException e) {
@@ -156,7 +168,7 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public boolean attachBookToAuthor(Long bookId, Long authorId) throws DaoException {
+    public void attachBookToAuthor(Long bookId, Long authorId) throws DaoException {
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(ATTACH_BOOK_AUTHOR)) {
@@ -164,8 +176,71 @@ public class AuthorDaoImpl implements AuthorDao {
             statement.setLong(1, authorId);
             statement.setLong(2, bookId);
 
-            return statement.executeUpdate() > 0;
+            statement.execute();
+
         } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<AuthorDto> findAllAuthorByBookId(Long bookId) throws DaoException {
+
+        List<AuthorDto> authorDtoList = new ArrayList<>();
+        List<Long> listOfAuthorId = findListOfAuthorIdByBookId(bookId);
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
+
+            for (Long authorId : listOfAuthorId) {
+                statement.setLong(1, authorId);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    authorDtoList.add(AuthorMapper.getInstance().resultSetToDto(resultSet));
+                }
+            }
+            return authorDtoList;
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+
+    }
+
+    @Override
+    public List<Long> findListOfAuthorIdByBookId(Long bookId) throws DaoException {
+
+        List<Long> listOfAuthorId = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_LIST_OF_AUTHOR_BY_BOOK_ID)) {
+
+            statement.setLong(1, bookId);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                listOfAuthorId.add(resultSet.getLong(AUTHOR_ID));
+            }
+
+            return listOfAuthorId;
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void deleteAttachedAuthor(Long bookId, Long authorId) throws DaoException {
+        try (Connection connection=ConnectionPool.getInstance().getConnection();
+        PreparedStatement statement=connection.prepareStatement(DELETE_LIST_OF_BOOK_AUTHOR)){
+
+            statement.setLong(1, bookId);
+
+            statement.execute();
+
+        } catch (SQLException e){
             logger.error(e);
             throw new DaoException(e);
         }

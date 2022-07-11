@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import static epam.project.bookshop.validation.ValidationParameterName.*;
 
 public class DeleteUserCommand implements Command {
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {

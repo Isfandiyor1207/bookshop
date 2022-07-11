@@ -1,13 +1,21 @@
 package epam.project.bookshop.dao;
 
+import epam.project.bookshop.dto.GenericDto;
+import epam.project.bookshop.dto.GenreDto;
+import epam.project.bookshop.entity.BaseDomain;
 import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.exception.ServiceException;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface BaseDao<T> {
-    boolean save(T t) throws DaoException;
+/*
+* T - Dto
+* E - Entity
+* */
+
+public interface BaseDao<T extends GenericDto, E extends BaseDomain> {
+    Long save(E e) throws DaoException;
 
     boolean updated(String query, Long id) throws DaoException;
 

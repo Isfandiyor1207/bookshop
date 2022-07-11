@@ -2,8 +2,8 @@ package epam.project.bookshop.service.impl;
 
 import epam.project.bookshop.dao.AttachmentDao;
 import epam.project.bookshop.dao.impl.AttachmentDaoImpl;
+import epam.project.bookshop.dto.AttachmentDto;
 import epam.project.bookshop.entity.Attachment;
-import epam.project.bookshop.entity.Genre;
 import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.exception.ServiceException;
 import epam.project.bookshop.service.AttachmentService;
@@ -37,17 +37,38 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
+    public void deleteByBookId(Long bookId) throws ServiceException {
+
+        try {
+
+            logger.info("Book id: " + bookId);
+
+            List<Long> allByBookId = attachmentDao.findAllAttachmentIdByBookId(bookId);
+
+            logger.info("Attachment book: " + allByBookId);
+
+            for (Long attachmentId : allByBookId) {
+                attachmentDao.deleteById(attachmentId);
+            }
+
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public boolean update(Map<String, String> update) throws ServiceException {
         return false;
     }
 
     @Override
-    public List<Attachment> findAll() throws ServiceException {
+    public List<AttachmentDto> findAll() throws ServiceException {
         return null;
     }
 
     @Override
-    public Optional<Attachment> findById(Long id) throws ServiceException {
+    public Optional<AttachmentDto> findById(Long id) throws ServiceException {
         return Optional.empty();
     }
 
@@ -56,24 +77,17 @@ public class AttachmentServiceImpl implements AttachmentService {
         return false;
     }
 
-    public void addFile(Part part) throws ServiceException {
+    public Long addFile(Part part) throws ServiceException {
 
         try (InputStream inputStream = part.getInputStream()) {
             String submittedFileName = part.getSubmittedFileName();
 
             Attachment attachment = new Attachment();
             attachment.setContentType(part.getContentType());
-            attachment.setAbsoluteName(submittedFileName.substring(0, submittedFileName.lastIndexOf(".")));
+            attachment.setAbsoluteName(part.getSubmittedFileName());
             attachment.setExtension(submittedFileName.substring(submittedFileName.lastIndexOf(".")));
             attachment.setFileSize(part.getSize());
-            attachment.setUploadPath(UPLOAD_DIRECTORY);
-
-            try {
-                attachmentDao.save(attachment);
-            } catch (DaoException e) {
-                logger.error(e);
-                throw new ServiceException(e);
-            }
+            attachment.setUploadPath(UPLOAD_DIRECTORY.substring(UPLOAD_DIRECTORY.indexOf("/pages")));
 
             Path imagePath = new File(UPLOAD_DIRECTORY + submittedFileName).toPath();
 
@@ -82,11 +96,36 @@ public class AttachmentServiceImpl implements AttachmentService {
                     imagePath,
                     StandardCopyOption.REPLACE_EXISTING
             );
-        } catch (IOException e) {
+
+
+            return attachmentDao.save(attachment);
+        } catch (IOException | DaoException e) {
             logger.error(e);
             throw new ServiceException(e);
         }
 
+    }
+
+    public void attachFileToBook(Long bookId, Long attachmentId, boolean isToUpdate) throws ServiceException {
+        try {
+            if (isToUpdate) {
+                attachmentDao.deleteAttachedFile(bookId, attachmentId);
+            }
+            attachmentDao.attachFileToBook(bookId, attachmentId);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<AttachmentDto> findAllByBookId(Long bookId) throws ServiceException {
+        try {
+            return attachmentDao.findAllByBookId(bookId);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
     }
 
 }

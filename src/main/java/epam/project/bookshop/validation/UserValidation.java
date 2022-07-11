@@ -1,5 +1,6 @@
 package epam.project.bookshop.validation;
 
+import com.oracle.wls.shaded.org.apache.bcel.generic.IF_ACMPEQ;
 import epam.project.bookshop.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,56 +56,54 @@ public class UserValidation {
     }
 
     public boolean checkUpdateUser(Map<String, String> user, Map<String, String> query) {
-        boolean isValid = true;
-        logger.info("user update validation:" + user.toString());
-
-        logger.info(user.get(FIRSTNAME));
-        logger.info(user.get(LASTNAME));
-        logger.info(user.get(USERNAME));
+        boolean isValid = false;
 
         if (!baseValidation.isEmpty(user.get(FIRSTNAME).trim())) {
             logger.info("User firstname is written to update: " + user.get(FIRSTNAME));
             query.put(FIRSTNAME, user.get(FIRSTNAME));
+            isValid = true;
         }
 
         if (!baseValidation.isEmpty(user.get(LASTNAME).trim())) {
             logger.info("User lastname is written to update: " + user.get(LASTNAME));
             query.put(LASTNAME, user.get(LASTNAME));
+            isValid = true;
         }
 
         if (!baseValidation.isEmpty(user.get(USERNAME).trim())) {
             logger.info("User username is written to update: " + user.get(USERNAME));
             query.put(USERNAME, user.get(USERNAME));
+            isValid = true;
         }
 
-        // todo check to regex if the information is not valid to regex warn error should be written to console
-
-        if (checkPasswordToValidation(user.get(PASSWORD).trim())) {
-            logger.info("User password is written to update: " + user.get(PASSWORD));
-            query.put(PASSWORD, user.get(PASSWORD));
-        } else {
-            logger.info("User password is not valid: " + user.get(PASSWORD));
-            user.put(WORN_PASSWORD, ERROR_PASSWORD_MSG);
-            isValid = false;
+        if (!baseValidation.isEmpty(user.get(PASSWORD).trim())){
+            if (checkPasswordToValidation(user.get(PASSWORD).trim())) {
+                logger.info("User password is written to update: " + user.get(PASSWORD));
+                query.put(PASSWORD, user.get(PASSWORD));
+                isValid = true;
+            }else {
+                user.put(WORN_PASSWORD, ERROR_PASSWORD_MSG);
+            }
         }
 
-        if (checkEmailValidation(user.get(EMAIL).trim())) {
-            logger.info("User email is written to update: " + user.get(EMAIL));
-            query.put(EMAIL, user.get(EMAIL));
-        } else {
-            logger.info("User email is not valid: " + user.get(EMAIL));
-            user.put(WORN_EMAIL, ERROR_EMAIL_MSG);
-            isValid = false;
+        if (!baseValidation.isEmpty(user.get(EMAIL).trim())){
+            if (checkEmailValidation(user.get(EMAIL).trim())) {
+                logger.info("User email is written to update: " + user.get(EMAIL));
+                query.put(EMAIL, user.get(EMAIL));
+                isValid = true;
+            } else {
+                user.put(WORN_EMAIL, ERROR_EMAIL_MSG);
+            }
         }
 
-
-        if (checkPhoneNumberToValidation(user.get(PHONE_NUMBER).trim())) {
-            logger.info("user phone number is written to update:  " + user.get(PHONE_NUMBER));
-            query.put(USER_PHONE_NUMBER_IN_DB, user.get(PHONE_NUMBER));
-        } else {
-            logger.info("user phone number is not valid:" + user.get(PHONE_NUMBER));
-            user.put(WORN_PHONE_NUMBER, ERROR_PHONE_NUMBER_MSG);
-            isValid = false;
+        if (!baseValidation.isEmpty(user.get(PHONE_NUMBER).trim())){
+            if (checkPhoneNumberToValidation(user.get(PHONE_NUMBER).trim())) {
+                logger.info("user phone number is written to update:  " + user.get(PHONE_NUMBER));
+                query.put(USER_PHONE_NUMBER_IN_DB, user.get(PHONE_NUMBER));
+                isValid = true;
+            } else {
+                user.put(WORN_PHONE_NUMBER, ERROR_PHONE_NUMBER_MSG);
+            }
         }
 
         return isValid;

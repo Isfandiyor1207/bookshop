@@ -2,6 +2,7 @@ package epam.project.bookshop.service.impl;
 
 import epam.project.bookshop.dao.AuthorDao;
 import epam.project.bookshop.dao.impl.AuthorDaoImpl;
+import epam.project.bookshop.dto.AuthorDto;
 import epam.project.bookshop.entity.Author;
 import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.exception.ServiceException;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.AUTHOR_FIO;
+import static epam.project.bookshop.command.ParameterName.ID;
 import static epam.project.bookshop.validation.ValidationParameterName.*;
 
 public class AuthorServiceImpl implements AuthorService {
@@ -52,7 +54,7 @@ public class AuthorServiceImpl implements AuthorService {
         boolean isUpdated = true;
 
         try {
-            Optional<Author> authorOptional = authorDao.findByFio(authorUpdateMap.get(AUTHOR_FIO));
+            Optional<AuthorDto> authorOptional = authorDao.findByFio(authorUpdateMap.get(AUTHOR_FIO));
 
             if (authorOptional.isPresent()) {
                 authorUpdateMap.put(WORN_AUTHOR_FULL_NAME, ERROR_AUTHOR_FIO_EXIST);
@@ -64,12 +66,11 @@ public class AuthorServiceImpl implements AuthorService {
         }
 
         try {
-            // todo change id
-            Optional<Author> authorOptional = authorDao.findById(2L);
+            Optional<AuthorDto> authorOptional = authorDao.findById(Long.valueOf(authorUpdateMap.get(ID)));
             if (authorOptional.isPresent()) {
-                isUpdated = authorDao.updated(authorUpdateMap.get(AUTHOR_FIO), 2L);
+                isUpdated = authorDao.updated(authorUpdateMap.get(AUTHOR_FIO), Long.valueOf(authorUpdateMap.get(ID)));
             } else {
-                logger.info("Author is not available in database");
+                logger.info("Author is not available");
                 authorUpdateMap.put(WORN_AUTHOR_FULL_NAME, ERROR_AUTHOR_NAME_IS_NOT_AVAILABLE);
             }
         } catch (DaoException e) {
@@ -81,7 +82,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> findAll() throws ServiceException {
+    public List<AuthorDto> findAll() throws ServiceException {
 
         try {
             return authorDao.findAll();
@@ -92,8 +93,13 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> findById(Long id) throws ServiceException {
-        return Optional.empty();
+    public Optional<AuthorDto> findById(Long id) throws ServiceException {
+        try {
+            return authorDao.findById(id);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
     }
 
     @Override
@@ -105,7 +111,7 @@ public class AuthorServiceImpl implements AuthorService {
         }
 
         try {
-            Optional<Author> authorOptional = authorDao.findByFio(authorMap.get(AUTHOR_FIO));
+            Optional<AuthorDto> authorOptional = authorDao.findByFio(authorMap.get(AUTHOR_FIO));
             if (authorOptional.isPresent()) {
                 logger.info("Author by this fio already exists: " + authorOptional.get().getFio());
                 authorMap.put(WORN_AUTHOR_FULL_NAME, ERROR_AUTHOR_FIO_EXIST);
@@ -120,7 +126,7 @@ public class AuthorServiceImpl implements AuthorService {
         author.setFio(authorMap.get(AUTHOR_FIO).toLowerCase());
 
         try {
-            return authorDao.save(author);
+            return authorDao.save(author) != null;
         } catch (DaoException e) {
             logger.error("Author is not added. Error: " + e);
             throw new ServiceException(e);
@@ -128,9 +134,22 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public boolean attachBookToAuthor(Long bookId, Long authorId) throws ServiceException {
+    public void attachBookToAuthor(Long bookId, Long authorId, boolean isToUpdate) throws ServiceException {
         try {
-            return authorDao.attachBookToAuthor(bookId, authorId);
+            if (isToUpdate) {
+                authorDao.deleteAttachedAuthor(bookId, authorId);
+            }
+            authorDao.attachBookToAuthor(bookId, authorId);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<AuthorDto> findAllAuthorByBookId(Long bookId) throws ServiceException {
+        try {
+            return authorDao.findAllAuthorByBookId(bookId);
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e);

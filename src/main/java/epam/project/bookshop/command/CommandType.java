@@ -14,6 +14,7 @@ public enum CommandType {
     DELETE_USER(new DeleteUserCommand()),
     UPDATE_USER(new UpdateUserCommand()),
     READ_USER(new FindAllUsersCommand()),
+    FIND_USER_BY_ID(new FindUserByIdCommand()),
 
     // Book commands,
     ADD_BOOK(new AddBookCommand()),
@@ -21,21 +22,23 @@ public enum CommandType {
     UPDATE_BOOK(new UpdateBookCommand()),
     READ_BOOK(new FindAllBooksCommand()),
     FIND_BOOK_BY_ID(new FindBookByIdCommand()),
+    FIND_ALL_BOOKS_PAGE(new FindAllBooksPageCommand()),
+    FIND_ONE_BOOK_INFORMATION(new FindBookInformationCommand()),
+//    ORDER_BOOK(new OrderBookCommand()),
 
     // Author commands
     ADD_AUTHOR(new AddAuthorCommand()),
     DELETE_AUTHOR(new DeleteAuthorCommand()),
     UPDATE_AUTHOR(new UpdateAuthorCommand()),
     READ_AUTHOR(new FindAllAuthorsCommand()),
+    FIND_AUTHOR_BY_ID(new FindAuthorByIdCommand()),
 
     // Genre commands
     ADD_GENRE(new AddGenreCommand()),
     DELETE_GENRE(new DeleteGenreCommand()),
     UPDATE_GENRE(new UpdateGenreCommand()),
-    READ_GENRE(new FindAllGenresCommand());
-
-    //File commands
-//    FILE_UPLOAD(new FileUploadCommand());
+    READ_GENRE(new FindAllGenresCommand()),
+    FIND_GENRE_BY_ID(new FindGenreByIdCommand());
 
     final Command command;
 

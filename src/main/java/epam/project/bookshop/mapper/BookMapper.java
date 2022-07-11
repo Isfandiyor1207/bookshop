@@ -1,5 +1,6 @@
 package epam.project.bookshop.mapper;
 
+import epam.project.bookshop.dto.BookDto;
 import epam.project.bookshop.entity.Book;
 import epam.project.bookshop.exception.DaoException;
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +34,27 @@ public class BookMapper implements BaseMapper<Book> {
             book.setPublishingYear(resultSet.getInt(BOOK_PUBLISHING_YEAR));
             book.setPrice(resultSet.getLong(BOOK_PRICE));
             book.setNumberOfBooks(resultSet.getLong(BOOK_TOTAL));
+            book.setDescription(resultSet.getString(BOOK_DESCRIPTION));
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+
+        return book;
+    }
+
+    public BookDto resultSetToDto(ResultSet resultSet) throws DaoException {
+        BookDto book = new BookDto();
+
+        try {
+            book.setId(resultSet.getLong(ID));
+            book.setName(resultSet.getString(BOOK_NAME));
+            book.setIsbn(resultSet.getString(BOOK_ISBN));
+            book.setPublisher(resultSet.getString(BOOK_PUBLISHER_NAME));
+            book.setPublishingYear(resultSet.getInt(BOOK_PUBLISHING_YEAR));
+            book.setPrice(resultSet.getLong(BOOK_PRICE));
+            book.setNumberOfBooks(resultSet.getLong(BOOK_TOTAL));
+            book.setDescription(resultSet.getString(BOOK_DESCRIPTION));
         } catch (SQLException e) {
             logger.error(e);
             throw new DaoException(e);

@@ -21,22 +21,21 @@ public class UpdateUserCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
 
+        String userId= (String) request.getSession().getAttribute("user_id");
+
         Map<String, String> userMap = new HashMap<>();
+        userMap.put(ID, userId);
         userMap.put(FIRSTNAME, request.getParameter(FIRSTNAME));
         userMap.put(LASTNAME, request.getParameter(LASTNAME));
         userMap.put(USERNAME, request.getParameter(USERNAME));
         userMap.put(PASSWORD, request.getParameter(PASSWORD));
         userMap.put(EMAIL, request.getParameter(EMAIL));
         userMap.put(PHONE_NUMBER, request.getParameter(PHONE_NUMBER));
-//        userMap.put(ID, request.getParameter("userId"));
-
-        logger.info("User info: " +  request.getParameter("userId"));
 
         UserService userService = UserServiceImpl.getInstance();
 
         try {
             boolean update = userService.update(userMap);
-
 
             if (update) {
                 return USERS_PAGE;

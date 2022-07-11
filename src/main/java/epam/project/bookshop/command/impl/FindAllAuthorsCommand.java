@@ -3,6 +3,7 @@ package epam.project.bookshop.command.impl;
 import epam.project.bookshop.command.Command;
 import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.command.WebPageName;
+import epam.project.bookshop.dto.AuthorDto;
 import epam.project.bookshop.entity.Author;
 import epam.project.bookshop.entity.Genre;
 import epam.project.bookshop.exception.CommandException;
@@ -24,7 +25,7 @@ public class FindAllAuthorsCommand implements Command {
         AuthorService authorService = AuthorServiceImpl.getInstance();
 
         try {
-            List<Author> genreList = authorService.findAll();
+            List<AuthorDto> genreList = authorService.findAll();
             request.setAttribute(ParameterName.AUTHOR_LIST, genreList);
         } catch (ServiceException e) {
             logger.error("Authors not found. " + e);

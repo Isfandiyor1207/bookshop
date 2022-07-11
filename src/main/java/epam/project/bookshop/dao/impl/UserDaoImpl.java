@@ -1,6 +1,7 @@
 package epam.project.bookshop.dao.impl;
 
 import epam.project.bookshop.dao.UserDao;
+import epam.project.bookshop.dto.UserDto;
 import epam.project.bookshop.entity.User;
 import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.mapper.UserMapper;
@@ -20,12 +21,14 @@ public class UserDaoImpl implements UserDao {
     public static final Logger logger = LogManager.getLogger();
 
     private static final String SELECT_BY_USERNAME = "SELECT id, firstname, lastname, password, phoneNumber, email, username, roleid FROM users WHERE username = ? AND deleted = false";
+    private static final String SELECT_BY_EMAIL = "SELECT id, firstname, lastname, password, phoneNumber, email, username, roleid FROM users WHERE email = ? AND deleted = false";
+    private static final String SELECT_BY_PHONE_NUMBER = "SELECT id, firstname, lastname, password, phoneNumber, email, username, roleid FROM users WHERE phoneNumber = ? AND deleted = false";
     private static final String SELECT_BY_ID = "SELECT id, firstname, lastname, phoneNumber, email, username, roleid, password FROM users WHERE  id = ? AND deleted = false";
     private static final String SELECT_ALL = "SELECT id, firstname, lastname, phoneNumber, email, username, roleid, password FROM  users WHERE deleted=false order by id";
     private static final String SELECT_ROLE_ID = "SELECT roleid FROM users WHERE username = ? AND deleted=false;";
     private static final String DELETE_USERS_BY_ID = "UPDATE users SET deleted = true WHERE id =? AND deleted = false";
-    private static final String UPDATE_USERS_BY_ID = "UPDATE users SET %s WHERE id =%s, updated_time = now() AND deleted = false";
-    private static final String INSERT_USER = "INSERT INTO users(firstname, lastname, username, password, email, phoneNumber) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_USERS_BY_ID = "UPDATE users SET %s updated_time = now() WHERE id =%s AND deleted = false";
+    private static final String INSERT_USER = "INSERT INTO users(firstname, lastname, username, password, email, phoneNumber) VALUES (?, ?, ?, ?, ?, ?) RETURNING id;";
     private static UserDaoImpl instance;
 
     public static UserDaoImpl getInstance() {
@@ -36,7 +39,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean save(User user) throws DaoException {
+    public Long save(User user) throws DaoException {
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_USER)) {
@@ -48,9 +51,15 @@ public class UserDaoImpl implements UserDao {
             statement.setString(5, user.getEmail());
             statement.setString(6, user.getPhoneNumber());
 
-            int numberOfRow = statement.executeUpdate();
+            ResultSet resultSet = statement.executeQuery();
 
-            return numberOfRow > 0;
+            Long id = null;
+
+            while (resultSet.next()) {
+                id = resultSet.getLong("id");
+            }
+
+            return id;
         } catch (SQLException e) {
             logger.error(e);
             throw new DaoException(e);
@@ -91,27 +100,30 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findById(Long id) throws DaoException {
+    public Optional<UserDto> findById(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
             statement.setLong(1, id);
 
             ResultSet resultSet = statement.executeQuery();
 
-            User user = new User();
+            UserDto user = new UserDto();
             while (resultSet.next()) {
-                user = UserMapper.getInstance().resultSetToEntity(resultSet);
+                user = UserMapper.getInstance().resultSetToDto(resultSet);
             }
 
-            return Optional.of(user);
+            if (user.getUsername() == null){
+                return Optional.empty();
+            }else return Optional.of(user);
+
         } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
 
     @Override
-    public List<User> findAll() throws DaoException {
-        List<User> userList = new ArrayList<>();
+    public List<UserDto> findAll() throws DaoException {
+        List<UserDto> userList = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
@@ -119,7 +131,7 @@ public class UserDaoImpl implements UserDao {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                userList.add(UserMapper.getInstance().resultSetToEntity(resultSet));
+                userList.add(UserMapper.getInstance().resultSetToDto(resultSet));
             }
 
         } catch (SQLException e) {
@@ -129,7 +141,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findByUsername(String username) throws DaoException {
+    public Optional<UserDto> findByUsername(String username) throws DaoException {
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_USERNAME)) {
@@ -137,16 +149,14 @@ public class UserDaoImpl implements UserDao {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
 
-            User user = new User();
+            UserDto user = new UserDto();
             while (resultSet.next()) {
-                user = UserMapper.getInstance().resultSetToEntity(resultSet);
+                user = UserMapper.getInstance().resultSetToDto(resultSet);
             }
 
-            logger.info("user in dao " + user);
-
-            if (user.getId() != null) {
-                return Optional.of(user);
-            } else return Optional.empty();
+            if (user.getUsername() == null) {
+                return Optional.empty();
+            } else return Optional.of(user);
 
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -167,8 +177,51 @@ public class UserDaoImpl implements UserDao {
                 role = resultSet.getLong(USER_ROLE_ID_IN_DB);
             }
 
-            logger.info("role id:" + role);
             return Optional.ofNullable(role);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public Optional<UserDto> findUserByEmail(String email) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_BY_EMAIL)) {
+
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+
+            UserDto user = new UserDto();
+            while (resultSet.next()) {
+                user = UserMapper.getInstance().resultSetToDto(resultSet);
+            }
+
+            if (user.getUsername() == null) {
+                return Optional.empty();
+            } else return Optional.of(user);
+
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public Optional<UserDto> findUserByPhoneNumber(String contact) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_BY_PHONE_NUMBER)) {
+
+            statement.setString(1, contact);
+            ResultSet resultSet = statement.executeQuery();
+
+            UserDto user = new UserDto();
+            while (resultSet.next()) {
+                user = UserMapper.getInstance().resultSetToDto(resultSet);
+            }
+
+            if (user.getUsername() == null) {
+                return Optional.empty();
+            } else return Optional.of(user);
+
         } catch (SQLException e) {
             throw new DaoException(e);
         }

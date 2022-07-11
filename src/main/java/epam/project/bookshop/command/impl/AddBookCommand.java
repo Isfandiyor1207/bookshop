@@ -1,7 +1,11 @@
 package epam.project.bookshop.command.impl;
 
 import epam.project.bookshop.command.Command;
+import epam.project.bookshop.dao.impl.BookDaoImpl;
+import epam.project.bookshop.dto.BookDto;
+import epam.project.bookshop.entity.Book;
 import epam.project.bookshop.exception.CommandException;
+import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.exception.ServiceException;
 import epam.project.bookshop.service.BookService;
 import epam.project.bookshop.service.impl.AttachmentServiceImpl;
@@ -16,6 +20,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.*;
 import static epam.project.bookshop.command.WebPageName.BOOK_CREATE_PAGE;
@@ -35,6 +40,7 @@ public class AddBookCommand implements Command {
         bookMap.put(BOOK_TOTAL, request.getParameter(BOOK_TOTAL));
         bookMap.put(AUTHOR_ID, Arrays.toString(request.getParameterValues(AUTHOR_ID)));
         bookMap.put(GENRE_ID, Arrays.toString(request.getParameterValues(GENRE_ID)));
+        bookMap.put(BOOK_DESCRIPTION, request.getParameter(BOOK_DESCRIPTION));
 
         try {
             Part part = request.getPart(ATTACHMENT);
@@ -47,21 +53,23 @@ public class AddBookCommand implements Command {
 
         System.out.println(bookMap);
 
-        BookService bookService = BookServiceImpl.getInstance();
-
-        // todo i can`t post part to bookService
+        BookServiceImpl bookService = BookServiceImpl.getInstance();
 
         try {
             if (bookService.add(bookMap)) {
 
                 try {
                     AttachmentServiceImpl attachmentService = AttachmentServiceImpl.getInstance();
-                    attachmentService.addFile(request.getPart("file"));
+                    Long fileId = attachmentService.addFile(request.getPart("file"));
+
+                    Optional<BookDto>  optionalBook = bookService.findByName(bookMap.get(BOOK_NAME));
+
+                    attachmentService.attachFileToBook(optionalBook.get().getId(), fileId, false);
+
                 } catch (ServiceException | IOException | ServletException e) {
                     logger.error("Image is not added");
                     throw new CommandException(e);
                 }
-
                 return BOOK_PAGE;
             } else {
 

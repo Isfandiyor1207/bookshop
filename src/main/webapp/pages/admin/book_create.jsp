@@ -6,6 +6,8 @@
 <%@ page import="epam.project.bookshop.entity.Genre" %>
 <%@ page import="java.util.List" %>
 <%@ page import="epam.project.bookshop.exception.ServiceException" %>
+<%@ page import="epam.project.bookshop.dto.AuthorDto" %>
+<%@ page import="epam.project.bookshop.dto.GenreDto" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -18,8 +20,8 @@
     AuthorService authorService = AuthorServiceImpl.getInstance();
     GenreService genreService = GenreServiceImpl.getInstance();
 
-    List<Author> authorList = null;
-    List<Genre> genreList = null;
+    List<AuthorDto> authorList = null;
+    List<GenreDto> genreList = null;
 
     try {
         authorList = authorService.findAll();
@@ -132,22 +134,10 @@
                     <i class="material-icons">extension</i><span><fmt:message key="label.users"/></span>
                 </a>
             </li>
-
             <li class="dropdown">
-                <a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="material-icons">content_copy</i><span><fmt:message key="label.pages"/></span>
+                <a href="${pageContext.request.contextPath}/index.jsp">
+                    <i class="material-icons">extension</i><fmt:message key="label.main.page"/>
                 </a>
-                <ul class="collapse list-unstyled menu" id="pageSubmenu7">
-                    <li>
-                        <a href="#">Page 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 2</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 3</a>
-                    </li>
-                </ul>
             </li>
         </ul>
 
@@ -298,6 +288,13 @@
                             <small style="color: red">${attachment_content_type}</small>
                         </div>
                     </div>
+
+                    <div class="container">
+                        <label style="width: 30% !important;">Total book: </label>
+                        <textarea rows="7" cols="50" class="form-control" name="description" placeholder="Description"></textarea>
+                    </div>
+                    <small style="color: red">${book_description_error}</small>
+
                     <div class="container mt-1">
                         <input class="btn btn-primary" type="submit" value="Push">
                     </div>
@@ -316,8 +313,6 @@
 <script src="${pageContext.request.contextPath}/pages/js/popper.min.js"></script>
 <script src="${pageContext.request.contextPath}/pages/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/pages/js/jquery-3.3.1.min.js"></script>
-<%--<script src="${pageContext.request.contextPath}/pages/js/bootstrap-select.min.js"></script>--%>
-<%--<script src="${pageContext.request.contextPath}/pages/js/bootstrap.bundle.min.js"></script>--%>
 
 <script type="text/javascript">
     $(document).ready(function () {

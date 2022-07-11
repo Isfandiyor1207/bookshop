@@ -3,6 +3,7 @@ package epam.project.bookshop.command.impl;
 import epam.project.bookshop.command.Command;
 import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.command.WebPageName;
+import epam.project.bookshop.dto.GenreDto;
 import epam.project.bookshop.entity.Genre;
 import epam.project.bookshop.entity.User;
 import epam.project.bookshop.exception.CommandException;
@@ -24,7 +25,7 @@ public class FindAllGenresCommand implements Command {
         GenreService genreService= GenreServiceImpl.getInstance();
 
         try {
-            List<Genre> genreList = genreService.findAll();
+            List<GenreDto> genreList = genreService.findAll();
             request.setAttribute(ParameterName.GENRE_LIST, genreList);
         } catch (ServiceException e) {
             logger.error("Genres not found. " + e);

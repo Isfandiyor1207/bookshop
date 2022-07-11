@@ -1,0 +1,27 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.flex-box{
+    display: flex;
+    width: 1000px;
+    margin: 45px auto;
+}
+
+.left{
+    width: 50%;
+}
+
+.big-img{
+    width: 250px;
+}
+
+.big-img img{
+    width: inherit;
+}
+
+.right{
+    width: 50%;
+}

@@ -1,5 +1,6 @@
 package epam.project.bookshop.validation;
 
+import com.oracle.wls.shaded.org.apache.bcel.generic.IF_ACMPEQ;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,6 +40,8 @@ public class BookValidation {
     public boolean validateBookInformation(Map<String, String> bookMap) {
         boolean isValid = true;
 
+        logger.info("Book is in information method()");
+
         if (!checkBookInformationToString(bookMap.get(BOOK_NAME).trim())) {
             logger.info("book name is not valid ");
             bookMap.put(WARN_BOOK_NAME, ERROR_BOOK_NAME);
@@ -75,6 +78,12 @@ public class BookValidation {
             isValid = false;
         }
 
+        if (!checkBookInformationToString(bookMap.get(BOOK_DESCRIPTION).trim())){
+            logger.info("book description is empty!");
+            bookMap.put(WARN_BOOK_DESCRIPTION, ERROR_BOOK_DESCRIPTION);
+            isValid=false;
+        }
+
         if (!checkBookInformationToString(bookMap.get(ATTACHMENT_NAME).trim())) {
             logger.info("attachment name is not valid ");
             bookMap.put(WARN_ATTACHMENT, ERROR_ATTACHMENT);
@@ -101,51 +110,62 @@ public class BookValidation {
     }
 
     public boolean validationBookToUpdate(Map<String, String> bookMap, Map<String, String> query) {
-        boolean isValid = true;
+        boolean isValid = false;
+
+        logger.info("Book is in update method()");
 
         if (checkBookInformationToString(bookMap.get(BOOK_NAME).trim())) {
             logger.info("book name is given to update ");
-//            bookMap.put(WARN_BOOK_NAME, ERROR_BOOK_NAME);
             query.put(BOOK_NAME, bookMap.get(BOOK_NAME));
+            isValid = true;
         }
 
         if (checkBookInformationToNumber(bookMap.get(BOOK_ISBN).trim())) {
             logger.info("book isbn is given to update ");
-//            bookMap.put(WARN_BOOK_ISBN, ERROR_BOOK_ISBN);
             query.put(BOOK_ISBN, bookMap.get(BOOK_ISBN));
+            isValid = true;
         }
         if (checkBookInformationToString(bookMap.get(BOOK_PUBLISHER_NAME).trim())) {
             logger.info("book publisher name is given to update ");
-//            bookMap.put(WARN_BOOK_PUBLISHER_NAME, ERROR_BOOK_PUBLISHER_NAME);
             query.put(BOOK_PUBLISHER_NAME, bookMap.get(BOOK_PUBLISHER_NAME));
+            isValid = true;
         }
         if (checkBookInformationToNumber(bookMap.get(BOOK_PUBLISHING_YEAR).trim())) {
             logger.info("book publishing year is given to update");
-//            bookMap.put(WARN_BOOK_PUBLISHING_YEAR, ERROR_BOOK_PUBLISHING_YEAR);
             query.put(BOOK_PUBLISHING_YEAR, bookMap.get(BOOK_PUBLISHING_YEAR));
+            isValid = true;
         }
         if (checkBookInformationToNumber(bookMap.get(BOOK_PRICE).trim())) {
             logger.info("book price is given to update");
-//            bookMap.put(WARN_BOOK_PRICE, ERROR_BOOK_PRICE);
             query.put(BOOK_PRICE, bookMap.get(BOOK_PRICE));
+            isValid = true;
         }
-        if (checkBookInformationToNumber(bookMap.get(BOOK_TOTAL).trim())) {
-            logger.info("book total is given to update");
-//            bookMap.put(WARN_BOOK_TOTAL, ERROR_BOOK_TOTAL);
-            query.put(BOOK_TOTAL, bookMap.get(BOOK_TOTAL));
+        if (checkBookInformationToString(bookMap.get(BOOK_DESCRIPTION).trim())){
+            logger.info("book description is to update");
+            query.put(BOOK_DESCRIPTION, bookMap.get(BOOK_DESCRIPTION));
+            isValid = true;
         }
 
-        if (checkBookInformationToString(bookMap.get(GENRE_ID).trim()) || bookMap.get(GENRE_ID).equals("0")) {
-            logger.info("genre id is not valid ");
-            bookMap.put(WARN_GENRE_ID, ERROR_GENRE_ID);
+        if (checkBookInformationToNumber(bookMap.get(BOOK_TOTAL).trim())) {
+            logger.info("book total is given to update");
+            query.put(BOOK_TOTAL, bookMap.get(BOOK_TOTAL));
+            isValid = true;
         }
-        if (checkBookInformationToString(bookMap.get(AUTHOR_ID).trim()) || bookMap.get(AUTHOR_ID).equals("0")) {
-            logger.info("author id is not valid ");
-            bookMap.put(WORN_AUTHOR_ID, ERROR_AUTHOR_ID);
+
+        if (checkBookInformationToString(bookMap.get(GENRE_ID)) || bookMap.get(GENRE_ID).equals("0")) {
+            isValid = true;
         }
-        if (checkFileContentType(bookMap.get(ATTACHMENT_CONTENT_TYPE).trim())) {
-            logger.info("image type is not correct ");
-            bookMap.put(WARN_ATTACHMENT_CONTENT_TYPE, ERROR_ATTACHMENT_CONTENT_TYPE);
+        if (checkBookInformationToString(bookMap.get(AUTHOR_ID)) || bookMap.get(AUTHOR_ID).equals("0")) {
+            isValid = true;
+        }
+
+        if (checkBookInformationToString(bookMap.get(ATTACHMENT_CONTENT_TYPE))) {
+            if (checkFileContentType(bookMap.get(ATTACHMENT_CONTENT_TYPE))) {
+                isValid = true;
+            } else {
+                logger.info("image type is not correct ");
+                bookMap.put(WARN_ATTACHMENT_CONTENT_TYPE, ERROR_ATTACHMENT_CONTENT_TYPE);
+            }
         }
 
         return isValid;

@@ -112,19 +112,9 @@
                 </a>
             </li>
             <li class="dropdown">
-                <a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="material-icons">content_copy</i><span><fmt:message key="label.pages"/></span></a>
-                <ul class="collapse list-unstyled menu" id="pageSubmenu7">
-                    <li>
-                        <a href="#">Page 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 2</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 3</a>
-                    </li>
-                </ul>
+                <a href="${pageContext.request.contextPath}/index.jsp">
+                    <i class="material-icons">extension</i><fmt:message key="label.main.page"/>
+                </a>
             </li>
         </ul>
 
@@ -197,129 +187,66 @@
 
         <div class="main-content">
 
+            <div class="container-fluid">
+                <form method="post" autocomplete="on" action="${pageContext.request.contextPath}/controller">
+                    <input type="hidden" name="command" value="update_user">
 
-            <form method="post" autocomplete="on" action="${pageContext.request.contextPath}/controller">
-                <input type="hidden" name="command" value="update_user">
-
-<%--                <% String user= request.getParameter("userToUpdate"); >--%>
-
-<%--                <p><%= request.getParameter("userId") %></p>--%>
-
-<%--                <input type="hidden" name="userId" value="<%= request.getParameter("userId")%>">--%>
-                <!--First name-->
-                <div class="box">
-                    <div class="new iconBox">
-                        <i class="fa fa-user" aria-hidden="true"></i>
+                    <div class="container-fluid">
+                        <label style="width: 30% !important; position: initial"> First Name: </label>
+                        <input type="text" name="firstname" placeholder="Firstname"
+                               class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
                     </div>
-                    <div class="fr">
-                        <label class="fl fontLabel"> First Name: </label>
-                        <label>
-                            <input type="text" name="firstname" placeholder="First Name"
-                                   class="textBox" autofocus="on" value=""><!-- <%= request.getParameter("firstname") %> -->
-                        </label>
+
+                    <div class="container-fluid">
+                        <label style="width: 30% !important; position: initial"> Lastname: </label>
+                        <input type="text" name="lastname" placeholder="Lastname"
+                                class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
                     </div>
-                    <div class="clr"></div>
-                </div>
-                <!--First name-->
 
-
-                <!--Second name-->
-                <div class="box">
-                    <div class="fl iconBox"><i class="fa fa-user" aria-hidden="true"></i></div>
-                    <div class="fr">
-                        <label>
-                            <label class="fl fontLabel"> Lastname: </label>
-                            <label>
-                                <input type="text" name="lastname"
-                                       placeholder="Lastname" class="textBox" value=""><!-- <%= request.getParameter("lastname")%> -->
-                            </label>
-                        </label>
+                    <div class="container-fluid">
+                        <label style="width: 30% !important; position: initial"> Username: </label>
+                        <input type="text" name="username" placeholder="Username"
+                               class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
                     </div>
-                    <div class="clr"></div>
-                </div>
-                <!--Second name-->
 
-                <!--Username-->
-                <div class="box">
-                    <div class="fl iconBox"><i class="fa fa-user" aria-hidden="true"></i></div>
-                    <div class="fr">
-                        <label class="fl fontLabel"> Username: </label>
-                        <label>
-                            <input type="text" name="username"
-                            placeholder="Username" class="textBox" value=""> <!-- <%= request.getAttribute("username")  %> -->
-                        </label>
+                    <small style="color: red">${username_error}</small>
+
+                    <div class="container-fluid">
+                        <label style="width: 30% !important; position: initial"> Phone number: </label>
+                        <input type="text" name="contact" placeholder="Phone number"
+                               class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
                     </div>
-                    <div class="clr"></div>
-                </div>
-                <!--Username-->
 
-                <div><small style="color: red">${username_error}</small></div>
+                    <small style="color: red">${phone_number_error}</small>
 
-                <!---Phone No.------>
-                <div class="box">
-                    <div class="fl iconBox"><i class="fa fa-phone-square" aria-hidden="true"></i></div>
-                    <div class="fr">
-                        <label class="fl fontLabel"> Phone Number: </label>
-                        <label>
-                            <input type="text" name="contact" placeholder="Phone number"
-                            class="textBox" value=""> <!-- <%=request.getParameter("contact")%> -->
-                        </label>
+                    <div class="container-fluid">
+                        <label style="width: 30% !important; position: initial"> Email: </label>
+                        <input type="text" name="email" placeholder="Email"
+                               class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
                     </div>
-                    <div class="clr"></div>
-                </div>
-                <!---Phone No.---->
 
-                <div><small style="color: red">${phone_number_error}</small></div>
+                    <small style="color: red">${email_error}</small>
 
-                <!---Email ID---->
-                <div class="box">
-                    <div class="fl iconBox"><i class="fa fa-envelope" aria-hidden="true"></i></div>
-                    <div class="fr">
-                        <label class="fl fontLabel"> Email: </label>
-                        <label>
-                            <input type="email" name="email" placeholder="Email" class="textBox"
-                                   value=""><!-- <%= request.getAttribute("email")%> -->
-                        </label>
+                    <div class="container-fluid">
+                        <label style="width: 30% !important; position: initial"> Password: </label>
+                        <input type="password" name="password" placeholder="Password"
+                               class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
                     </div>
-                    <div class="clr"></div>
-                </div>
-                <!--Email ID----->
 
-                <div><small style="color: red">${email_error}</small></div>
+                    <small style="color: red">${password_error}</small>
 
-                <!---Password------>
-                <div class="box">
-                    <div class="fl iconBox"><i class="fa fa-key" aria-hidden="true"></i></div>
-                    <div class="fr">
-                        <label class="fl fontLabel"> Password </label>
-                        <label>
-                            <input type="Password" name="password" placeholder="Password" class="textBox"
-                                   value=""><!-- <%= request.getParameter("password") %> -->
-                        </label>
+                    <div class="container-fluid">
+                        <input type="submit" name="add_user" id="update_user" class="form-submit btn btn-primary"
+                               value="Push"/>
                     </div>
-                    <div class="clr"></div>
-                </div>
-                <!---Password---->
 
-                <div><small style="color: red">${password_error}</small></div>
-
-                <!--Terms and Conditions------>
-                <div class="box terms">
-                    <label>
-                        <input type="checkbox" name="Terms">
-                    </label> &nbsp; I accept the terms and conditions
-                </div>
-                <!--Terms and Conditions------>
+                    <small style="color: red">${user_update_error}</small>
 
 
-                <!---Submit Button------>
-                <div class="box">
-                    <input type="submit" name="submit" class="submit" value="Push">
-                </div>
-                <!---Submit Button----->
-            </form>
+                </form>
+            </div>
 
-            <footer class="footer">
+            <footer class="footer" style="vertical-align: bottom !important;">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-6">

@@ -112,25 +112,9 @@
             </li>
 
             <li class="dropdown">
-                <a href="${pageContext.request.contextPath}/pages/admin/file_upload.jsp">
-                    <i class="material-icons">extension</i>FILE
+                <a href="${pageContext.request.contextPath}/index.jsp">
+                    <i class="material-icons">extension</i><fmt:message key="label.main.page"/>
                 </a>
-            </li>
-
-            <li class="dropdown">
-                <a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="material-icons">content_copy</i><span><fmt:message key="label.pages"/></span></a>
-                <ul class="collapse list-unstyled menu" id="pageSubmenu7">
-                    <li>
-                        <a href="#">Page 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 2</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 3</a>
-                    </li>
-                </ul>
             </li>
         </ul>
 

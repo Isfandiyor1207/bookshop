@@ -61,7 +61,7 @@ public class LoginCommand implements Command {
             for (Map.Entry<String, String> entry : userLogin.entrySet()) {
                 request.setAttribute(entry.getKey(), entry.getValue());
             }
-            page = WebPageName.INDEX_PAGE;
+            page = WebPageName.LOGIN_PAGE;
         }
         session.setAttribute("currentPage", page);
         return page;

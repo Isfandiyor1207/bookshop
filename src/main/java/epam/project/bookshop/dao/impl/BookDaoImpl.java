@@ -1,6 +1,7 @@
 package epam.project.bookshop.dao.impl;
 
 import epam.project.bookshop.dao.BookDao;
+import epam.project.bookshop.dto.BookDto;
 import epam.project.bookshop.entity.Book;
 import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.exception.ServiceException;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static epam.project.bookshop.command.ParameterName.ID;
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookDaoImpl implements BookDao {
 
@@ -23,13 +26,13 @@ public class BookDaoImpl implements BookDao {
 
     private static final String SELECT_BY_BOOK = "SELECT id, firstname, lastname, password, phoneNumber, email, username, roleid FROM users WHERE username = ? AND deleted = false";
     private static final String SELECT_BOOK_ID_BY_NAME = "SELECT id FROM book WHERE name = ? AND deleted = false";
-    private static final String SELECT_BOOK_BY_NAME = "SELECT id, name, isbn, publisher, publishing_year, price, total FROM book WHERE name = ? AND deleted = false";
-    private static final String SELECT_BY_ID = "SELECT id, name, isbn, publisher, publishing_year, price, total FROM book WHERE  id = ? AND deleted = false";
-    private static final String SELECT_BY_ISBN = "SELECT id, name, isbn, publisher, publishing_year, price, total FROM book WHERE isbn = ? and deleted=false";
-    private static final String SELECT_ALL = "SELECT id, name, isbn, publisher, publishing_year, price, total FROM book WHERE deleted=false order by id";
+    private static final String SELECT_BOOK_BY_NAME = "SELECT id, name, isbn, publisher, publishing_year, price, total, description FROM book WHERE name = ? AND deleted = false";
+    private static final String SELECT_BY_ID = "SELECT id, name, isbn, publisher, publishing_year, price, total, description FROM book WHERE  id = ? AND deleted = false";
+    private static final String SELECT_BY_ISBN = "SELECT id, name, isbn, publisher, publishing_year, price, total, description FROM book WHERE isbn = ? and deleted=false";
+    private static final String SELECT_ALL = "SELECT id, name, isbn, publisher, publishing_year, price, total, description FROM book WHERE deleted=false order by id";
     private static final String DELETE_BOOK_BY_ID = "UPDATE book SET deleted = true WHERE id =? AND deleted = false";
-    private static final String UPDATE_BOOK_BY_ID = "UPDATE users SET %s WHERE id =%s, updated_time = now() AND deleted = false";
-    private static final String INSERT_BOOK = "INSERT INTO book(name, isbn, publisher, publishing_year, price, total) VALUES (?, ?, ?, ?, ?, ?);";
+    private static final String UPDATE_BOOK_BY_ID = "UPDATE book SET %s, updated_time = now() WHERE id =%s AND deleted = false";
+    private static final String INSERT_BOOK = "INSERT INTO book(name, isbn, publisher, publishing_year, price, total, description) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id;";
 
     static BookDaoImpl instance;
 
@@ -42,7 +45,7 @@ public class BookDaoImpl implements BookDao {
 
 
     @Override
-    public boolean save(Book book) throws DaoException {
+    public Long save(Book book) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_BOOK)) {
 
@@ -52,8 +55,18 @@ public class BookDaoImpl implements BookDao {
             statement.setLong(4, book.getPublishingYear());
             statement.setLong(5, book.getPrice());
             statement.setLong(6, book.getNumberOfBooks());
+            statement.setString(7, book.getDescription());
 
-            return statement.executeUpdate() > 0;
+            ResultSet resultSet = statement.executeQuery();
+
+            Long id = null;
+
+            while (resultSet.next()) {
+                id = resultSet.getLong(ID);
+            }
+
+            return id;
+
         } catch (SQLException e) {
             logger.error(e);
             throw new DaoException(e);
@@ -91,7 +104,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public Optional<Book> findById(Long id) throws DaoException {
+    public Optional<BookDto> findById(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
 
@@ -99,13 +112,13 @@ public class BookDaoImpl implements BookDao {
 
             ResultSet resultSet = statement.executeQuery();
 
-            Book book = new Book();
+            BookDto bookDto = new BookDto();
             while (resultSet.next()) {
-                book = BookMapper.getInstance().resultSetToEntity(resultSet);
+                bookDto = BookMapper.getInstance().resultSetToDto(resultSet);
             }
 
-            if (book.getName() != null) {
-                return Optional.of(book);
+            if (bookDto.getName() != null) {
+                return Optional.of(bookDto);
             } else return Optional.empty();
 
         } catch (SQLException e) {
@@ -115,18 +128,19 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public List<Book> findAll() throws DaoException {
+    public List<BookDto> findAll() throws DaoException {
 
-        List<Book> bookList = new ArrayList<>();
+        List<BookDto> bookList = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
 
             ResultSet resultSet = statement.executeQuery();
-            Book book;
+
             while (resultSet.next()) {
-                book = BookMapper.getInstance().resultSetToEntity(resultSet);
-                bookList.add(book);
+                BookDto bookDto = BookMapper.getInstance().resultSetToDto(resultSet);
+                logger.info("BookDto 1: " + bookDto);
+                bookList.add(bookDto);
             }
 
         } catch (SQLException e) {
@@ -138,7 +152,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public Optional<Book> findByName(String name) throws DaoException {
+    public Optional<BookDto> findByName(String name) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BOOK_BY_NAME)) {
 
@@ -146,10 +160,10 @@ public class BookDaoImpl implements BookDao {
 
             ResultSet resultSet = statement.executeQuery();
 
-            Book book = new Book();
+            BookDto book = new BookDto();
 
             while (resultSet.next()) {
-                book = BookMapper.getInstance().resultSetToEntity(resultSet);
+                book = BookMapper.getInstance().resultSetToDto(resultSet);
             }
 
             if (book.getName() != null) {
@@ -174,7 +188,7 @@ public class BookDaoImpl implements BookDao {
             ResultSet resultSet = statement.executeQuery();
             Long id = null;
             while (resultSet.next()) {
-                id = resultSet.getLong("id");
+                id = resultSet.getLong(ID);
             }
             return id;
         } catch (SQLException e) {
@@ -184,7 +198,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public Optional<Book> findByISBN(String isbn) throws DaoException {
+    public Optional<BookDto> findByISBN(String isbn) throws DaoException {
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_ISBN)) {
@@ -193,10 +207,10 @@ public class BookDaoImpl implements BookDao {
 
             ResultSet resultSet = statement.executeQuery();
 
-            Book book = new Book();
+            BookDto book = new BookDto();
 
             while (resultSet.next()) {
-                book = BookMapper.getInstance().resultSetToEntity(resultSet);
+                book = BookMapper.getInstance().resultSetToDto(resultSet);
             }
 
             if (book.getName() != null) {

@@ -1,6 +1,7 @@
 package epam.project.bookshop.command.impl;
 
 import epam.project.bookshop.command.Command;
+import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.command.WebPageName;
 import epam.project.bookshop.exception.CommandException;
 import epam.project.bookshop.exception.ServiceException;
@@ -13,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
+import static epam.project.bookshop.command.ParameterName.*;
 import static epam.project.bookshop.command.ParameterName.GENRE_NAME;
 import static epam.project.bookshop.command.ParameterName.ID;
 
@@ -23,11 +25,13 @@ public class UpdateGenreCommand implements Command {
     public String execute(HttpServletRequest request) throws CommandException {
         GenreService genreService = GenreServiceImpl.getInstance();
 
-        // todo get id by session
+        String genreId = (String) request.getSession().getAttribute(GENRE_ID);
+
+        logger.info("Genre :" + genreId);
+
         Map<String, String> genreMap = new HashMap<>();
         genreMap.put(GENRE_NAME, request.getParameter(GENRE_NAME));
-//        genreMap.put(ID, request.getParameter(ID));
-        genreMap.put(ID, request.getParameter(ID));
+        genreMap.put(ID, genreId);
         String page;
         try {
             if (genreService.update(genreMap)){

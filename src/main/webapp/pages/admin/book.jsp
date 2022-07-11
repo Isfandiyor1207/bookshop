@@ -42,7 +42,8 @@
         </div>
         <ul class="list-unstyled components">
             <li class="active">
-                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message key="label.dashboard"/></span></a>
+                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message
+                        key="label.dashboard"/></span></a>
             </li>
 
             <div class="small-screen navbar-display">
@@ -102,22 +103,10 @@
                     <i class="material-icons">extension</i><span><fmt:message key="label.users"/></span>
                 </a>
             </li>
-
             <li class="dropdown">
-                <a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="material-icons">content_copy</i><span><fmt:message key="label.pages"/></span>
+                <a href="${pageContext.request.contextPath}/index.jsp">
+                    <i class="material-icons">extension</i><fmt:message key="label.main.page"/>
                 </a>
-                <ul class="collapse list-unstyled menu" id="pageSubmenu7">
-                    <li>
-                        <a href="#">Page 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 2</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 3</a>
-                    </li>
-                </ul>
             </li>
         </ul>
 
@@ -194,13 +183,15 @@
                 <div style="width: 50% !important; display: grid">
                     <form action="${pageContext.request.contextPath}/controller" method="get">
                         <input type="hidden" name="command" value="read_book">
-                        <input type="submit" style="align-content: flex-start" class="btn btn-primary" value="<fmt:message key="label.show_all_btn"/>">
+                        <input type="submit" style="align-content: flex-start" class="btn btn-primary"
+                               value="<fmt:message key="label.show_all_btn"/>">
                     </form>
                 </div>
 
                 <div style="width: 50% !important; display: grid">
                     <form>
-                        <a href="${pageContext.request.contextPath}/pages/admin/book_create.jsp" style="text-transform: none; align-content: flex-end"
+                        <a href="${pageContext.request.contextPath}/pages/admin/book_create.jsp"
+                           style="text-transform: none; align-content: flex-end"
                            class="btn btn-success"><fmt:message key="label.create_btn"/></a>
                     </form>
                 </div>
@@ -208,53 +199,67 @@
 
             </div>
 
-            <b><small style="color: red">${deleted_error}</small></b>
+            <b><small style="color: red; text-transform: none">${deleted_error}</small></b>
 
-            <table class="table table-light table-bordered" style="font-size: small">
+            <table class="table table-light table-bordered" style="font-size: small; vertical-align: center; text-align:  center;">
                 <thead class="table-primary">
                 <tr>
-                    <th scope="col" ><fmt:message key="label.id"/></th>
-                    <th scope="col" ><fmt:message key="label.book_name"/></th>
-                    <th scope="col" ><fmt:message key="label.book_isbn"/></th>
-                    <th scope="col" ><fmt:message key="label.book_publisher"/></th>
-                    <th scope="col" ><fmt:message key="label.book_publishingYear"/></th>
-                    <%--                    <th scope="col" ><fmt:message key="label.book_attachments"/></th>--%>
-                    <th scope="col" ><fmt:message key="label.book_price"/></th>
-                    <th scope="col" ><fmt:message key="label.book_numberOfBooks"/></th>
-                    <th scope="col" ><fmt:message key="label.book_genre"/></th>
-                    <th scope="col" ><fmt:message key="label.book_author"/></th>
-                    <th scope="col" ><fmt:message key="label.delete_btn"/></th>
-                    <th scope="col" ><fmt:message key="label.update_btn"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.id"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_name"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_isbn"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_publisher"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_publishingYear"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_price"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_numberOfBooks"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_genre"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_author"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_image_path"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.delete_btn"/></th>
+                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.update_btn"/></th>
                 </tr>
                 </thead>
 
                 <tbody>
                 <c:forEach items="${book_list}" var="item">
                     <tr>
-                        <td style="text-transform: capitalize"><c:out value="${item.id}"/></td>
-                        <td><c:out value="${item.name}"/></td>
+                        <td><c:out value="${item.id}"/></td>
+                        <td style="text-transform: capitalize"><c:out value="${item.name}"/></td>
                         <td><c:out value="${item.isbn}"/></td>
-                        <td><c:out value="${item.publisher}"/></td>
+                        <td style="text-transform: capitalize"><c:out value="${item.publisher}"/></td>
                         <td><c:out value="${item.publishingYear}"/></td>
                         <td><c:out value="${item.price}"/></td>
                         <td><c:out value="${item.numberOfBooks}"/></td>
-                        <td><c:out value="${item.genreId}" /></td>
-                        <td><c:out value="${item.authorId}"/></td>
-<%--                        <td><c:out value="${item.attachmentId}"/></td>--%>
-<%--                        <td><c:out value="${item.roleId}"/></td>--%>
+                        <td style="text-transform: capitalize">
+                            <c:forEach items="${item.genreDtoList}" var="genreList">
+                                <c:out value="${genreList.name}"/>
+                            </c:forEach>
+                        </td>
+                        <td style="text-transform: capitalize">
+                            <c:forEach items="${item.authorDtoList}" var="authorList">
+                                <c:out value="${authorList.fio}"/>
+                            </c:forEach>
+                        </td>
                         <td>
-                            <form action="${pageContext.request.contextPath}/controller">
-                                <input type="hidden" name="command" value="delete_book">
-                                    <%--                                <label type="submit"><i class="bi bi-trash"></i></label>--%>
-                                <button type="submit" name="delete_by_id" class="btn btn-outline-danger" value="${item.id}"><fmt:message key="label.delete_btn"/></button>
-                            </form>
+                            <c:forEach items="${item.attachmentDtoList}" var="imageList">
+                                <c:out value="${imageList.uploadPath}${imageList.absoluteName}"/>
+                            </c:forEach>
                         </td>
                         <td style="text-transform: none">
                             <form>
                                 <input type="hidden" name="command" value="find_book_by_id">
-                                <button type="submit" class="btn btn-outline-warning" name="book_id" value="${item.id}"><fmt:message key="label.update_btn"/></button>
+                                <button type="submit" class="btn btn-outline-warning" name="book_id" value="${item.id}">
+                                    <fmt:message key="label.update_btn"/></button>
                             </form>
                         </td>
+                        <td>
+                            <form action="${pageContext.request.contextPath}/controller">
+                                <input type="hidden" name="command" value="delete_book">
+                                    <%--                                <label type="submit"><i class="bi bi-trash"></i></label>--%>
+                                <button type="submit" name="delete_by_id" class="btn btn-outline-danger"
+                                        value="${item.id}"><fmt:message key="label.delete_btn"/></button>
+                            </form>
+                        </td>
+
                     </tr>
                 </c:forEach>
                 </tbody>

@@ -2,6 +2,7 @@ package epam.project.bookshop.command.impl;
 
 import epam.project.bookshop.command.Command;
 import epam.project.bookshop.command.WebPageName;
+import epam.project.bookshop.dto.BookDto;
 import epam.project.bookshop.entity.Book;
 import epam.project.bookshop.exception.CommandException;
 import epam.project.bookshop.exception.ServiceException;
@@ -27,7 +28,7 @@ public class FindBookByIdCommand implements Command {
         BookService bookService= BookServiceImpl.getInstance();
 
         try {
-            Optional<Book> optionalBook = bookService.findById(Long.valueOf(id));
+            Optional<BookDto> optionalBook = bookService.findById(Long.valueOf(id));
 
             if (optionalBook.isPresent()){
                 HttpSession session = request.getSession();

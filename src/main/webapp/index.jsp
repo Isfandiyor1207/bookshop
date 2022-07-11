@@ -1,5 +1,6 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 	<meta charset="UTF-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -37,16 +38,15 @@
 			<a href="${pageContext.request.contextPath}/pages/login.jsp"><span class="fas fa-user"></span></a>
 		</div>
 
-		<ul>
-			<li><a href="pages/admin/file_upload.jsp">File</a></li>
-		</ul>
-
 	</div>
 
 	<div class="header-2">
 		<nav class="navbar">
 			<a href="#home">home</a>
-			<a href="#featured">featured</a>
+			<form action="${pageContext.request.contextPath}/controller" style="display: inline !important;">
+				<input type="hidden" name="command" value="find_all_books_page">
+				<button type="submit" class="btn btn-success">Books</button>
+			</form>
 			<a href="#arrivals">arrivals</a>
 			<a href="#reviews">reviews</a>
 			<a href="#blogs">blogs</a>

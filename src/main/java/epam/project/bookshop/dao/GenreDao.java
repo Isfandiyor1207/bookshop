@@ -1,12 +1,20 @@
 package epam.project.bookshop.dao;
 
+import epam.project.bookshop.dto.GenreDto;
 import epam.project.bookshop.entity.Genre;
 import epam.project.bookshop.exception.DaoException;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface GenreDao extends BaseDao<Genre>{
-    Optional<Genre> findByName(String name) throws DaoException;
+public interface GenreDao extends BaseDao<GenreDto, Genre>{
+    Optional<GenreDto> findByName(String name) throws DaoException;
 
-    boolean attachBookToGenre(Long bookId, Long genreId, boolean isToUpdate) throws DaoException;
+    void attachBookToGenre(Long bookId, Long genreId) throws DaoException;
+
+    List<GenreDto> findAllByBookId(Long bookId) throws DaoException;
+
+    List<Long> findOfGenreIdByBookId(Long bookId) throws DaoException;
+
+    void deleteAttachedGenre(Long bookId, Long genreId) throws DaoException;
 }
