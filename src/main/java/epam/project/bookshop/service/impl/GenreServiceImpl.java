@@ -20,6 +20,7 @@ import static epam.project.bookshop.command.ParameterName.ID;
 import static epam.project.bookshop.validation.ValidationParameterName.*;
 
 public class GenreServiceImpl implements GenreService {
+
     private static final Logger logger = LogManager.getLogger();
     private static final GenreServiceImpl instance = new GenreServiceImpl();
     private static final GenreDao genreDao = GenreDaoImpl.getInstance();
@@ -153,6 +154,16 @@ public class GenreServiceImpl implements GenreService {
     public List<GenreDto> findAllByBookId(Long bookId) throws ServiceException {
         try {
             return genreDao.findAllByBookId(bookId);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Long> findAllBookIdByGenreId(Long genreId) throws ServiceException {
+        try {
+            return genreDao.findAllBookIdByGenreId(genreId);
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e);

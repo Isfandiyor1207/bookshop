@@ -1,16 +1,9 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 26.06.2022
-  Time: 8:42
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="uz"/>
+<fmt:setLocale value="en"/>
 <fmt:setBundle basename="prop.message"/>
 <html>
 <head>
@@ -108,6 +101,17 @@
                 </a>
             </li>
             <li class="dropdown">
+                <form action="${pageContext.request.contextPath}/controller" style="margin-bottom: 0">
+                    <input type="hidden" name="command" value="find_all_orders">
+                    <div style="display: flex; justify-content: left; align-items: center">
+                        <i class="material-icons" style="margin: 0 10px 0 20px">inventory</i>
+                        <button type="submit" style="padding: 10px;background-color: white; border: none;display: flex; align-items: center; justify-content: left; width: 100%;">
+                            <span><fmt:message key="label.user.orders"/></span>
+                        </button>
+                    </div>
+                </form>
+            </li>
+            <li class="dropdown">
                 <a href="${pageContext.request.contextPath}/index.jsp">
                     <i class="material-icons">extension</i><fmt:message key="label.main.page"/>
                 </a>
@@ -129,59 +133,21 @@
 
                     <a class="navbar-brand" href="#"> <fmt:message key="label.dashboard"/> </a>
 
-                    <%--                    <ul>--%>
-                    <%--                        <li><a href="?sessionLocale=en"><fmt:message key="label.language.en" /></a></li>--%>
-                    <%--                        <li><a href="?sessionLocale=uz"><fmt:message key="label.language.uz" /></a></li>--%>
-                    <%--                    </ul>--%>
-                    <%--                    <c:if test="${not empty param.sessionLocale}">--%>
-                    <%--                        <fmt:message key="label.cookieChangeSuccess" />--%>
-                    <%--                        <button><a href="admin.jsp"><fmt:message key="label.viewPage" /></a></button>--%>
-                    <%--                    </c:if>--%>
-
                     <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="material-icons">more_vert</span>
                     </button>
 
-                    <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none"
-                         id="navbarSupportedContent">
+                    <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
-                            <li class="dropdown nav-item active">
-                                <a href="#" class="nav-link" data-toggle="dropdown">
-                                    <span class="material-icons">notifications</span>
-                                    <span class="notification">4</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#">You have 5 new messages</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">You're now friend with Mike</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Wish Mary on her birthday!</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">5 warnings in Server Console</a>
-                                    </li>
-
-                                </ul>
-                            </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">apps</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">person</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">settings</span>
-                                </a>
+                                <form action="${pageContext.request.contextPath}/controller">
+                                    <input type="hidden" name="command" value="logout">
+                                    <button class="nav-link" href="#">
+                                        <span class="material-icons">logout</span>
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </div>

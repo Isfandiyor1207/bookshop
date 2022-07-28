@@ -31,6 +31,8 @@ public class AttachmentDaoImpl implements AttachmentDao {
     private static final String ATTACH_BOOK_TO_ATTACHMENT = "INSERT INTO attachment_book_list(attachment_id, book_id) VALUES (?, ?)";
     private static final AttachmentDaoImpl instance = new AttachmentDaoImpl();
 
+    private AttachmentDaoImpl(){}
+
     public static AttachmentDaoImpl getInstance() {
         return instance;
     }

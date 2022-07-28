@@ -18,6 +18,10 @@ public class BookDto extends GenericDto{
 
     private Long numberOfBooks;
 
+    private Double averageRate;
+
+    private Long numberOfVotedUser;
+
     private String description;
 
     private List<GenreDto> genreDtoList;
@@ -25,6 +29,22 @@ public class BookDto extends GenericDto{
     private List<AttachmentDto> attachmentDtoList;
 
     private List<AuthorDto> authorDtoList;
+
+    public Double getAverageRate() {
+        return averageRate;
+    }
+
+    public void setAverageRate(Double averageRate) {
+        this.averageRate = averageRate;
+    }
+
+    public Long getNumberOfVotedUser() {
+        return numberOfVotedUser;
+    }
+
+    public void setNumberOfVotedUser(Long numberOfVotedUser) {
+        this.numberOfVotedUser = numberOfVotedUser;
+    }
 
     public String getDescription() {
         return description;
@@ -110,13 +130,14 @@ public class BookDto extends GenericDto{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         BookDto bookDto = (BookDto) o;
-        return publishingYear == bookDto.publishingYear && Objects.equals(name, bookDto.name) && Objects.equals(isbn, bookDto.isbn) && Objects.equals(publisher, bookDto.publisher) && Objects.equals(price, bookDto.price) && Objects.equals(numberOfBooks, bookDto.numberOfBooks) && Objects.equals(description, bookDto.description) && Objects.equals(genreDtoList, bookDto.genreDtoList) && Objects.equals(attachmentDtoList, bookDto.attachmentDtoList) && Objects.equals(authorDtoList, bookDto.authorDtoList);
+        return publishingYear == bookDto.publishingYear && Objects.equals(name, bookDto.name) && Objects.equals(isbn, bookDto.isbn) && Objects.equals(publisher, bookDto.publisher) && Objects.equals(price, bookDto.price) && Objects.equals(numberOfBooks, bookDto.numberOfBooks) && Objects.equals(averageRate, bookDto.averageRate) && Objects.equals(numberOfVotedUser, bookDto.numberOfVotedUser) && Objects.equals(description, bookDto.description) && Objects.equals(genreDtoList, bookDto.genreDtoList) && Objects.equals(attachmentDtoList, bookDto.attachmentDtoList) && Objects.equals(authorDtoList, bookDto.authorDtoList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, isbn, publisher, publishingYear, price, numberOfBooks, description, genreDtoList, attachmentDtoList, authorDtoList);
+        return Objects.hash(super.hashCode(), name, isbn, publisher, publishingYear, price, numberOfBooks, averageRate, numberOfVotedUser, description, genreDtoList, attachmentDtoList, authorDtoList);
     }
 
     @Override
@@ -128,6 +149,8 @@ public class BookDto extends GenericDto{
                 .add("publishingYear=" + publishingYear)
                 .add("price=" + price)
                 .add("numberOfBooks=" + numberOfBooks)
+                .add("averageRate=" + averageRate)
+                .add("numberOfVotedUser=" + numberOfVotedUser)
                 .add("description='" + description + "'")
                 .add("genreDtoList=" + genreDtoList)
                 .add("attachmentDtoList=" + attachmentDtoList)

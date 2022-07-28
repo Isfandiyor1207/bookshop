@@ -5,6 +5,7 @@ import epam.project.bookshop.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.awt.desktop.QuitEvent;
 import java.util.Map;
 
 import static epam.project.bookshop.command.ParameterName.*;
@@ -107,6 +108,29 @@ public class UserValidation {
         }
 
         return isValid;
+    }
+
+    public void createSearchingQuery(Map<String, String> map, Map<String, String> query){
+        if (!baseValidation.isEmpty(map.get(FIRSTNAME))){
+            query.put(FIRSTNAME, "'%" + map.get(FIRSTNAME) + "%'");
+            logger.info("query: " + query.get(FIRSTNAME));
+        }
+        if (!baseValidation.isEmpty(map.get(LASTNAME))){
+            query.put(LASTNAME, "'%" +map.get(LASTNAME) + "%'");
+            logger.info("query: "  + query.get(LASTNAME));
+        }
+        if (!baseValidation.isEmpty(map.get(USERNAME))){
+            query.put(USERNAME, "'%" +map.get(USERNAME) + "%'");
+            logger.info("query: "  + query.get(USERNAME));
+        }
+        if (!baseValidation.isEmpty(map.get(EMAIL))){
+            query.put(EMAIL, "'%" +map.get(EMAIL) + "%'");
+            logger.info("query: "  + query.get(EMAIL));
+        }
+        if (!baseValidation.isEmpty(map.get(PHONE_NUMBER))){
+            query.put(USER_PHONE_NUMBER_IN_DB, "'%" + map.get(PHONE_NUMBER) + "%'");
+            logger.info("query: "  + query.get(PHONE_NUMBER));
+        }
     }
 
 }

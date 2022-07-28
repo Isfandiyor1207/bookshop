@@ -11,20 +11,18 @@ import java.sql.SQLException;
 
 import static epam.project.bookshop.command.ParameterName.*;
 
-public class AttachmentMapper implements BaseMapper<Attachment> {
+public class AttachmentMapper implements BaseMapper<AttachmentDto> {
 
     private static final Logger logger = LogManager.getLogger();
     private static final AttachmentMapper instance = new AttachmentMapper();
+
+    private AttachmentMapper(){}
 
     public static AttachmentMapper getInstance() {
         return instance;
     }
 
     @Override
-    public Attachment resultSetToEntity(ResultSet resultSet) throws DaoException {
-        return null;
-    }
-
     public AttachmentDto resultSetToDto(ResultSet resultSet) throws DaoException {
         AttachmentDto attachmentDto = new AttachmentDto();
 

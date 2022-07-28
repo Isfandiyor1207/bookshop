@@ -24,7 +24,6 @@ public class FindAllBooksPageCommand implements Command {
         try {
             List<BookDto> bookList = bookService.findAll();
 
-            logger.info(bookList);
             request.setAttribute(ParameterName.BOOK_LIST, bookList);
         } catch (ServiceException e) {
             logger.error(e);

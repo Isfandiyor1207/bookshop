@@ -21,6 +21,8 @@ public class Book extends BaseDomain {
 
     private Long price;
 
+    // todo I don`t know write or not number of voted users
+
     private Long numberOfBooks;
 
     private String description;

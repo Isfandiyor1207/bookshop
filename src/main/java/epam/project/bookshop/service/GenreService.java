@@ -10,4 +10,6 @@ public interface GenreService extends GenericService<GenreDto> {
     void attachBookToGenre(Long bookId, Long genreId, boolean isToUpdate) throws ServiceException;
 
     List<GenreDto> findAllByBookId(Long bookId) throws ServiceException;
+
+    List<Long> findAllBookIdByGenreId(Long genreId) throws ServiceException;
 }

@@ -2,6 +2,7 @@ package epam.project.bookshop.command.impl;
 
 import epam.project.bookshop.command.Command;
 import epam.project.bookshop.command.WebPageName;
+import epam.project.bookshop.dto.UserDto;
 import epam.project.bookshop.exception.CommandException;
 import epam.project.bookshop.exception.ServiceException;
 import epam.project.bookshop.service.UserService;
@@ -11,9 +12,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.*;
-import static epam.project.bookshop.validation.ValidationParameterName.*;
 
 public class LoginCommand implements Command {
 
@@ -40,9 +41,10 @@ public class LoginCommand implements Command {
 
         if (login) {
             Long roleId = 2L;
-
+            Optional<UserDto> optionalUserDto = Optional.empty();
             try {
-                roleId = userService.findUserRoleByUsername(username);
+                optionalUserDto = userService.findUserByUsername(username);
+                roleId = optionalUserDto.get().getRoleId();
             } catch (ServiceException e) {
                 e.printStackTrace();
             }
@@ -50,6 +52,7 @@ public class LoginCommand implements Command {
             request.setAttribute("user", username);
             session.setAttribute(USERNAME, username);
             session.setAttribute(USER_ROLE_ID, roleId);
+            session.setAttribute(USER_ID, optionalUserDto.get().getId());
 
             if (roleId == 0) {
                 page = WebPageName.ADMIN_PAGE;
@@ -63,7 +66,7 @@ public class LoginCommand implements Command {
             }
             page = WebPageName.LOGIN_PAGE;
         }
-        session.setAttribute("currentPage", page);
+//        session.setAttribute("currentPage", page);
         return page;
     }
 

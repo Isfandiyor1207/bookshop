@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import static epam.project.bookshop.command.ParameterName.GENRE_NAME;
 import static epam.project.bookshop.command.ParameterName.ID;
 
-public class GenreMapper implements BaseMapper<Genre> {
+public class GenreMapper implements BaseMapper<GenreDto> {
 
     private static final GenreMapper instance = new GenreMapper();
 
@@ -21,18 +21,7 @@ public class GenreMapper implements BaseMapper<Genre> {
     }
 
     @Override
-    public Genre resultSetToEntity(ResultSet resultSet) throws DaoException {
-        Genre genre = new Genre();
-        try {
-            genre.setId(resultSet.getLong(ID));
-            genre.setName(resultSet.getString(GENRE_NAME));
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-        return genre;
-    }
-
-    public GenreDto resultSetToGenreDto(ResultSet resultSet) throws DaoException {
+    public GenreDto resultSetToDto(ResultSet resultSet) throws DaoException {
         GenreDto genre = new GenreDto();
         try {
             genre.setId(resultSet.getLong(ID));

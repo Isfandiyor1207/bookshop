@@ -1,4 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
+
+<fmt:setLocale value="uz"/>
+<fmt:setBundle basename="prop.message"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,9 +39,14 @@
 		<div class="icons">
 			<div id="search-btn" class="fas fa-search"></div>
 			<a href="#" class="fas fa-heart"></a>
-			<a href="#" class="fas fa-shopping-cart"></a>
+<%--			<a href="#" class="fas fa-shopping-cart"></a>--%>
 			<%--            <div id="login-btn" class="fas fa-user"></div>--%>
 			<a href="${pageContext.request.contextPath}/pages/login.jsp"><span class="fas fa-user"></span></a>
+			<form action="${pageContext.request.contextPath}/controller" style="display: inline !important;">
+				<input type="hidden" name="command" value="get_access_to_user_profile">
+				<button type="submit" style="background-color: white" class=""><i class="fa fa-home" style="margin-left: 1.5rem;font-size: 2.5rem"></i></button>
+			</form>
+<%--			<a href="${pageContext.request.contextPath}/pages/login.jsp"><i class="fas fa-user"></i></a>--%>
 		</div>
 
 	</div>

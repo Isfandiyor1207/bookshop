@@ -1,16 +1,9 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 27.06.2022
-  Time: 9:30
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="uz"/>
+<fmt:setLocale value="en"/>
 <fmt:setBundle basename="prop.message"/>
 <html>
 <head>
@@ -47,7 +40,8 @@
         </div>
         <ul class="list-unstyled components">
             <li class="active">
-                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message key="label.dashboard"/></span></a>
+                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message
+                        key="label.dashboard"/></span></a>
             </li>
 
             <div class="small-screen navbar-display">
@@ -106,6 +100,17 @@
                     <i class="material-icons">extension</i><span><fmt:message key="label.users"/></span>
                 </a>
             </li>
+            <li class="dropdown">
+                <form action="${pageContext.request.contextPath}/controller" style="margin-bottom: 0">
+                    <input type="hidden" name="command" value="find_all_orders">
+                    <div style="display: flex; justify-content: left; align-items: center">
+                        <i class="material-icons" style="margin: 0 10px 0 20px">inventory</i>
+                        <button type="submit" style="padding: 10px;background-color: white; border: none;display: flex; align-items: center; justify-content: left; width: 100%;">
+                            <span><fmt:message key="label.user.orders"/></span>
+                        </button>
+                    </div>
+                </form>
+            </li>
 
             <li class="dropdown">
                 <a href="${pageContext.request.contextPath}/index.jsp">
@@ -139,41 +144,13 @@
                     <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none"
                          id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
-                            <li class="dropdown nav-item active">
-                                <a href="#" class="nav-link" data-toggle="dropdown">
-                                    <span class="material-icons">notifications</span>
-                                    <span class="notification">4</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#">You have 5 new messages</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">You're now friend with Mike</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Wish Mary on her birthday!</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">5 warnings in Server Console</a>
-                                    </li>
-
-                                </ul>
-                            </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">apps</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">person</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">settings</span>
-                                </a>
+                                <form action="${pageContext.request.contextPath}/controller">
+                                    <input type="hidden" name="command" value="logout">
+                                    <button class="nav-link" href="#">
+                                        <span class="material-icons">logout</span>
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </div>
@@ -196,7 +173,8 @@
                         <label class="fl fontLabel"> Full name: </label>
                         <label>
                             <input type="text" name="fio" placeholder="Full name"
-                                   class="textBox" autofocus="on" value=""><!-- <%= request.getParameter("firstname") %> -->
+                                   class="textBox" autofocus="on" value="">
+                            <!-- <%= request.getParameter("firstname") %> -->
                         </label>
                     </div>
                     <div class="clr"></div>

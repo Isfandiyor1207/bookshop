@@ -1,3 +1,8 @@
+<%@ page import="epam.project.bookshop.service.GenreService" %>
+<%@ page import="epam.project.bookshop.service.impl.GenreServiceImpl" %>
+<%@ page import="epam.project.bookshop.dto.GenreDto" %>
+<%@ page import="epam.project.bookshop.exception.ServiceException" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -5,6 +10,23 @@
 
 <fmt:setLocale value="uz"/>
 <fmt:setBundle basename="prop.message"/>
+
+
+<%
+    GenreService genreService = GenreServiceImpl.getInstance();
+
+    List<GenreDto> genreList = null;
+
+    try {
+
+        genreList = genreService.findAll();
+        request.setAttribute("genreList", genreList);
+
+    } catch (ServiceException e) {
+        throw new RuntimeException(e);
+    }
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,9 +62,15 @@
         <div class="icons">
             <div id="search-btn" class="fas fa-search"></div>
             <a href="#" class="fas fa-heart"></a>
-            <a href="#" class="fas fa-shopping-cart"></a>
+            <%--            <a href="#" class="fas fa-shopping-cart"></a>--%>
             <%--            <div id="login-btn" class="fas fa-user"></div>--%>
             <a href="${pageContext.request.contextPath}/pages/login.jsp"><span class="fas fa-user"></span></a>
+            <form action="${pageContext.request.contextPath}/controller" style="display: inline !important;">
+                <input type="hidden" name="command" value="get_access_to_user_profile">
+                <button type="submit" style="background-color: white" class=""><i class="fa fa-home"
+                                                                                  style="margin-left: 1.5rem;font-size: 2.5rem"></i>
+                </button>
+            </form>
         </div>
 
     </div>
@@ -62,9 +90,39 @@
 </header>
 
 <!-- header section ends -->
+<div class="container" style="margin: 15px 0">
+    <div id="demo" >
+        <form action="${pageContext.request.contextPath}/controller" style="width: 480px; padding: 15px; font-size: 15px">
+            <input type="hidden" name="command" value="search_to_main_book_page">
+            <div style="display: flex; justify-content: flex-start; align-items: center" class="search">
+                <label style="width: 40%">Book name</label>
+                <div style="width: 60%; display: inline">
+                    <input type="text" name="name" value="" style="border: groove">
+                </div>
+            </div>
+            <div style="display: flex; justify-content: flex-start; align-items: center" class="search">
+                <label style="width: 40%">Author name</label>
+                <div style="display: inline; width: 60%">
+                    <input type="text" name="fio" value="" style="border: groove">
+                </div>
+            </div>
+            <div style="display: flex; justify-content: flex-start; align-items: center">
+                <label style="width: 40% !important;">Genre:</label>
+                <select id="genre_id" name="genre_id" style="padding: 5px 5px; text-transform: capitalize; border: groove">
+                    <option value="0"></option>
+                    <c:forEach var="item" items="${genreList}">
+                        <option value="${item.id}">${item.name}</option>
+                    </c:forEach>
+                </select>
+                <small style="color: red">${genre_id_error}</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
+<%--<button type="button" class="btn btn-info collapsible" style="margin-bottom: 10px">Filter</button>--%>
 
-
-<section class="container">
+<section class="container" style="padding-top: 0 !important;">
     <c:forEach items="${book_list}" var="bookItem">
         <div class="card">
             <div class="card-image">
@@ -147,6 +205,23 @@
 <!-- <div class="loader-container">
   <img src="image/book_img/loader-img.gif" alt="" />
 </div> -->
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>
 
 <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 

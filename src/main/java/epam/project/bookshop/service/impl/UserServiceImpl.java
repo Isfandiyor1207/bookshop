@@ -81,6 +81,57 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<UserDto> findUserByUsername(String username) throws ServiceException {
+        try {
+            return userDao.findByUsername(username);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean updateUserStatusByUserId(Long userId, Long role) throws ServiceException {
+        try {
+            return userDao.updateUserStatusByUserId(userId, role);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<UserDto> findAllByUserFields(Map<String, String> userFieldMap) throws ServiceException {
+
+        Map<String, String> queryMap=new HashMap<>();
+
+        userValidation.createSearchingQuery(userFieldMap, queryMap);
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        queryMap.forEach((key, value) -> stringBuilder.append(key)
+                .append(" like ")
+                .append(value)
+                .append(" and "));
+
+        if (!userFieldMap.get(USER_ROLE_ID_IN_DB).isEmpty()){
+            stringBuilder.append(USER_ROLE_ID_IN_DB).append(" = ").append(userFieldMap.get(USER_ROLE_ID_IN_DB)).append(" and ");
+        }
+
+        stringBuilder.append(" deleted = ").append("false");
+
+        String queryString = stringBuilder.toString();
+
+        logger.info("query : " + queryString);
+
+        try {
+            return userDao.findAllByUserFields(queryString);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public boolean add(Map<String, String> userData) throws ServiceException {
 
         if (!userValidation.userRegistrationValidation(userData)) {
@@ -215,7 +266,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> findById(Long id) throws ServiceException {
-
         try {
             return userDao.findById(id);
         } catch (DaoException e) {

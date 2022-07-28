@@ -46,3 +46,6 @@
     background-color: #fefefe;
     text-align: center;
 }
+.search div input{
+    border: #1c7430 !important;
+}

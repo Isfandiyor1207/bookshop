@@ -27,22 +27,21 @@ public class BookDaoImpl implements BookDao {
     private static final String SELECT_BY_BOOK = "SELECT id, firstname, lastname, password, phoneNumber, email, username, roleid FROM users WHERE username = ? AND deleted = false";
     private static final String SELECT_BOOK_ID_BY_NAME = "SELECT id FROM book WHERE name = ? AND deleted = false";
     private static final String SELECT_BOOK_BY_NAME = "SELECT id, name, isbn, publisher, publishing_year, price, total, description FROM book WHERE name = ? AND deleted = false";
+    private static final String SELECT_ALL_BOOK_BY_NAME = "SELECT id, name, isbn, publisher, publishing_year, price, total, description FROM book WHERE name LIKE ?";
     private static final String SELECT_BY_ID = "SELECT id, name, isbn, publisher, publishing_year, price, total, description FROM book WHERE  id = ? AND deleted = false";
     private static final String SELECT_BY_ISBN = "SELECT id, name, isbn, publisher, publishing_year, price, total, description FROM book WHERE isbn = ? and deleted=false";
     private static final String SELECT_ALL = "SELECT id, name, isbn, publisher, publishing_year, price, total, description FROM book WHERE deleted=false order by id";
     private static final String DELETE_BOOK_BY_ID = "UPDATE book SET deleted = true WHERE id =? AND deleted = false";
     private static final String UPDATE_BOOK_BY_ID = "UPDATE book SET %s, updated_time = now() WHERE id =%s AND deleted = false";
     private static final String INSERT_BOOK = "INSERT INTO book(name, isbn, publisher, publishing_year, price, total, description) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id;";
+    private static final BookDaoImpl instance = new BookDaoImpl();
 
-    static BookDaoImpl instance;
-
-    public static BookDaoImpl getInstance() {
-        if (instance == null) {
-            instance = new BookDaoImpl();
-        }
-        return instance;
+    private BookDaoImpl() {
     }
 
+    public static BookDaoImpl getInstance() {
+        return instance;
+    }
 
     @Override
     public Long save(Book book) throws DaoException {
@@ -139,7 +138,6 @@ public class BookDaoImpl implements BookDao {
 
             while (resultSet.next()) {
                 BookDto bookDto = BookMapper.getInstance().resultSetToDto(resultSet);
-                logger.info("BookDto 1: " + bookDto);
                 bookList.add(bookDto);
             }
 
@@ -222,5 +220,29 @@ public class BookDaoImpl implements BookDao {
             throw new DaoException(e);
         }
 
+    }
+
+    @Override
+    public List<BookDto> findAllBookByBookName(String bookName) throws DaoException {
+
+        List<BookDto> bookDtoList = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BOOK_BY_NAME)) {
+
+            statement.setString(1, "%" + bookName.toLowerCase() + "%");
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                bookDtoList.add(BookMapper.getInstance().resultSetToDto(resultSet));
+            }
+
+            return bookDtoList;
+
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
     }
 }

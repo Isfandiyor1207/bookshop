@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static epam.project.bookshop.command.ParameterName.AUTHOR_ID;
-import static epam.project.bookshop.command.ParameterName.ID;
+import static epam.project.bookshop.command.ParameterName.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthorDaoImpl implements AuthorDao {
@@ -29,22 +28,23 @@ public class AuthorDaoImpl implements AuthorDao {
 
     private static final String SELECT_BY_AUTHOR_NAME = "SELECT id, fio FROM author WHERE fio = ? AND deleted = false";
     private static final String SELECT_BY_ID = "SELECT id, fio FROM author WHERE  id = ? AND deleted = false";
+    private static final String SELECT_ALL_ID_BY_FIO = "SELECT id FROM author WHERE fio LIKE ?";
     private static final String SELECT_LIST_OF_AUTHOR_BY_BOOK_ID = "SELECT author_id FROM author_book_list WHERE  book_id = ?";
     private static final String SELECT_ALL = "SELECT id, fio FROM author WHERE deleted = false order by id";
+    private static final String SELECT_ALL_BOOK_ID_BY_AUTHOR_ID = "SELECT book_id FROM author_book_list WHERE author_id = ?";
     private static final String DELETE_AUTHOR_BY_ID = "UPDATE author SET deleted = true WHERE id =? AND deleted = false";
     private static final String DELETE_LIST_OF_BOOK_AUTHOR = "DELETE FROM author_book_list WHERE book_id =?";
     private static final String UPDATE_AUTHOR_BY_ID = "UPDATE author SET fio = ?, updated_time = now() WHERE id = ? AND deleted = false";
     private static final String INSERT_AUTHOR = "INSERT INTO author(fio) VALUES (?) RETURNING id";
     private static final String ATTACH_BOOK_AUTHOR = "INSERT INTO author_book_list(author_id, book_id) VALUES (?, ?)";
-    private static AuthorDaoImpl instance;
+    private static final AuthorDaoImpl instance = new AuthorDaoImpl();
 
-    public static AuthorDaoImpl getInstance() {
-        if (instance == null) {
-            instance = new AuthorDaoImpl();
-        }
-        return instance;
+    private AuthorDaoImpl() {
     }
 
+    public static AuthorDaoImpl getInstance() {
+        return instance;
+    }
 
     @Override
     public Long save(Author author) throws DaoException {
@@ -233,14 +233,57 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public void deleteAttachedAuthor(Long bookId, Long authorId) throws DaoException {
-        try (Connection connection=ConnectionPool.getInstance().getConnection();
-        PreparedStatement statement=connection.prepareStatement(DELETE_LIST_OF_BOOK_AUTHOR)){
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_LIST_OF_BOOK_AUTHOR)) {
 
             statement.setLong(1, bookId);
 
             statement.execute();
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<Long> findAuthorIdByName(String authorName) throws DaoException {
+        List<Long> authorIdList = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_ID_BY_FIO)) {
+
+            statement.setString(1, "%"+authorName.toLowerCase() + "%");
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                authorIdList.add(resultSet.getLong(ID));
+            }
+            return authorIdList;
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<Long> findAllBookIdByAuthorId(Long authorId) throws DaoException {
+
+        List<Long> bookIdList=new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BOOK_ID_BY_AUTHOR_ID)) {
+
+            statement.setLong(1, authorId);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()){
+                bookIdList.add(resultSet.getLong(BOOK_ID));
+            }
+
+            return bookIdList;
+        } catch (SQLException e) {
             logger.error(e);
             throw new DaoException(e);
         }

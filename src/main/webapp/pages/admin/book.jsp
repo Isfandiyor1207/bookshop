@@ -1,12 +1,34 @@
 <%@ page import="epam.project.bookshop.service.GenreService" %>
 <%@ page import="epam.project.bookshop.service.impl.GenreServiceImpl" %>
+<%@ page import="epam.project.bookshop.service.AuthorService" %>
+<%@ page import="epam.project.bookshop.service.impl.AuthorServiceImpl" %>
+<%@ page import="epam.project.bookshop.dto.AuthorDto" %>
+<%@ page import="epam.project.bookshop.dto.GenreDto" %>
+<%@ page import="java.util.List" %>
+<%@ page import="epam.project.bookshop.exception.ServiceException" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="uz"/>
+<fmt:setLocale value="en"/>
 <fmt:setBundle basename="prop.message"/>
+
+<%
+    GenreService genreService = GenreServiceImpl.getInstance();
+
+    List<GenreDto> genreList = null;
+
+    try {
+
+        genreList = genreService.findAll();
+        request.setAttribute("genreList", genreList);
+
+    } catch (ServiceException e) {
+        throw new RuntimeException(e);
+    }
+%>
+
 <html>
 <head>
     <!-- Required meta tags -->
@@ -104,6 +126,19 @@
                 </a>
             </li>
             <li class="dropdown">
+                <form action="${pageContext.request.contextPath}/controller" style="margin-bottom: 0">
+                    <input type="hidden" name="command" value="find_all_orders">
+                    <div style="display: flex; justify-content: left; align-items: center">
+                        <i class="material-icons" style="margin: 0 10px 0 20px">inventory</i>
+                        <button type="submit"
+                                style="padding: 10px;background-color: white; border: none;display: flex; align-items: center; justify-content: left; width: 100%;">
+                            <span><fmt:message key="label.user.orders"/></span>
+                        </button>
+                    </div>
+                </form>
+            </li>
+
+            <li class="dropdown">
                 <a href="${pageContext.request.contextPath}/index.jsp">
                     <i class="material-icons">extension</i><fmt:message key="label.main.page"/>
                 </a>
@@ -134,41 +169,13 @@
                     <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none"
                          id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
-                            <li class="dropdown nav-item active">
-                                <a href="#" class="nav-link" data-toggle="dropdown">
-                                    <span class="material-icons">notifications</span>
-                                    <span class="notification">4</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#">You have 5 new messages</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">You're now friend with Mike</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Wish Mary on her birthday!</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">5 warnings in Server Console</a>
-                                    </li>
-
-                                </ul>
-                            </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">apps</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">person</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">settings</span>
-                                </a>
+                                <form action="${pageContext.request.contextPath}/controller">
+                                    <input type="hidden" name="command" value="logout">
+                                    <button class="nav-link" href="#">
+                                        <span class="material-icons">logout</span>
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </div>
@@ -179,8 +186,41 @@
 
         <div class="main-content">
 
-            <div>
-                <div style="width: 50% !important; display: grid">
+            <%--      Collapse      --%>
+            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo"
+                    style="margin-bottom: 10px">Filter
+            </button>
+            <div id="demo" class="collapse">
+                <form action="${pageContext.request.contextPath}/controller">
+                    <input type="hidden" name="command" value="search_book">
+                    <div style="width: 100%">
+                        <label style="width: 20%">Book name</label>
+                        <div style="width: 80%; display: inline">
+                            <input type="text" name="name" value="">
+                        </div>
+                    </div>
+                    <div style="width: 100%">
+                        <label style="width: 20%">Author name</label>
+                        <div style="display: inline; width: 80%">
+                            <input type="text" name="fio" value="">
+                        </div>
+                    </div>
+                    <div style="width: 100%;">
+                        <label style="width: 20% !important;">Genre:</label>
+                        <select id="genre_id" name="genre_id" style="padding: 5px 5px; text-transform: capitalize">
+                            <option value="0"></option>
+                            <c:forEach var="item" items="${genreList}">
+                                <option value="${item.id}">${item.name}</option>
+                            </c:forEach>
+                        </select>
+                        <small style="color: red">${genre_id_error}</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center">
+                <div>
                     <form action="${pageContext.request.contextPath}/controller" method="get">
                         <input type="hidden" name="command" value="read_book">
                         <input type="submit" style="align-content: flex-start" class="btn btn-primary"
@@ -188,7 +228,7 @@
                     </form>
                 </div>
 
-                <div style="width: 50% !important; display: grid">
+                <div>
                     <form>
                         <a href="${pageContext.request.contextPath}/pages/admin/book_create.jsp"
                            style="text-transform: none; align-content: flex-end"
@@ -201,21 +241,34 @@
 
             <b><small style="color: red; text-transform: none">${deleted_error}</small></b>
 
-            <table class="table table-light table-bordered" style="font-size: small; vertical-align: center; text-align:  center;">
+            <table class="table table-light table-bordered"
+                   style="font-size: small; vertical-align: center; text-align:  center;">
                 <thead class="table-primary">
                 <tr>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.id"/></th>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_name"/></th>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_isbn"/></th>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_publisher"/></th>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_publishingYear"/></th>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_price"/></th>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_numberOfBooks"/></th>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_genre"/></th>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_author"/></th>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_image_path"/></th>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.delete_btn"/></th>
-                    <th  style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.update_btn"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.id"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.book_name"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.book_isbn"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.book_publisher"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.book_publishingYear"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.book_price"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.book_numberOfBooks"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.book_genre"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.book_author"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.book_image_path"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.delete_btn"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
+                            key="label.update_btn"/></th>
                 </tr>
                 </thead>
 
@@ -288,6 +341,21 @@
         });
 
     });
+
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
 
 </script>
 

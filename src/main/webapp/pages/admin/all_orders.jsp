@@ -1,17 +1,10 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 06.06.2022
-  Time: 10:48
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored="false" %>
 <%@ page session="true" %>
-<fmt:setLocale value="uz" scope="session"/>
+<fmt:setLocale value="en" scope="session"/>
 <fmt:setBundle basename="prop.message"/>
-
 <html>
 <head>
     <!-- Required meta tags -->
@@ -29,9 +22,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link href="css/style.css" type="text/css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<%--    <link rel="stylesheet" href="css/user_update.css" type="text/css">--%>
+
     <!--google material icon-->
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
 </head>
@@ -47,11 +38,13 @@
     <!-- Sidebar  -->
     <nav id="sidebar">
         <div class="sidebar-header">
-            <h3><img src="${pageContext.request.contextPath}/pages/img/logo.png" class="img-fluid"/><span><fmt:message key="label.admin"/></span></h3>
+            <h3><img src="${pageContext.request.contextPath}/pages/img/logo.png"
+                     class="img-fluid"/><span><%=session.getAttribute("username")%></span></h3>
         </div>
         <ul class="list-unstyled components">
             <li class="active">
-                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message key="label.dashboard"/></span></a>
+                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message
+                        key="label.dashboard"/></span></a>
             </li>
 
             <div class="small-screen navbar-display">
@@ -88,6 +81,7 @@
             </div>
 
 
+
             <li class="dropdown">
                 <a href="${pageContext.request.contextPath}/pages/admin/book.jsp">
                     <i class="material-icons">aspect_ratio</i><span><fmt:message key="label.books"/></span>
@@ -96,21 +90,33 @@
 
             <li class="dropdown">
                 <a href="${pageContext.request.contextPath}/pages/admin/author.jsp">
-                    <i class="material-icons">apps</i><span><fmt:message key="label.author"/></span>
-                </a>
+                    <i class="material-icons">apps</i><span><fmt:message key="label.author"/></span></a>
             </li>
 
             <li class="dropdown">
-                <a href="${pageContext.request.contextPath}/pages/admin/author.jsp">
-                    <i class="material-icons">apps</i><span><fmt:message key="label.genre"/></span>
-                </a>
+                <a href="${pageContext.request.contextPath}/pages/admin/genre.jsp">
+                    <i class="material-icons">equalizer</i><span><fmt:message key="label.genre"/>
+                </span></a>
             </li>
 
             <li class="dropdown">
                 <a href="${pageContext.request.contextPath}/pages/admin/user.jsp">
-                    <i class="material-icons">extension</i><fmt:message key="label.genre"/>
+                    <i class="material-icons">extension</i><fmt:message key="label.users"/>
                 </a>
             </li>
+
+            <li class="dropdown">
+                <form action="${pageContext.request.contextPath}/controller" style="margin-bottom: 0">
+                    <input type="hidden" name="command" value="find_all_orders">
+                    <div style="display: flex; justify-content: left; align-items: center">
+                        <i class="material-icons" style="margin: 0 10px 0 20px">inventory</i>
+                        <button type="submit" style="padding: 10px;background-color: white; border: none;display: flex; align-items: center; justify-content: left; width: 100%;">
+                            <span><fmt:message key="label.user.orders"/></span>
+                        </button>
+                    </div>
+                </form>
+            </li>
+
             <li class="dropdown">
                 <a href="${pageContext.request.contextPath}/index.jsp">
                     <i class="material-icons">extension</i><fmt:message key="label.main.page"/>
@@ -142,41 +148,13 @@
                     <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none"
                          id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
-                            <li class="dropdown nav-item active">
-                                <a href="#" class="nav-link" data-toggle="dropdown">
-                                    <span class="material-icons">notifications</span>
-                                    <span class="notification">4</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#">You have 5 new messages</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">You're now friend with Mike</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Wish Mary on her birthday!</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">5 warnings in Server Console</a>
-                                    </li>
-
-                                </ul>
-                            </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">apps</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">person</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">settings</span>
-                                </a>
+                                <form action="${pageContext.request.contextPath}/controller">
+                                    <input type="hidden" name="command" value="logout">
+                                    <button class="nav-link" href="#">
+                                        <span class="material-icons">logout</span>
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </div>
@@ -187,66 +165,99 @@
 
         <div class="main-content">
 
-            <div class="container-fluid">
-                <form method="post" autocomplete="on" action="${pageContext.request.contextPath}/controller">
-                    <input type="hidden" name="command" value="update_user">
-
-                    <div class="container-fluid">
-                        <label style="width: 30% !important; position: initial"> First Name: </label>
-                        <input type="text" name="firstname" placeholder="Firstname"
-                               class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
+            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo"
+                    style="margin-bottom: 10px">Filter
+            </button>
+            <div id="demo" class="collapse">
+                <form action="${pageContext.request.contextPath}/controller">
+                    <input type="hidden" name="command" value="search_order">
+                    <div style="display: flex; justify-content: left;">
+                        <div style="width: 50%">
+                            <label style="width: 35%">Book name: </label>
+                            <div style="width: 65%; display: inline">
+                                <input type="text" name="name" value="">
+                            </div>
+                        </div>
+                        <div style="width: 50%">
+                            <label style="width: 35%">Username</label>
+                            <div style="display: inline; width: 65%">
+                                <input type="text" name="username" value="">
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="container-fluid">
-                        <label style="width: 30% !important; position: initial"> Lastname: </label>
-                        <input type="text" name="lastname" placeholder="Lastname"
-                                class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
-                    </div>
-
-                    <div class="container-fluid">
-                        <label style="width: 30% !important; position: initial"> Username: </label>
-                        <input type="text" name="username" placeholder="Username"
-                               class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
-                    </div>
-
-                    <small style="color: red">${username_error}</small>
-
-                    <div class="container-fluid">
-                        <label style="width: 30% !important; position: initial"> Phone number: </label>
-                        <input type="text" name="contact" placeholder="Phone number"
-                               class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
-                    </div>
-
-                    <small style="color: red">${phone_number_error}</small>
-
-                    <div class="container-fluid">
-                        <label style="width: 30% !important; position: initial"> Email: </label>
-                        <input type="text" name="email" placeholder="Email"
-                               class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
-                    </div>
-
-                    <small style="color: red">${email_error}</small>
-
-                    <div class="container-fluid">
-                        <label style="width: 30% !important; position: initial"> Password: </label>
-                        <input type="password" name="password" placeholder="Password"
-                               class="textBox" autofocus="autofocus" value="" style="width: 50% !important;">
-                    </div>
-
-                    <small style="color: red">${password_error}</small>
-
-                    <div class="container-fluid">
-                        <input type="submit" name="add_user" id="update_user" class="form-submit btn btn-primary"
-                               value="Push"/>
-                    </div>
-
-                    <small style="color: red">${user_update_error}</small>
-
-
+                    <button type="submit" class="btn btn-primary">Search</button>
                 </form>
             </div>
 
-            <footer class="footer" style="vertical-align: bottom !important;">
+            <div style="display: flex; justify-content: normal">
+                <div style="width: 100%; display: flex; justify-content: space-around;align-items: center;">
+                    <div>
+                        <form action="${pageContext.request.contextPath}/controller" style="display: inline">
+                            <input type="hidden" name="command" value="find_all_delivered_orders">
+                            <button type="submit" class="btn btn-outline-success"><fmt:message key="label.delivered.orders"/></button>
+                        </form>
+                    </div>
+                    <div>
+                        <form action="${pageContext.request.contextPath}/controller" style="display: inline">
+                            <input type="hidden" name="command" value="find_all_not_delivered_orders">
+                            <button type="submit" class="btn btn-outline-warning"><fmt:message key="label.not.delivered.orders"/></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <h2>${order_is_not_available}</h2>
+
+            <table class="table table-light table-bordered">
+                <thead class="table-primary">
+                <tr>
+                    <th scope="col"><fmt:message key="label.id"/></th>
+                    <th scope="col"><fmt:message key="label.book_name"/></th>
+                    <th scope="col"><fmt:message key="label.username"/></th>
+                    <th scope="col"><fmt:message key="label.order.orderQuantity"/></th>
+                    <th scope="col"><fmt:message key="label.order.price"/></th>
+                    <th scope="col"><fmt:message key="label.order.isDelivered"/></th>
+<%--                    <th scope="col"><fmt:message key="label.isDelivered.button"/></th>--%>
+                </tr>
+                </thead>
+
+                <tbody>
+                <c:set var="count" value="0" scope="page"/>
+                <c:forEach items="${all_orders}" var="item">
+                    <tr>
+                        <td>
+                            <c:set var="count" value="${count + 1}" scope="page"/>
+                            <c:out value="${count}"/>
+                        </td>
+                        <td><c:out value="${item.bookDto.name}"/></td>
+                        <td><c:out value="${item.userDto.username}"/></td>
+                        <td><c:out value="${item.orderQuantity}"/></td>
+                        <td>$<c:out value="${item.orderPrice}"/></td>
+                        <td>
+                            <c:choose>
+                            <c:when test="${item.delivered == true}">
+                            Yes
+                            </c:when>
+                            <c:otherwise>
+                            No
+                            </c:otherwise>
+                            </c:choose>
+                        </td>
+<%--                        <td>--%>
+<%--                            <form action="${pageContext.request.contextPath}/controller">--%>
+<%--                                <input type="hidden" name="command" value="change_order_delivered_status">--%>
+<%--                                    &lt;%&ndash;                                <label type="submit"><i class="bi bi-trash"></i></label>&ndash;%&gt;--%>
+<%--                                <input type="hidden" name="order_id" value="${item.id}">--%>
+<%--                                <button type="submit" name="order_delivered" class="btn btn-outline-danger"--%>
+<%--                                        value="${true}"><fmt:message key="label.isDelivered.button"/></button>--%>
+<%--                            </form>--%>
+<%--                        </td>--%>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+
+            <footer class="footer">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-6">
@@ -277,8 +288,8 @@
 
                         </div>
                         <div class="col-md-6">
-                            <p class="copyright d-flex justify-content-end"> &copy 2021 Design by
-                                <a href="#">Vishweb Design</a> BootStrap Admin Dashboard
+                            <p class="copyright d-flex justify-content-end"> &copy 2022 Design by
+                                <a href="#"> Sultonov Isfandiyor</a>
                             </p>
                         </div>
                     </div>

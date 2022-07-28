@@ -26,7 +26,6 @@ public class AuthorServiceImpl implements AuthorService {
     private static final AuthorServiceImpl instance = new AuthorServiceImpl();
 
     private AuthorServiceImpl() {
-
     }
 
     public static AuthorServiceImpl getInstance() {
@@ -150,6 +149,26 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorDto> findAllAuthorByBookId(Long bookId) throws ServiceException {
         try {
             return authorDao.findAllAuthorByBookId(bookId);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Long> findAuthorIdByName(String authorName) throws ServiceException {
+        try {
+            return authorDao.findAuthorIdByName(authorName);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Long> findAllBookIdByAuthorId(Long authorId) throws ServiceException {
+        try {
+            return authorDao.findAllBookIdByAuthorId(authorId);
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e);

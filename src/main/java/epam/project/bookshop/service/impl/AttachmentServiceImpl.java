@@ -27,6 +27,8 @@ public class AttachmentServiceImpl implements AttachmentService {
     private static final String UPLOAD_DIRECTORY = "C:/Users/User/Desktop/bookshop/src/main/webapp/pages/img/uploads/";
     private static final AttachmentDao attachmentDao = AttachmentDaoImpl.getInstance();
 
+    private AttachmentServiceImpl(){}
+
     public static AttachmentServiceImpl getInstance() {
         return instance;
     }

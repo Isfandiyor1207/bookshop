@@ -20,6 +20,7 @@ public final class ParameterName {
     public static final String USER_ROLE_ID_IN_DB = "roleid";
     public static final String USER_PHONE_NUMBER_IN_DB = "phonenumber";
     public static final String USER_LIST = "user_list";
+    public static final String USER_INFO = "user_info";
 
     /* Genre parameters */
     public static final String GENRE_NAME = "name";
@@ -42,6 +43,7 @@ public final class ParameterName {
     public static final String BOOK_NAME = "name";
     public static final String BOOK_DESCRIPTION = "description";
     public static final String BOOK_INFORMATION = "book_info";
+    public static final String BOOK_RATE = "rate";
 
     /* Attachment parameters */
     public static final String ATTACHMENT = "file";
@@ -51,6 +53,18 @@ public final class ParameterName {
     public static final String ATTACHMENT_ABSOLUTE_NAME = "absolute_name";
     public static final String ATTACHMENT_UPLOAD_PATH = "upload_path";
     public static final String ATTACHMENT_EXTENSION = "extension";
+
+    /* Rate parameters */
+    public static final String RATE_QUANTITY = "rate";
+
+    /* Order parameters */
+    public static final String BOOK_ORDER_QUANTITY = "quantity";
+    public static final String BOOK_DELIVERED = "delivered";
+    public static final String ORDERS_BY_USER_ID = "user_order";
+    public static final String ORDER_PRICE = "order_price";
+    public static final String ALL_ORDERS = "all_orders";
+    public static final String ALL_ORDERS_BY_STATUS = "all_orders_by_status";
+    public static final String DELIVERED_STATUS = "order_delivered_status";
 
 
     private ParameterName() {

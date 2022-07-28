@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 import static epam.project.bookshop.command.ParameterName.*;
 
-public class AuthorMapper implements BaseMapper<Author>{
+public class AuthorMapper implements BaseMapper<AuthorDto>{
     private static final Logger logger= LogManager.getLogger();
     private static final AuthorMapper instance = new AuthorMapper();
 
@@ -23,18 +23,6 @@ public class AuthorMapper implements BaseMapper<Author>{
     }
 
     @Override
-    public Author resultSetToEntity(ResultSet resultSet) throws DaoException {
-        try {
-            Author author = new Author();
-            author.setId(resultSet.getLong(ID));
-            author.setFio(resultSet.getString(AUTHOR_FIO));
-            return author;
-        } catch (SQLException e) {
-            logger.info(e);
-            throw new DaoException(e);
-        }
-    }
-
     public AuthorDto resultSetToDto(ResultSet resultSet) throws DaoException{
         try {
             AuthorDto authorDto=new AuthorDto();

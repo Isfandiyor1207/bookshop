@@ -3,7 +3,7 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="uz"/>
+<fmt:setLocale value="en"/>
 <fmt:setBundle basename="prop.message"/>
 <jsp:useBean id="book_info" scope="request" type="epam.project.bookshop.dto.BookDto"></jsp:useBean>
 <!DOCTYPE html>
@@ -22,6 +22,8 @@
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/main.css"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <!-- header section starts  -->
@@ -41,9 +43,15 @@
         <div class="icons">
             <div id="search-btn" class="fas fa-search"></div>
             <a href="#" class="fas fa-heart"></a>
-            <a href="#" class="fas fa-shopping-cart"></a>
-            <%--            <div id="login-btn" class="fas fa-user"></div>--%>
+            <%--            <a href="#" class="fas fa-shopping-cart"></a>--%>
+<%--            <div id="login-btn" class="fas fa-user"></div>--%>
             <a href="${pageContext.request.contextPath}/pages/login.jsp"><span class="fas fa-user"></span></a>
+            <form action="${pageContext.request.contextPath}/controller" style="display: inline !important;">
+                <input type="hidden" name="command" value="get_access_to_user_profile">
+                <button type="submit" style="background-color: white" class=""><i class="fa fa-home"
+                                                                                  style="margin-left: 1.5rem;font-size: 2.5rem"></i>
+                </button>
+            </form>
         </div>
 
     </div>
@@ -73,7 +81,7 @@
         </div>
     </div>
     <div class="right">
-        <h1>
+        <h1 class="content-title">
             <jsp:getProperty name="book_info" property="name"/>
             <small>by</small>
             <c:forEach var="author" items="${book_info.authorDtoList}">
@@ -83,15 +91,50 @@
         <p>
             <jsp:getProperty name="book_info" property="description"/>
         </p>
-        <h3>$
+        <h2>
+            Rate:
+            <jsp:getProperty name="book_info" property="averageRate"/>
+            Voted:
+            <jsp:getProperty name="book_info" property="numberOfVotedUser"/>
+        </h2>
+        <h1 class="price">$
             <jsp:getProperty name="book_info" property="price"/>
-        </h3>
-        <div class="quantity">
-            <p>Quantity: </p>
-            <input type="number" name="quantity">
+        </h1>
+        <div class="rate-comment">
+            <form action="${pageContext.request.contextPath}/controller" class="rate-wrapper">
+                <input type="hidden" name="command" value="rate_book"/>
+                <div class="rate">
+                    <input type="radio" id="star5" name="rate" value="5"/>
+                    <label for="star5" title="text"></label>
+                    <input type="radio" id="star4" name="rate" value="4"/>
+                    <label for="star4" title="text"></label>
+                    <input type="radio" id="star3" name="rate" value="3"/>
+                    <label for="star3" title="text"></label>
+                    <input type="radio" id="star2" name="rate" value="2"/>
+                    <label for="star2" title="text"></label>
+                    <input type="radio" id="star1" name="rate" value="1"/>
+                    <label for="star1" title="text"></label>
+                </div>
+                <button type="submit" name="book_id" value="${book_info.id}" class="btn btn-primary">Rate</button>
+            </form>
         </div>
-        <input type="hidden" name="command" value="order_book">
-        <button class="btn btn-success" name="book_id" value="${book_info.id}">Buy</button>
+
+        <div class="quantity">
+            <div class="order">
+                <form action="${pageContext.request.contextPath}/controller">
+                    <div class="order-quantity">
+                        <label>Quantity: </label>
+                        <input type="number" name="quantity" value="1">
+                        <small style="color: red;">${book_quantity_error}</small>
+                    </div>
+                    <div class="order-btn">
+                        <input type="hidden" name="command" value="check_user_to_authorization">
+                        <button class="btn btn-success" type="submit" name="book_id" value="${book_info.id}">Buy
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -150,10 +193,6 @@
 <!-- footer section ends -->
 
 <!-- loader  -->
-
-<!-- <div class="loader-container">
-  <img src="image/book_img/loader-img.gif" alt="" />
-</div> -->
 
 <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 

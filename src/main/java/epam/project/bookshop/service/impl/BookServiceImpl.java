@@ -28,10 +28,11 @@ public class BookServiceImpl implements BookService {
     private static final BookServiceImpl instance = new BookServiceImpl();
     private static final BookDao bookDao = BookDaoImpl.getInstance();
     private static final AuthorServiceImpl authorService = AuthorServiceImpl.getInstance();
+    private static final RateServiceImpl rateService = RateServiceImpl.getInstance();
+    private static final GenreService genreService = GenreServiceImpl.getInstance();
     private static final BookValidation bookValidation = BookValidation.getInstance();
     private static final BaseValidation baseValidation = BaseValidation.getInstance();
     private static final AttachmentService attachmentService = AttachmentServiceImpl.getInstance();
-    private static final GenreService genreService = GenreServiceImpl.getInstance();
     private static final Utils utils = new Utils();
 
     private BookServiceImpl() {
@@ -43,8 +44,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public boolean deleteById(Long id) throws ServiceException {
-    // todo delete genre_list and author_list by book_id
+        // todo delete genre_list and author_list by book_id
         try {
+            rateService.deleteByBookId(id);
             attachmentService.deleteByBookId(id);
             return bookDao.deleteById(id);
         } catch (DaoException e) {
@@ -140,9 +142,12 @@ public class BookServiceImpl implements BookService {
             List<BookDto> bookList = new ArrayList<>();
 
             for (BookDto book : bookDtoList) {
-                book.setAuthorDtoList(authorService.findAllAuthorByBookId(book.getId()));
-                book.setGenreDtoList(genreService.findAllByBookId(book.getId()));
-                book.setAttachmentDtoList(attachmentService.findAllByBookId(book.getId()));
+                Long bookId = book.getId();
+                book.setAuthorDtoList(authorService.findAllAuthorByBookId(bookId));
+                book.setGenreDtoList(genreService.findAllByBookId(bookId));
+                book.setAttachmentDtoList(attachmentService.findAllByBookId(bookId));
+                book.setAverageRate(rateService.getAverageRateByBookId(bookId).get());
+                book.setNumberOfVotedUser(rateService.getNumberOfVotedUsersByBookId(bookId).get());
                 bookList.add(book);
             }
 
@@ -159,13 +164,21 @@ public class BookServiceImpl implements BookService {
         try {
             Optional<BookDto> optionalBookDto = bookDao.findById(id);
             BookDto bookDto = optionalBookDto.get();
-            List<AuthorDto> authorDtoList = authorService.findAllAuthorByBookId(bookDto.getId());
-            List<AttachmentDto> attachmentDtoList = attachmentService.findAllByBookId(bookDto.getId());
-            List<GenreDto> genreDtoList = genreService.findAllByBookId(bookDto.getId());
+
+            Long bookId = bookDto.getId();
+
+            List<AuthorDto> authorDtoList = authorService.findAllAuthorByBookId(bookId);
+            List<AttachmentDto> attachmentDtoList = attachmentService.findAllByBookId(bookId);
+            List<GenreDto> genreDtoList = genreService.findAllByBookId(bookId);
+            Double averageRate = rateService.getAverageRateByBookId(bookId).get();
+            Long numberOfVotedUsers = rateService.getNumberOfVotedUsersByBookId(bookId).get();
 
             bookDto.setAuthorDtoList(authorDtoList);
             bookDto.setAttachmentDtoList(attachmentDtoList);
             bookDto.setGenreDtoList(genreDtoList);
+            bookDto.setAverageRate(averageRate);
+            bookDto.setNumberOfVotedUser(numberOfVotedUsers);
+
             return Optional.of(bookDto);
         } catch (DaoException e) {
             logger.error(e);
@@ -237,13 +250,20 @@ public class BookServiceImpl implements BookService {
         try {
             Optional<BookDto> optionalBookDto = bookDao.findByName(name);
             BookDto bookDto = optionalBookDto.get();
-            List<AuthorDto> authorDtoList = authorService.findAllAuthorByBookId(bookDto.getId());
-            List<AttachmentDto> attachmentDtoList = attachmentService.findAllByBookId(bookDto.getId());
-            List<GenreDto> genreDtoList = genreService.findAllByBookId(bookDto.getId());
+
+            Long bookId = bookDto.getId();
+
+            List<AuthorDto> authorDtoList = authorService.findAllAuthorByBookId(bookId);
+            List<AttachmentDto> attachmentDtoList = attachmentService.findAllByBookId(bookId);
+            List<GenreDto> genreDtoList = genreService.findAllByBookId(bookId);
+            Double averageRate = rateService.getAverageRateByBookId(bookId).get();
+            Long numberOfVotedUsers = rateService.getNumberOfVotedUsersByBookId(bookId).get();
 
             bookDto.setAuthorDtoList(authorDtoList);
             bookDto.setAttachmentDtoList(attachmentDtoList);
             bookDto.setGenreDtoList(genreDtoList);
+            bookDto.setAverageRate(averageRate);
+            bookDto.setNumberOfVotedUser(numberOfVotedUsers);
             return Optional.of(bookDto);
         } catch (DaoException e) {
             logger.error(e);
@@ -251,4 +271,169 @@ public class BookServiceImpl implements BookService {
         }
     }
 
+    @Override
+    public List<BookDto> findBySearchingDetail(Map<String, String> searchMap) throws ServiceException {
+
+        List<BookDto> dtoList = new ArrayList<>();
+
+        String bookName = searchMap.get(BOOK_NAME);
+        String authorName = searchMap.get(AUTHOR_FIO);
+        String genreId = searchMap.get(GENRE_ID);
+
+        if (!bookName.isEmpty() && !authorName.isEmpty() && !genreId.equals("0")) {
+            logger.info("!bookName.isEmpty() && !authorName.isEmpty() !genreId.equals(\"0\")");
+            List<Long> bookIdList = genreService.findAllBookIdByGenreId(Long.valueOf(genreId));
+            if (!bookIdList.isEmpty()) {
+
+                List<Long> authorIdList = authorService.findAuthorIdByName(authorName);
+
+                List<Long> bookIdListByAuthorId = new ArrayList<>();
+
+                for (Long authorId : authorIdList) {
+                    bookIdListByAuthorId.addAll(authorService.findAllBookIdByAuthorId(authorId));
+                }
+
+                List<BookDto> allBookByBookName = findAllBookByBookName(bookName);
+
+                for (Long aLong : bookIdListByAuthorId) {
+                    for (BookDto bookDto : allBookByBookName) {
+                        if (Objects.equals(aLong, bookDto.getId())) {
+                            dtoList.add(bookDto);
+                        }
+                    }
+                }
+
+                List<BookDto> bookList = new ArrayList<>();
+                for (Long bookIdByGenre : bookIdList) {
+                    for (BookDto bookDto : dtoList) {
+                        if (Objects.equals(bookIdByGenre, bookDto.getId())) {
+                            bookList.add(bookDto);
+                        }
+                    }
+                }
+                dtoList.clear();
+                dtoList.addAll(bookList);
+            }
+        }
+
+        if (bookName.isEmpty() && !authorName.isEmpty() && !genreId.equals("0")) {
+            logger.info("bookName.isEmpty() && !authorName.isEmpty() && !genreId.equals(\"0\")");
+            List<Long> bookIdList = genreService.findAllBookIdByGenreId(Long.valueOf(genreId));
+            if (!bookIdList.isEmpty()) {
+                List<Long> authorIdList = authorService.findAuthorIdByName(authorName);
+
+                List<Long> bookIdListByAuthorId = new ArrayList<>();
+
+                for (Long authorId : authorIdList) {
+                    bookIdListByAuthorId.addAll(authorService.findAllBookIdByAuthorId(authorId));
+                }
+
+                for (Long bookId : bookIdListByAuthorId) {
+                    Optional<BookDto> optionalBookDto = findById(bookId);
+                    dtoList.add(optionalBookDto.get());
+                }
+
+                List<BookDto> bookList = new ArrayList<>();
+                for (Long bookIdByGenre : bookIdList) {
+                    for (BookDto bookDto : dtoList) {
+                        if (Objects.equals(bookIdByGenre, bookDto.getId())) {
+                            bookList.add(bookDto);
+                        }
+                    }
+                }
+                dtoList.clear();
+                dtoList.addAll(bookList);
+            }
+        }
+
+        if (!bookName.isEmpty() && authorName.isEmpty() && !genreId.equals("0")) {
+            logger.info("!bookName.isEmpty() && authorName.isEmpty() && !genreId.equals(\"0\")");
+            List<Long> bookIdByGenreList = genreService.findAllBookIdByGenreId(Long.valueOf(genreId));
+            if (!bookIdByGenreList.isEmpty()) {
+                List<BookDto> allBookByBookName = findAllBookByBookName(bookName);
+
+                for (Long bookIdByGenre : bookIdByGenreList) {
+                    for (BookDto bookDto : allBookByBookName) {
+                        if (Objects.equals(bookIdByGenre, bookDto.getId())) {
+                            dtoList.add(bookDto);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!bookName.isEmpty() && !authorName.isEmpty() && genreId.equals("0")) {
+            logger.info("!bookName.isEmpty() && !authorName.isEmpty() && genreId.equals(\"0\")");
+
+            List<Long> authorIdByName = authorService.findAuthorIdByName(authorName);
+
+            List<Long> bookIdByAuthor = new ArrayList<>();
+
+            for (Long authorId : authorIdByName) {
+                bookIdByAuthor.addAll(authorService.findAllBookIdByAuthorId(authorId));
+            }
+
+            List<BookDto> bookDtoList = findAllBookByBookName(bookName);
+
+            for (Long bookId : bookIdByAuthor) {
+                for (BookDto bookDto : bookDtoList) {
+                    if (Objects.equals(bookId, bookDto.getId())) {
+                        dtoList.add(bookDto);
+                    }
+                }
+            }
+
+        }
+
+        if (bookName.isEmpty() && authorName.isEmpty() && !genreId.equals("0")) {
+            logger.info("bookName.isEmpty() && authorName.isEmpty() && !genreId.equals(\"0\")");
+            List<Long> bookListByGenre = genreService.findAllBookIdByGenreId(Long.valueOf(genreId));
+            for (Long bookId : bookListByGenre) {
+                dtoList.add(findById(bookId).get());
+            }
+        }
+
+        if (bookName.isEmpty() && !authorName.isEmpty() && genreId.equals("0")) {
+
+            logger.info("bookName.isEmpty() && !authorName.isEmpty() && genreId.equals(\"0\")");
+
+            List<Long> authorIdByName = authorService.findAuthorIdByName(authorName);
+            List<Long> bookIdList = new ArrayList<>();
+            for (Long authorId : authorIdByName) {
+                bookIdList.addAll(authorService.findAllBookIdByAuthorId(authorId));
+            }
+
+            for (Long bookId : bookIdList) {
+                dtoList.add(findById(bookId).get());
+            }
+        }
+
+        if (!bookName.isEmpty() && authorName.isEmpty() && genreId.equals("0")) {
+            logger.info("!bookName.isEmpty() && authorName.isEmpty() && genreId.equals(\"0\")");
+            dtoList.addAll(findAllBookByBookName(bookName.trim()));
+        }
+
+        List<BookDto> bookList = new ArrayList<>();
+        for (BookDto book : dtoList) {
+            Long bookId = book.getId();
+            book.setAuthorDtoList(authorService.findAllAuthorByBookId(bookId));
+            book.setGenreDtoList(genreService.findAllByBookId(bookId));
+            book.setAttachmentDtoList(attachmentService.findAllByBookId(bookId));
+            book.setAverageRate(rateService.getAverageRateByBookId(bookId).get());
+            book.setNumberOfVotedUser(rateService.getNumberOfVotedUsersByBookId(bookId).get());
+            bookList.add(book);
+        }
+
+        return bookList;
+    }
+
+    @Override
+    public List<BookDto> findAllBookByBookName(String bookName) throws ServiceException {
+        try {
+            return bookDao.findAllBookByBookName(bookName);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
 }

@@ -28,13 +28,15 @@ public class UserDaoImpl implements UserDao {
     private static final String SELECT_ROLE_ID = "SELECT roleid FROM users WHERE username = ? AND deleted=false;";
     private static final String DELETE_USERS_BY_ID = "UPDATE users SET deleted = true WHERE id =? AND deleted = false";
     private static final String UPDATE_USERS_BY_ID = "UPDATE users SET %s updated_time = now() WHERE id =%s AND deleted = false";
+    private static final String UPDATE_USERS_STATUS_BY_ID = "UPDATE users SET roleid = ?, updated_time = now() WHERE id = ? AND deleted = false";
     private static final String INSERT_USER = "INSERT INTO users(firstname, lastname, username, password, email, phoneNumber) VALUES (?, ?, ?, ?, ?, ?) RETURNING id;";
-    private static UserDaoImpl instance;
+    private static final String SEARCHING_USER = "SELECT id, firstname, lastname, phoneNumber, email, password, username, roleid FROM users WHERE %s";
+    private static final UserDaoImpl instance = new UserDaoImpl();
+
+    private UserDaoImpl() {
+    }
 
     public static UserDaoImpl getInstance() {
-        if (instance == null) {
-            instance = new UserDaoImpl();
-        }
         return instance;
     }
 
@@ -112,9 +114,9 @@ public class UserDaoImpl implements UserDao {
                 user = UserMapper.getInstance().resultSetToDto(resultSet);
             }
 
-            if (user.getUsername() == null){
+            if (user.getUsername() == null) {
                 return Optional.empty();
-            }else return Optional.of(user);
+            } else return Optional.of(user);
 
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -223,6 +225,45 @@ public class UserDaoImpl implements UserDao {
             } else return Optional.of(user);
 
         } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public boolean updateUserStatusByUserId(Long userId, Long role) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USERS_STATUS_BY_ID)) {
+
+            statement.setLong(1, role);
+            statement.setLong(2, userId);
+
+            return statement.execute();
+
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<UserDto> findAllByUserFields(String query) throws DaoException {
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             Statement statement = connection.createStatement()) {
+
+            String searchQuery = String.format(SEARCHING_USER, query);
+
+            ResultSet resultSet = statement.executeQuery(searchQuery);
+
+            List<UserDto> userDtoList = new ArrayList<>();
+
+            while (resultSet.next()) {
+                userDtoList.add(UserMapper.getInstance().resultSetToDto(resultSet));
+            }
+
+            return userDtoList;
+        } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }

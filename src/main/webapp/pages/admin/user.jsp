@@ -1,17 +1,17 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 11.06.2022
-  Time: 17:04
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="epam.project.bookshop.entity.type.Role" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="uz"/>
+<fmt:setLocale value="en"/>
 <fmt:setBundle basename="prop.message"/>
+<%
+    Role[] roleArray = Role.values();
+
+    request.setAttribute("role_array", roleArray);
+
+%>
 <html>
 <head>
     <!-- Required meta tags -->
@@ -108,6 +108,18 @@
                 </a>
             </li>
             <li class="dropdown">
+                <form action="${pageContext.request.contextPath}/controller" style="margin-bottom: 0">
+                    <input type="hidden" name="command" value="find_all_orders">
+                    <div style="display: flex; justify-content: left; align-items: center">
+                        <i class="material-icons" style="margin: 0 10px 0 20px">inventory</i>
+                        <button type="submit" style="padding: 10px;background-color: white; border: none;display: flex; align-items: center; justify-content: left; width: 100%;">
+                            <span><fmt:message key="label.user.orders"/></span>
+                        </button>
+                    </div>
+                </form>
+            </li>
+
+            <li class="dropdown">
                 <a href="${pageContext.request.contextPath}/index.jsp">
                     <i class="material-icons">extension</i><fmt:message key="label.main.page"/>
                 </a>
@@ -135,44 +147,15 @@
                         <span class="material-icons">more_vert</span>
                     </button>
 
-                    <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none"
-                         id="navbarSupportedContent">
+                    <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
-                            <li class="dropdown nav-item active">
-                                <a href="#" class="nav-link" data-toggle="dropdown">
-                                    <span class="material-icons">notifications</span>
-                                    <span class="notification">4</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#">You have 5 new messages</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">You're now friend with Mike</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Wish Mary on her birthday!</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">5 warnings in Server Console</a>
-                                    </li>
-
-                                </ul>
-                            </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">apps</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">person</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span class="material-icons">settings</span>
-                                </a>
+                                <form action="${pageContext.request.contextPath}/controller">
+                                    <input type="hidden" name="command" value="logout">
+                                    <button class="nav-link" href="#">
+                                        <span class="material-icons">logout</span>
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </div>
@@ -182,6 +165,60 @@
 
 
         <div class="main-content">
+
+            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo"
+                    style="margin-bottom: 10px">Filter
+            </button>
+            <div id="demo" class="collapse">
+                <form action="${pageContext.request.contextPath}/controller">
+                    <input type="hidden" name="command" value="search_user">
+                    <div style="display: flex; justify-content: left;">
+                        <div style="width: 50%">
+                            <label style="width: 35%">Firstname</label>
+                            <div style="width: 65%; display: inline">
+                                <input type="text" name="firstname" value="">
+                            </div>
+                        </div>
+                        <div style="width: 50%">
+                            <label style="width: 35%">Lastname</label>
+                            <div style="display: inline; width: 65%">
+                                <input type="text" name="lastname" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: left;">
+                        <div style="width: 50%">
+                            <label style="width: 35%">Username</label>
+                            <div style="width: 65%; display: inline">
+                                <input type="text" name="username" value="">
+                            </div>
+                        </div>
+                        <div style="width: 50%">
+                            <label style="width: 35%">Email</label>
+                            <div style="display: inline; width: 65%">
+                                <input type="text" name="email" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: left;">
+                        <div style="width: 50%">
+                            <label style="width: 35%">Phone Number</label>
+                            <div style="width: 65%; display: inline">
+                                <input type="text" name="contact" value="">
+                            </div>
+                        </div>
+                        <div style="width: 50%;">
+                            <label style="width: 35% !important;">Role:</label>
+                            <select id="genre_id" name="role_id" style="padding: 5px 5px; text-transform: capitalize">
+                                <c:forEach var="item" items="${role_array}">
+                                    <option value="${item.ordinal()}">${item}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
 
             <form action="${pageContext.request.contextPath}/controller" method="get">
                 <input type="hidden" name="command" value="read_user">
@@ -217,7 +254,7 @@
                         <td><c:out value="${item.roleId}"/></td>
                         <td style="text-transform: none">
                             <form>
-                                <input type="hidden" name="command" value="find_user_by_id">
+                                <input type="hidden" name="command" value="find_user_to_update_status">
                                 <button class="btn btn-outline-warning" name="user_id" value="${item.id}">
                                     <fmt:message key="label.update_btn"/></button>
                             </form>

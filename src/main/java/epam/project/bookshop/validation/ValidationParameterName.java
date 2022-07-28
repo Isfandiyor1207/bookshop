@@ -1,7 +1,5 @@
 package epam.project.bookshop.validation;
 
-import javax.swing.plaf.PanelUI;
-
 public final class ValidationParameterName {
 
     /* User WORN */
@@ -14,6 +12,7 @@ public final class ValidationParameterName {
     public static final String WORN_LOGIN = "login_error";
     public static final String WORN_USER = "user_error";
     public static final String WORN_USER_UPDATE = "user_update_error";
+    public static final String WARN_USER_UPDATE_STATUS = "user_update_status_error";
 
     /* User ERROR */
     public static final String ERROR_EMAIL_MSG = "Email is incorrect!";
@@ -27,6 +26,7 @@ public final class ValidationParameterName {
     public static final String ERROR_PHONE_NUMBER_ALREADY_EXIST = "User by this phone number already exist";
     public static final String ERROR_LOGIN_MSG = "Password is incorrect!";
     public static final String ERROR_USER_UPDATE = "Please enter some fields to update!";
+    public static final String ERROR_USER_UPDATE_STATUS = "Please enter user role to update!";
 
     /* GENRE WORN */
     public static final String WORN_GENRE_NAME = "genre_name_error";
@@ -91,5 +91,18 @@ public final class ValidationParameterName {
     public static final String ERROR_ATTACHMENT = "Attachment is empty!";
     public static final String ERROR_ATTACHMENT_CONTENT_TYPE = "Attachment type is not correct! Please choose only images.";
 
+    /* Ordered WARN */
+    public static final String WARN_BOOK_QUANTITY = "book_quantity_error";
+    public static final String WARN_USER_IS_NOT_ORDERED = "order_is_not_available";
+
+    /* Ordered ERROR */
+    public static final String ERROR_BOOK_QUANTITY = "Please enter book quantity";
+    public static final String ERROR_USER_IS_NOT_ORDERED = "There have not any ordered books!";
+
+    /* Rate WARN */
+    public static final String WARN_RATE_IS_NOT_FOUND = "rate_not_foun_error";
+
+    /* Rate ERROR */
+    public static final String ERROR_RATE_IS_NOT_AVAILABLE = "Rate not found";
 
 }
