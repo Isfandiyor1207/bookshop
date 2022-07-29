@@ -174,4 +174,14 @@ public class AuthorServiceImpl implements AuthorService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public List<AuthorDto> findBySearchingFio(String fio) throws ServiceException {
+        try {
+            return authorDao.findBySearchingFio(fio);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
 }

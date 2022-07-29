@@ -273,9 +273,13 @@
                 </thead>
 
                 <tbody>
+                <c:set var="count" value="0" scope="page" />
                 <c:forEach items="${book_list}" var="item">
                     <tr>
-                        <td><c:out value="${item.id}"/></td>
+                        <td>
+                            <c:set var="count" value="${count + 1}" scope="page"/>
+                            <c:out value="${count}"/>
+                        </td>
                         <td style="text-transform: capitalize"><c:out value="${item.name}"/></td>
                         <td><c:out value="${item.isbn}"/></td>
                         <td style="text-transform: capitalize"><c:out value="${item.publisher}"/></td>

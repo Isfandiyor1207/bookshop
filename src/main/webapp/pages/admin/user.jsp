@@ -10,7 +10,6 @@
     Role[] roleArray = Role.values();
 
     request.setAttribute("role_array", roleArray);
-
 %>
 <html>
 <head>
@@ -196,7 +195,7 @@
                         <div style="width: 50%">
                             <label style="width: 35%">Email</label>
                             <div style="display: inline; width: 65%">
-                                <input type="text" name="email" value="">
+                                <input type="email" name="email" value="">
                             </div>
                         </div>
                     </div>
@@ -243,15 +242,19 @@
                 </thead>
 
                 <tbody>
+                <c:set var="count" value="0" scope="page" />
                 <c:forEach items="${user_list}" var="item">
                     <tr>
-                        <td><c:out value="${item.id}"/></td>
+                        <td>
+                            <c:set var="count" value="${count + 1}" scope="page"/>
+                            <c:out value="${count}"/>
+                        </td>
                         <td><c:out value="${item.firstname}"/></td>
                         <td><c:out value="${item.lastname}"/></td>
                         <td><c:out value="${item.username}"/></td>
                         <td><c:out value="${item.email}"/></td>
                         <td><c:out value="${item.phoneNumber}"/></td>
-                        <td><c:out value="${item.roleId}"/></td>
+                        <td><c:out value="${role_array[item.roleId]}"/></td>
                         <td style="text-transform: none">
                             <form>
                                 <input type="hidden" name="command" value="find_user_to_update_status">

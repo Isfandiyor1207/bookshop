@@ -192,6 +192,8 @@
 
         <div class="main-content">
 
+            <p><fmt:message key="label.update.message"/></p>
+
             <div class="container">
                 <form action="${pageContext.request.contextPath}/controller" enctype="multipart/form-data"
                       method="post">

@@ -157,6 +157,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<OrderDto> findOrderByBookId(Long bookId) throws ServiceException {
+        try {
+            List<OrderDto> orderDtoList = orderDao.findAllOrderByBookId(bookId);
+
+            List<OrderDto> dtoList = new ArrayList<>();
+
+            for (OrderDto orderDto : orderDtoList) {
+                orderDto.setUserDto(userService.findById(orderDto.getUserId()).get());
+                orderDto.setBookDto(bookService.findById(orderDto.getBookId()).get());
+                dtoList.add(orderDto);
+            }
+            return dtoList;
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public List<OrderDto> findAllDeliveredOrder() throws ServiceException {
 
         try {
@@ -212,31 +231,39 @@ public class OrderServiceImpl implements OrderService {
         String bookName = orderMap.get(BOOK_NAME);
         String username = orderMap.get(USERNAME);
 
-        List<OrderDto> orderDto=new ArrayList<>();
+        List<OrderDto> orderDto = new ArrayList<>();
 
-        if (!bookName.isEmpty() && !username.isEmpty()){
+        if (!bookName.isEmpty() && !username.isEmpty()) {
             Optional<UserDto> userByUsername = userService.findUserByUsername(username);
             List<BookDto> bookDtoList = bookService.findAllBookByBookName(bookName);
             List<OrderDto> orderDtoList = findOrderByUserId(userByUsername.get().getId());
 
             for (BookDto bookDto : bookDtoList) {
                 for (OrderDto dto : orderDtoList) {
-                    if (dto.getBookId().equals(bookDto.getId())){
-                        OrderDto order=new OrderDto();
+                    if (dto.getBookId().equals(bookDto.getId())) {
+                        OrderDto order = new OrderDto();
                         order.setUserDto(userByUsername.get());
                         order.setBookDto(bookDto);
+                        order.setOrderPrice((double) (bookDto.getPrice() * dto.getOrderQuantity()));
+                        order.setOrderQuantity(dto.getOrderQuantity());
                         orderDto.add(order);
                     }
                 }
             }
         }
 
-        // todo not done by ending
-        if (bookName.isEmpty() && !username.isEmpty()){
+        // todo not done by the end
+        if (bookName.isEmpty() && !username.isEmpty()) {
+            Optional<UserDto> optionalUserDto = userService.findUserByUsername(username);
+            orderDto = findOrderByUserId(optionalUserDto.get().getId());
+        }
+
+        if (!bookName.isEmpty() && username.isEmpty()) {
             List<BookDto> bookDtoList = bookService.findAllBookByBookName(bookName);
 
-
-
+            for (BookDto bookDto : bookDtoList) {
+                orderDto.addAll(findOrderByBookId(bookDto.getId()));
+            }
         }
 
         return orderDto;

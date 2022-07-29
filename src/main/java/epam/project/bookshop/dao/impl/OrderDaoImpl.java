@@ -26,6 +26,7 @@ public class OrderDaoImpl implements OrderDao {
     private static final OrderDaoImpl instance = new OrderDaoImpl();
     private static final String INSERT_ORDER = "INSERT INTO order_book(user_id, book_id, quantity, order_price) values (?, ?, ?, ?) RETURNING id;";
     private static final String SELECT_ORDER_BY_USER_ID = "SELECT id, user_id, book_id, quantity, order_price, delivered FROM order_book WHERE user_id = ? and deleted = false;";
+    private static final String SELECT_ORDER_BY_BOOK_ID = "SELECT id, user_id, book_id, quantity, order_price, delivered FROM order_book WHERE book_id = ? and deleted = false;";
     private static final String SELECT_ALL_ORDER = "SELECT id, user_id, book_id, quantity, order_price, delivered FROM order_book WHERE deleted = false;";
     private static final String SELECT_ALL_DELIVERED_ORDERS = "SELECT id, user_id, book_id, quantity, order_price, delivered FROM order_book WHERE deleted = false and delivered=true;";
     private static final String SELECT_ALL_NOT_DELIVERED_ORDERS = "SELECT id, user_id, book_id, quantity, order_price, delivered FROM order_book WHERE deleted = false and delivered=false;";
@@ -146,6 +147,27 @@ public class OrderDaoImpl implements OrderDao {
              PreparedStatement statement = connection.prepareStatement(SELECT_ORDER_BY_USER_ID)) {
 
             statement.setLong(1, userId);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                orderDtoList.add(OrderMapper.getInstance().resultSetToDto(resultSet));
+            }
+
+            return orderDtoList;
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<OrderDto> findAllOrderByBookId(Long bookId) throws DaoException {
+        List<OrderDto> orderDtoList = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ORDER_BY_BOOK_ID)) {
+
+            statement.setLong(1, bookId);
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

@@ -19,4 +19,6 @@ public interface GenreDao extends BaseDao<GenreDto, Genre>{
     void deleteAttachedGenre(Long bookId, Long genreId) throws DaoException;
 
     List<Long> findAllBookIdByGenreId(Long genreId) throws DaoException;
+
+    List<GenreDto> findGenreBySearchingDetail(String genreName) throws DaoException;
 }

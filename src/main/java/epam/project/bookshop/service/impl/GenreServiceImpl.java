@@ -169,4 +169,13 @@ public class GenreServiceImpl implements GenreService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public List<GenreDto> findGenreBySearchingDetail(String genreName) throws ServiceException {
+        try {
+            return genreDao.findGenreBySearchingDetail(genreName);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

@@ -2,6 +2,7 @@ package epam.project.bookshop.validation;
 
 import com.oracle.wls.shaded.org.apache.bcel.generic.IF_ACMPEQ;
 import epam.project.bookshop.entity.User;
+import epam.project.bookshop.util.PasswordEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,7 +81,7 @@ public class UserValidation {
         if (!baseValidation.isEmpty(user.get(PASSWORD).trim())){
             if (checkPasswordToValidation(user.get(PASSWORD).trim())) {
                 logger.info("User password is written to update: " + user.get(PASSWORD));
-                query.put(PASSWORD, user.get(PASSWORD));
+                query.put(PASSWORD, PasswordEncoder.getInstance().encode(user.get(PASSWORD)));
                 isValid = true;
             }else {
                 user.put(WORN_PASSWORD, ERROR_PASSWORD_MSG);

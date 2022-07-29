@@ -1,6 +1,5 @@
 package epam.project.bookshop.dao.impl;
 
-import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.dao.GenreDao;
 import epam.project.bookshop.dto.GenreDto;
 import epam.project.bookshop.entity.Genre;
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.command.ParameterName.BOOK_ID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GenreDaoImpl implements GenreDao {
@@ -28,6 +27,7 @@ public class GenreDaoImpl implements GenreDao {
     public static final Logger logger = LogManager.getLogger();
 
     private static final String SELECT_BY_GENRE_NAME = "SELECT id, name FROM genre WHERE name = ? AND deleted = false";
+    private static final String SELECT_BY_GENRE_NAME_USING_LIKE = "SELECT id, name FROM genre WHERE name like ? AND deleted = false";
     private static final String SELECT_BY_ID = "SELECT id, name FROM genre WHERE  id = ? AND deleted = false";
     private static final String SELECT_ALL = "SELECT id, name FROM genre WHERE deleted = false order by id";
     private static final String SELECT_ALL_GENRE_ID_BY_BOOK_ID = "SELECT genre_id FROM genre_book_list WHERE book_id = ?";
@@ -257,7 +257,7 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public List<Long> findAllBookIdByGenreId(Long genreId) throws DaoException {
 
-        List<Long> bookIdList=new ArrayList<>();
+        List<Long> bookIdList = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BOOK_ID)) {
@@ -266,7 +266,7 @@ public class GenreDaoImpl implements GenreDao {
 
             ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 bookIdList.add(resultSet.getLong(BOOK_ID));
             }
 
@@ -276,6 +276,27 @@ public class GenreDaoImpl implements GenreDao {
             throw new DaoException(e);
         }
 
+    }
+
+    @Override
+    public List<GenreDto> findGenreBySearchingDetail(String genreName) throws DaoException {
+        List<GenreDto> genreDtoList = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_BY_GENRE_NAME_USING_LIKE)) {
+
+            statement.setString(1, "%" + genreName.toLowerCase() + "%");
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                genreDtoList.add(GenreMapper.getInstance().resultSetToDto(resultSet));
+            }
+
+            return genreDtoList;
+        } catch (SQLException e) {
+            logger.info("Genre not found!");
+            throw new DaoException(e);
+        }
     }
 
 }

@@ -97,13 +97,13 @@
             <div style="display: flex; justify-content: flex-start; align-items: center" class="search">
                 <label style="width: 40%">Book name</label>
                 <div style="width: 60%; display: inline">
-                    <input type="text" name="name" value="" style="border: groove">
+                    <input type="text" name="name" value="" style="border: groove !important;">
                 </div>
             </div>
             <div style="display: flex; justify-content: flex-start; align-items: center" class="search">
                 <label style="width: 40%">Author name</label>
                 <div style="display: inline; width: 60%">
-                    <input type="text" name="fio" value="" style="border: groove">
+                    <input type="text" name="fio" value="" style="border: groove !important;">
                 </div>
             </div>
             <div style="display: flex; justify-content: flex-start; align-items: center">

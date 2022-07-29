@@ -15,4 +15,6 @@ public interface AuthorService extends GenericService<AuthorDto> {
     List<Long> findAuthorIdByName(String authorName) throws ServiceException;
 
     List<Long> findAllBookIdByAuthorId(Long authorId) throws ServiceException;
+
+    List<AuthorDto> findBySearchingFio(String fio) throws ServiceException;
 }

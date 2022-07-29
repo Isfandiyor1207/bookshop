@@ -6,6 +6,7 @@ import epam.project.bookshop.entity.User;
 import epam.project.bookshop.exception.DaoException;
 import epam.project.bookshop.exception.ServiceException;
 import epam.project.bookshop.service.UserService;
+import epam.project.bookshop.util.PasswordEncoder;
 import epam.project.bookshop.validation.BaseValidation;
 import epam.project.bookshop.validation.UserValidation;
 import org.apache.logging.log4j.LogManager;
@@ -23,8 +24,9 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger();
     private static final BaseValidation baseValidation = BaseValidation.getInstance();
     private static final UserServiceImpl instance = new UserServiceImpl();
-    private final UserDaoImpl userDao = UserDaoImpl.getInstance();
-    private final UserValidation userValidation = UserValidation.getInstance();
+    private static final UserDaoImpl userDao = UserDaoImpl.getInstance();
+    private static final UserValidation userValidation = UserValidation.getInstance();
+    private static final PasswordEncoder passwordEncoder=PasswordEncoder.getInstance();
 
     private UserServiceImpl() {
     }
@@ -38,6 +40,7 @@ public class UserServiceImpl implements UserService {
 
         String username = userLogin.get(USERNAME);
         String password = userLogin.get(PASSWORD);
+
 
         BaseValidation validation = BaseValidation.getInstance();
         if (validation.isEmpty(username) || validation.isEmpty(password)) {
@@ -54,7 +57,7 @@ public class UserServiceImpl implements UserService {
                 System.out.println(dao.get());
                 UserDto user = dao.get();
 
-                if (!user.getPassword().equals(password)) {
+                if(!passwordEncoder.checkPassword(password, user.getPassword())) {
                     userLogin.put(WORN_LOGIN, ERROR_LOGIN_MSG);
                     isAuthenticated = false;
                 }
@@ -113,6 +116,8 @@ public class UserServiceImpl implements UserService {
                 .append(value)
                 .append(" and "));
 
+        logger.info("Query: " + queryMap);
+
         if (!userFieldMap.get(USER_ROLE_ID_IN_DB).isEmpty()){
             stringBuilder.append(USER_ROLE_ID_IN_DB).append(" = ").append(userFieldMap.get(USER_ROLE_ID_IN_DB)).append(" and ");
         }
@@ -156,7 +161,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userData.get(LASTNAME));
         user.setUsername(userData.get(USERNAME));
         user.setEmail(userData.get(EMAIL));
-        user.setPassword(userData.get(PASSWORD));
+        user.setPassword(passwordEncoder.encode(userData.get(PASSWORD)));
         user.setPhoneNumber(userData.get(PHONE_NUMBER));
 
         try {

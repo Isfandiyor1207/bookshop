@@ -146,6 +146,8 @@
 
         <div class="main-content">
 
+            <p><fmt:message key="label.update.message"/></p>
+
             <div class="container-fluid">
                 <form method="post" autocomplete="on" action="${pageContext.request.contextPath}/controller">
                     <input type="hidden" name="command" value="update_user">

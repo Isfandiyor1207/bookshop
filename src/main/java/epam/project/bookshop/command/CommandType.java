@@ -45,6 +45,7 @@ public enum CommandType {
     UPDATE_AUTHOR(new UpdateAuthorCommand()),
     READ_AUTHOR(new FindAllAuthorsCommand()),
     FIND_AUTHOR_BY_ID(new FindAuthorByIdCommand()),
+    SEARCH_AUTHOR(new FindAuthorBySearchingDetails()),
 
     /* Genre commands */
     ADD_GENRE(new AddGenreCommand()),
@@ -52,6 +53,7 @@ public enum CommandType {
     UPDATE_GENRE(new UpdateGenreCommand()),
     READ_GENRE(new FindAllGenresCommand()),
     FIND_GENRE_BY_ID(new FindGenreByIdCommand()),
+    SEARCH_GENRE(new FindGenreBySearchingDetails()),
 
     /* Order command */
     FIND_ALL_ORDERS(new FindAllOrdersCommand()),

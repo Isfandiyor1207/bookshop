@@ -3,6 +3,7 @@ package epam.project.bookshop.dao;
 import epam.project.bookshop.dto.AuthorDto;
 import epam.project.bookshop.entity.Author;
 import epam.project.bookshop.exception.DaoException;
+import org.checkerframework.checker.nullness.Opt;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,4 +23,6 @@ public interface AuthorDao extends BaseDao<AuthorDto, Author> {
     List<Long> findAuthorIdByName(String authorName) throws DaoException;
 
     List<Long> findAllBookIdByAuthorId(Long authorId) throws DaoException;
+
+    List<AuthorDto> findBySearchingFio(String fio) throws DaoException;
 }

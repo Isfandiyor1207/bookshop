@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.text.DecimalFormat;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.*;
@@ -33,6 +34,10 @@ public class FindBookInformationCommand implements Command {
             Optional<BookDto> optionalBookDto = bookService.findById(Long.valueOf(bookId));
 
             if (optionalBookDto.isPresent()){
+
+                Double rate = optionalBookDto.get().getAverageRate();
+                optionalBookDto.get().setAverageRate(Math.round(rate * 10D) / 10D);
+
                 request.setAttribute(BOOK_INFORMATION, optionalBookDto.get());
             } else {
                 request.setAttribute(WARN_BOOK_IS_AVAILABLE_BY_NAME, ERROR_BOOK_IS_NOT_AVAILABLE);

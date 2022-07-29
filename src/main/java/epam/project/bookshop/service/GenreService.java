@@ -12,4 +12,6 @@ public interface GenreService extends GenericService<GenreDto> {
     List<GenreDto> findAllByBookId(Long bookId) throws ServiceException;
 
     List<Long> findAllBookIdByGenreId(Long genreId) throws ServiceException;
+
+    List<GenreDto> findGenreBySearchingDetail(String genreName) throws ServiceException;
 }

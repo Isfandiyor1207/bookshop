@@ -27,6 +27,7 @@ public class AuthorDaoImpl implements AuthorDao {
     public static final Logger logger = LogManager.getLogger();
 
     private static final String SELECT_BY_AUTHOR_NAME = "SELECT id, fio FROM author WHERE fio = ? AND deleted = false";
+    private static final String SELECT_BY_AUTHOR_NAME_USING_LIKE = "SELECT id, fio FROM author WHERE fio like ? AND deleted = false";
     private static final String SELECT_BY_ID = "SELECT id, fio FROM author WHERE  id = ? AND deleted = false";
     private static final String SELECT_ALL_ID_BY_FIO = "SELECT id FROM author WHERE fio LIKE ?";
     private static final String SELECT_LIST_OF_AUTHOR_BY_BOOK_ID = "SELECT author_id FROM author_book_list WHERE  book_id = ?";
@@ -252,7 +253,7 @@ public class AuthorDaoImpl implements AuthorDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_ID_BY_FIO)) {
 
-            statement.setString(1, "%"+authorName.toLowerCase() + "%");
+            statement.setString(1, "%" + authorName.toLowerCase() + "%");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -269,7 +270,7 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public List<Long> findAllBookIdByAuthorId(Long authorId) throws DaoException {
 
-        List<Long> bookIdList=new ArrayList<>();
+        List<Long> bookIdList = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BOOK_ID_BY_AUTHOR_ID)) {
@@ -278,11 +279,32 @@ public class AuthorDaoImpl implements AuthorDao {
 
             ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 bookIdList.add(resultSet.getLong(BOOK_ID));
             }
 
             return bookIdList;
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<AuthorDto> findBySearchingFio(String fio) throws DaoException {
+        List<AuthorDto> authorDtoList = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_BY_AUTHOR_NAME_USING_LIKE)) {
+
+            statement.setString(1,  "%" + fio.toLowerCase() + "%");
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                authorDtoList.add(AuthorMapper.getInstance().resultSetToDto(resultSet));
+            }
+
+            return authorDtoList;
         } catch (SQLException e) {
             logger.error(e);
             throw new DaoException(e);

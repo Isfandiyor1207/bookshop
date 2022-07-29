@@ -33,16 +33,6 @@ public class FindUserBySearchingDetailCommand implements Command {
 
         UserService userService = UserServiceImpl.getInstance();
 
-        logger.info("FIRSTNAME " + request.getParameter(FIRSTNAME));
-        logger.info("LASTNAME " + request.getParameter(LASTNAME));
-        logger.info("USERNAME " + request.getParameter(USERNAME));
-        logger.info("EMAIL " + request.getParameter(EMAIL));
-        logger.info("PHONE_NUMBER " + request.getParameter(PHONE_NUMBER));
-        logger.info("role_id " + request.getParameter("role_id"));
-
-        userMap.forEach((key, value) -> System.out.println(value));
-
-
         try {
 
             List<UserDto> userDtoList = userService.findAllByUserFields(userMap);

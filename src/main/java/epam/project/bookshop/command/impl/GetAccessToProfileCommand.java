@@ -1,20 +1,43 @@
 package epam.project.bookshop.command.impl;
 
 import epam.project.bookshop.command.Command;
+import epam.project.bookshop.dto.UserDto;
 import epam.project.bookshop.exception.CommandException;
+import epam.project.bookshop.exception.ServiceException;
+import epam.project.bookshop.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.Optional;
+
+import static epam.project.bookshop.command.ParameterName.PASSWORD;
 import static epam.project.bookshop.command.ParameterName.USERNAME;
-import static epam.project.bookshop.command.WebPageName.LOGIN_PAGE;
-import static epam.project.bookshop.command.WebPageName.USER_PROFILE;
+import static epam.project.bookshop.command.WebPageName.*;
 
 public class GetAccessToProfileCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-        String attribute = (String) request.getSession().getAttribute(USERNAME);
+        String username = (String) request.getSession().getAttribute(USERNAME);
 
-        if (attribute == null) {
-            return LOGIN_PAGE;
-        } else return USER_PROFILE;
+        try {
+            if (username != null) {
+                UserServiceImpl userService = UserServiceImpl.getInstance();
+                String page;
+                Optional<UserDto> userByUsername = userService.findUserByUsername(username);
+                if (userByUsername.isPresent()) {
+                    if (userByUsername.get().getRoleId() == 0) {
+                        page = ADMIN_PAGE;
+                    } else {
+                        page = USER_PROFILE;
+                    }
+                } else {
+                    page = LOGIN_PAGE;
+                }
+
+                return page;
+            } else return LOGIN_PAGE;
+
+        } catch (ServiceException e) {
+            throw new CommandException(e);
+        }
     }
 }

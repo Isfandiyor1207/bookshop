@@ -11,6 +11,8 @@ public interface OrderService extends GenericService<OrderDto> {
 
     List<OrderDto> findOrderByUserId(Long userId) throws ServiceException;
 
+    List<OrderDto> findOrderByBookId(Long bookId) throws ServiceException;
+
     List<OrderDto> findAllDeliveredOrder() throws ServiceException;
 
     List<OrderDto> findAllNotDeliveredOrder() throws ServiceException;

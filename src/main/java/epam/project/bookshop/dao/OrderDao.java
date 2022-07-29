@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface OrderDao extends BaseDao<OrderDto, Order>{
     List<OrderDto> findAllOrderByUserId(Long userId) throws DaoException;
 
+    List<OrderDto> findAllOrderByBookId(Long bookId) throws DaoException;
+
     List<OrderDto> findAllDeliveredOrder() throws DaoException;
 
     List<OrderDto> findAllNotDeliveredOrder() throws DaoException;

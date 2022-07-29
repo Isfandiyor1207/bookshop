@@ -159,7 +159,26 @@
 
         <div class="main-content">
 
-            <div class="">
+            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo"
+                    style="margin-bottom: 10px">Filter
+            </button>
+            <div id="demo" class="collapse">
+                <form action="${pageContext.request.contextPath}/controller">
+                    <input type="hidden" name="command" value="search_genre">
+                    <div style="display: flex; justify-content: left;">
+                        <div style="width: 50%">
+                            <label style="width: 35%">Genre name</label>
+                            <div style="width: 65%; display: inline">
+                                <input type="text" name="name" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+
+
+            <div style="justify-content: space-between; display: flex; align-items: center">
                 <form action="${pageContext.request.contextPath}/controller" method="get">
                     <input type="hidden" name="command" value="read_genre">
                     <input type="submit" class="btn btn-primary" value="<fmt:message key="label.show_all_btn"/>">
@@ -186,9 +205,13 @@
                 </thead>
 
                 <tbody>
+                <c:set var="count" value="0" scope="page" />
                 <c:forEach items="${genre_list}" var="item">
                     <tr>
-                        <td style="text-transform: capitalize"><c:out value="${item.id}"/></td>
+                        <td style="text-transform: capitalize">
+                            <c:set var="count" value="${count + 1}" scope="page"/>
+                            <c:out value="${count}"/>
+                        </td>
                         <td style="text-transform: capitalize"><c:out value="${item.name}"/></td>
                         <td style="text-transform: none">
                             <form>
