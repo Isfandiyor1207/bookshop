@@ -25,6 +25,7 @@ public class ChangeDeliveredStatusCommand implements Command {
 
         try {
             orderService.changeOrderDeliveredStatus(Boolean.parseBoolean(isDelivered), Long.valueOf(orderId));
+            orderService.changeBookQuantityByOrderId(Long.parseLong(orderId));
             FindAllOrdersCommand command=new FindAllOrdersCommand();
             return command.execute(request);
         } catch (ServiceException e) {

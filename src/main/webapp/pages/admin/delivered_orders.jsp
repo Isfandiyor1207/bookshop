@@ -176,16 +176,7 @@
                     </div>
                     <div>
                         <form action="${pageContext.request.contextPath}/controller" style="display: inline">
-                            <input type="hidden" name="command" value="
-                            <c:choose>
-                                <c:when test="${order_delivered_status == true}">
-                                    find_all_delivered_orders
-                                </c:when>
-                                <c:otherwise>
-                                    find_all_not_delivered_orders
-                                </c:otherwise>
-                            </c:choose>
-                            ">
+                            <input type="hidden" name="command" value="<c:choose><c:when test="${order_delivered_status == true}">find_all_delivered_orders</c:when><c:otherwise>find_all_not_delivered_orders</c:otherwise></c:choose>">
                             <button type="submit" class="btn btn-outline-warning">
                                 <c:choose>
                                     <c:when test="${order_delivered_status == true}">
@@ -210,7 +201,7 @@
                     <th scope="col"><fmt:message key="label.order.orderQuantity"/></th>
                     <th scope="col"><fmt:message key="label.order.price"/></th>
                     <th scope="col"><fmt:message key="label.order.isDelivered"/></th>
-                    <th scope="col"><fmt:message key="label.isDelivered.button"/></th>
+                    <c:if test="${order_delivered_status == true}"><th scope="col"><fmt:message key="label.isDelivered.button"/></th></c:if>
                 </tr>
                 </thead>
 
@@ -236,15 +227,17 @@
                                 </c:otherwise>
                             </c:choose>
                         </td>
-                        <td>
-                            <form action="${pageContext.request.contextPath}/controller">
-                                <input type="hidden" name="command" value="change_order_delivered_status">
-                                <input type="hidden" name="order_id" value="${item.id}">
-                                <button type="submit" name="order_delivered" class="btn btn-outline-danger"
-                                        value="${order_delivered_status}"><fmt:message
-                                        key="label.isDelivered.button"/></button>
-                            </form>
-                        </td>
+                        <c:if test="${order_delivered_status == true}">
+                            <td>
+                                <form action="${pageContext.request.contextPath}/controller">
+                                    <input type="hidden" name="command" value="change_order_delivered_status">
+                                    <input type="hidden" name="order_id" value="${item.id}">
+                                    <button type="submit" name="order_delivered" class="btn btn-outline-danger"
+                                            value="${order_delivered_status}"><fmt:message
+                                            key="label.isDelivered.button"/></button>
+                                </form>
+                            </td>
+                        </c:if>
                     </tr>
                 </c:forEach>
                 </tbody>

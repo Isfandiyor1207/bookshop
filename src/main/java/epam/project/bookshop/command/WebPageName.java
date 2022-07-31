@@ -30,6 +30,9 @@ public final class WebPageName {
     public static final String BOOK_ORDER_PAGE = "/pages/order_page.jsp";
     public static final String ALL_ORDERS = "/pages/admin/all_orders.jsp";
     public static final String ALL_DELIVERED_ORDERS = "/pages/admin/delivered_orders.jsp";
+    public static final String PASSWORD_CHANGING_PAGE = "/pages/username_verification.jsp";
+    public static final String VERIFICATION_PAGE = "/pages/verification.jsp";
+    public static final String UPDATE_PASSWORD_PAGE = "/pages/update_password.jsp";
 
 
     private WebPageName(){}

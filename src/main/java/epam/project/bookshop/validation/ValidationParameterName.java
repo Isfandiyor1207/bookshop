@@ -1,5 +1,7 @@
 package epam.project.bookshop.validation;
 
+import com.oracle.wls.shaded.org.apache.bcel.generic.PUSH;
+
 public final class ValidationParameterName {
 
     /* User WORN */
@@ -13,6 +15,8 @@ public final class ValidationParameterName {
     public static final String WORN_USER = "user_error";
     public static final String WORN_USER_UPDATE = "user_update_error";
     public static final String WARN_USER_UPDATE_STATUS = "user_update_status_error";
+    public static final String WARN_USER_PASSWORD_CHANGING = "send_password_error";
+    public static final String WARN_VERIFICATION_PASSWORD_ERROR = "verification_password_error";
 
     /* User ERROR */
     public static final String ERROR_EMAIL_MSG = "Email is incorrect!";
@@ -27,6 +31,8 @@ public final class ValidationParameterName {
     public static final String ERROR_LOGIN_MSG = "Password is incorrect!";
     public static final String ERROR_USER_UPDATE = "Please enter some fields to update!";
     public static final String ERROR_USER_UPDATE_STATUS = "Please enter user role to update!";
+    public static final String ERROR_USER_PASSWORD_CHANGING = "Verification code does not sent. Please check your username.";
+    public static final String SUCCESS_VERIFICATION = "Password changed successfully.";
 
     /* GENRE WORN */
     public static final String WORN_GENRE_NAME = "genre_name_error";

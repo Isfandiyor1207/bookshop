@@ -25,6 +25,9 @@ public enum CommandType {
     FIND_USER_ORDERS(new FindUserOrdersCommand()),
     UPDATE_USER_STATUS(new UpdateUserStatusCommand()),
     SEARCH_USER(new FindUserBySearchingDetailCommand()),
+    SEND_PASSWORD_EMAIL(new EmailSenderCommand()),
+    PASSWORD_VERIFICATION(new PasswordVerificationCommand()),
+    PASSWORD_UPDATE(new UserPasswordUpdateCommand()),
 
     /* Book commands */
     ADD_BOOK(new AddBookCommand()),
@@ -70,7 +73,7 @@ public enum CommandType {
 
     public static Command castToCommand(String command) {
         CommandValidation commandValidation = new CommandValidation();
-        boolean commandToValidation = commandValidation.checkCommandToValidation(command);
+        boolean commandToValidation = commandValidation.checkCommandToValidation(command.trim());
 
         if (commandToValidation) {
             CommandType type = CommandType.valueOf(command.toUpperCase());

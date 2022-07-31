@@ -155,7 +155,6 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(e);
         }
 
-        // todo to do hex password
         User user = new User();
         user.setFirstName(userData.get(FIRSTNAME));
         user.setLastName(userData.get(LASTNAME));

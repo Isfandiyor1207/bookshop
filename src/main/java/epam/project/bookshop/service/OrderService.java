@@ -20,4 +20,6 @@ public interface OrderService extends GenericService<OrderDto> {
     void changeOrderDeliveredStatus(boolean isDelivered, Long orderId) throws ServiceException;
 
     List<OrderDto> findAllOrdersBySearchingField(Map<String, String> orderMap) throws ServiceException;
+
+    void changeBookQuantityByOrderId(Long orderId) throws ServiceException;
 }

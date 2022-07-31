@@ -32,6 +32,7 @@ public class BookDaoImpl implements BookDao {
     private static final String SELECT_BY_ISBN = "SELECT id, name, isbn, publisher, publishing_year, price, total, description FROM book WHERE isbn = ? and deleted=false";
     private static final String SELECT_ALL = "SELECT id, name, isbn, publisher, publishing_year, price, total, description FROM book WHERE deleted=false order by id";
     private static final String DELETE_BOOK_BY_ID = "UPDATE book SET deleted = true WHERE id =? AND deleted = false";
+    private static final String UPDATE_BOOK_QUANTITY = "UPDATE book SET total = ? WHERE id =? AND deleted = false";
     private static final String UPDATE_BOOK_BY_ID = "UPDATE book SET %s, updated_time = now() WHERE id =%s AND deleted = false";
     private static final String INSERT_BOOK = "INSERT INTO book(name, isbn, publisher, publishing_year, price, total, description) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id;";
     private static final BookDaoImpl instance = new BookDaoImpl();
@@ -242,6 +243,21 @@ public class BookDaoImpl implements BookDao {
 
         } catch (SQLException e) {
             logger.error(e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void changeQuantityByBookId(Long bookId, Long bookQuantity) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_BOOK_QUANTITY)) {
+
+            statement.setLong(1, bookQuantity);
+            statement.setLong(2, bookId);
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }

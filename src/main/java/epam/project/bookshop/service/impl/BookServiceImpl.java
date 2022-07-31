@@ -436,4 +436,16 @@ public class BookServiceImpl implements BookService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public void changeQuantityByBookId(Long bookId, Long bookQuantity) throws ServiceException {
+        Optional<BookDto> optionalBookDto = findById(bookId);
+        Long availableBook = optionalBookDto.get().getNumberOfBooks();
+        Long numberOfBooks = availableBook - bookQuantity;
+        try {
+            bookDao.changeQuantityByBookId(bookId, numberOfBooks);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

@@ -15,4 +15,6 @@ public interface BookDao extends BaseDao<BookDto, Book> {
     Optional<BookDto> findByISBN(String isbn) throws DaoException;
 
     List<BookDto> findAllBookByBookName(String bookName) throws DaoException;
+
+    void changeQuantityByBookId(Long bookId, Long bookQuantity) throws DaoException;
 }

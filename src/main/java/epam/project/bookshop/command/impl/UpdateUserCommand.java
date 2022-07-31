@@ -1,7 +1,6 @@
 package epam.project.bookshop.command.impl;
 
 import epam.project.bookshop.command.Command;
-import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.dto.UserDto;
 import epam.project.bookshop.exception.CommandException;
 import epam.project.bookshop.exception.ServiceException;
@@ -16,7 +15,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.*;
-import static epam.project.bookshop.command.WebPageName.*;
+import static epam.project.bookshop.command.WebPageName.USERS_UPDATE_PAGE;
+import static epam.project.bookshop.command.WebPageName.USER_INFORMATION_PAGE;
 
 public class UpdateUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -24,7 +24,7 @@ public class UpdateUserCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
 
-        String userId= (String) request.getSession().getAttribute("user_id");
+        String userId = (String) request.getSession().getAttribute("user_id");
 
         Map<String, String> userMap = new HashMap<>();
         userMap.put(ID, userId);

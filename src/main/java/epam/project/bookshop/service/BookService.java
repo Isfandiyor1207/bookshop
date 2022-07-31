@@ -10,4 +10,6 @@ public interface BookService extends GenericService<BookDto> {
     List<BookDto> findBySearchingDetail(Map<String, String> searchMap) throws ServiceException;
 
     List<BookDto> findAllBookByBookName(String bookName) throws ServiceException;
+
+    void changeQuantityByBookId(Long bookId, Long bookQuantity) throws ServiceException;
 }

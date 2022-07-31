@@ -268,4 +268,10 @@ public class OrderServiceImpl implements OrderService {
 
         return orderDto;
     }
+
+    @Override
+    public void changeBookQuantityByOrderId(Long orderId) throws ServiceException {
+        Optional<OrderDto> optionalOrderDto = findById(orderId);
+        bookService.changeQuantityByBookId(optionalOrderDto.get().getBookId(), optionalOrderDto.get().getOrderQuantity());
+    }
 }

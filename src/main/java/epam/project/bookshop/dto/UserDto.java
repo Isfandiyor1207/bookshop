@@ -18,6 +18,8 @@ public class UserDto extends GenericDto {
 
     private Long roleId;
 
+    private String code;
+
     public String getFirstname() {
         return firstname;
     }
@@ -72,6 +74,14 @@ public class UserDto extends GenericDto {
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Override

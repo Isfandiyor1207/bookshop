@@ -1,11 +1,17 @@
 package epam.project.bookshop.command;
 
+import com.oracle.wls.shaded.org.apache.bcel.generic.PUSH;
+import org.checkerframework.checker.index.qual.PolyUpperBound;
+
+import java.lang.reflect.Field;
+
 public final class ParameterName {
 
     /* Unique parameters */
     public static final String ID = "id";
     public static final String DELETE_ID = "delete_by_id";
     public static final String UPDATE_BY_ID = "update_by_id";
+    public static final String COMMAND = "command";
 
     /* User parameters */
     public static final String USER_ID = "user_id";
@@ -21,6 +27,9 @@ public final class ParameterName {
     public static final String USER_PHONE_NUMBER_IN_DB = "phonenumber";
     public static final String USER_LIST = "user_list";
     public static final String USER_INFO = "user_info";
+    public static final String AUTH_USER = "auth_user";
+    public static final String VERIFICATION_CODE = "verification_code";
+    public static final String VERIFICATION_SUCCESS = "verification_success";
 
     /* Genre parameters */
     public static final String GENRE_NAME = "name";

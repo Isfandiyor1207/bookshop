@@ -28,27 +28,20 @@
                     <figure>
                         <img src="${pageContext.request.contextPath}/pages/img/signin-image.jpg" alt="sing up image">
                     </figure>
-                    <a href="${pageContext.request.contextPath}/pages/registration.jsp" class="signup-image-link"><fmt:message key="label.create_account"/></a>
+                    <a href="${pageContext.request.contextPath}/pages/registration.jsp" class="signup-image-link"><fmt:message key="label.password.change"/></a>
                 </div>
 
                 <div class="signin-form">
-                    <h2 class="form-title"><fmt:message key="label.sign_in"/></h2>
+                    <h2 class="form-title"><fmt:message key="label.password.change"/></h2>
+                    <p style="font-size: 12px !important; margin-bottom: 10px !important;">Please enter new password.</p>
                     <form action="${pageContext.request.contextPath}/controller" class="register-form" id="login-form">
-                        <input type="hidden" name="command" value="login">
+                        <input type="hidden" name="command" value="password_update">
                         <div class="form-group">
-                            <label for="username"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                            <input type="text" name="username" id="username" placeholder="Your Name" required="required"/>
+                            <label><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" name="password" placeholder="Please enter password" required="required"/>
                         </div>
-                        <div class="form-group">
-                            <label for="password"><i class="zmdi zmdi-lock"></i></label>
-                            <input type="password" name="password" id="password" placeholder="Password" required="required"/>
-                        </div>
-                        <b><small style="color: red">${login_error}</small></b>
-                        <b><small style="color: red">${user_error}</small></b>
-                        <div><b><small style="color: #1abc9c">${verification_success}</small></b></div>
-                        <a href="${pageContext.request.contextPath}/pages/username_verification.jsp" style="text-decoration: none">
-                            <span style="color: #0d6efd;">Forget your password.</span>
-                        </a>
+                        <b><small style="color: red">${password_error}</small></b>
+
                         <div class="form-group form-button">
                             <input type="submit" name="signin" id="signin" class="form-submit" value="<fmt:message key="label.login"/>" />
                         </div>

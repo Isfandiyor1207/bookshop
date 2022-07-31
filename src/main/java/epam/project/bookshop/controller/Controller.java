@@ -2,6 +2,7 @@ package epam.project.bookshop.controller;
 
 import epam.project.bookshop.command.Command;
 import epam.project.bookshop.command.CommandType;
+import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.exception.CommandException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -11,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+
+import static epam.project.bookshop.command.ParameterName.*;
 
 @WebServlet(name = "helloServlet", value = {"/controller", "*.do"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
@@ -36,7 +39,7 @@ public class Controller extends HttpServlet {
     private void controllerCommand(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
 
-        String command = req.getParameter("command");// input dagi name
+        String command = req.getParameter(COMMAND);// input dagi name
         Command execute = CommandType.castToCommand(command);
 
         String page;

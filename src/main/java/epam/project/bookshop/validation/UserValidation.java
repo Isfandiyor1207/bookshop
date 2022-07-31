@@ -1,12 +1,9 @@
 package epam.project.bookshop.validation;
 
-import com.oracle.wls.shaded.org.apache.bcel.generic.IF_ACMPEQ;
-import epam.project.bookshop.entity.User;
 import epam.project.bookshop.util.PasswordEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.awt.desktop.QuitEvent;
 import java.util.Map;
 
 import static epam.project.bookshop.command.ParameterName.*;
@@ -22,7 +19,8 @@ public class UserValidation {
     private static final BaseValidation baseValidation = BaseValidation.getInstance();
     private static final UserValidation INSTANCE = new UserValidation();
 
-    private UserValidation(){}
+    private UserValidation() {
+    }
 
     public static UserValidation getInstance() {
         return INSTANCE;
@@ -60,36 +58,37 @@ public class UserValidation {
     public boolean checkUpdateUser(Map<String, String> user, Map<String, String> query) {
         boolean isValid = false;
 
-        if (!baseValidation.isEmpty(user.get(FIRSTNAME).trim())) {
+        logger.info("user info in validation: " + user);
+        if (!baseValidation.isEmpty(user.get(FIRSTNAME))) {
             logger.info("User firstname is written to update: " + user.get(FIRSTNAME));
             query.put(FIRSTNAME, user.get(FIRSTNAME));
             isValid = true;
         }
 
-        if (!baseValidation.isEmpty(user.get(LASTNAME).trim())) {
+        if (!baseValidation.isEmpty(user.get(LASTNAME))) {
             logger.info("User lastname is written to update: " + user.get(LASTNAME));
             query.put(LASTNAME, user.get(LASTNAME));
             isValid = true;
         }
 
-        if (!baseValidation.isEmpty(user.get(USERNAME).trim())) {
+        if (!baseValidation.isEmpty(user.get(USERNAME))) {
             logger.info("User username is written to update: " + user.get(USERNAME));
             query.put(USERNAME, user.get(USERNAME));
             isValid = true;
         }
 
-        if (!baseValidation.isEmpty(user.get(PASSWORD).trim())){
-            if (checkPasswordToValidation(user.get(PASSWORD).trim())) {
+        if (!baseValidation.isEmpty(user.get(PASSWORD))) {
+            if (checkPasswordToValidation(user.get(PASSWORD))) {
                 logger.info("User password is written to update: " + user.get(PASSWORD));
                 query.put(PASSWORD, PasswordEncoder.getInstance().encode(user.get(PASSWORD)));
                 isValid = true;
-            }else {
+            } else {
                 user.put(WORN_PASSWORD, ERROR_PASSWORD_MSG);
             }
         }
 
-        if (!baseValidation.isEmpty(user.get(EMAIL).trim())){
-            if (checkEmailValidation(user.get(EMAIL).trim())) {
+        if (!baseValidation.isEmpty(user.get(EMAIL))) {
+            if (checkEmailValidation(user.get(EMAIL))) {
                 logger.info("User email is written to update: " + user.get(EMAIL));
                 query.put(EMAIL, user.get(EMAIL));
                 isValid = true;
@@ -98,8 +97,8 @@ public class UserValidation {
             }
         }
 
-        if (!baseValidation.isEmpty(user.get(PHONE_NUMBER).trim())){
-            if (checkPhoneNumberToValidation(user.get(PHONE_NUMBER).trim())) {
+        if (!baseValidation.isEmpty(user.get(PHONE_NUMBER))) {
+            if (checkPhoneNumberToValidation(user.get(PHONE_NUMBER))) {
                 logger.info("user phone number is written to update:  " + user.get(PHONE_NUMBER));
                 query.put(USER_PHONE_NUMBER_IN_DB, user.get(PHONE_NUMBER));
                 isValid = true;
@@ -108,29 +107,30 @@ public class UserValidation {
             }
         }
 
+        logger.info("User update query: " + query);
         return isValid;
     }
 
-    public void createSearchingQuery(Map<String, String> map, Map<String, String> query){
-        if (!baseValidation.isEmpty(map.get(FIRSTNAME))){
+    public void createSearchingQuery(Map<String, String> map, Map<String, String> query) {
+        if (!baseValidation.isEmpty(map.get(FIRSTNAME))) {
             query.put(FIRSTNAME, "'%" + map.get(FIRSTNAME) + "%'");
             logger.info("query: " + query.get(FIRSTNAME));
         }
-        if (!baseValidation.isEmpty(map.get(LASTNAME))){
-            query.put(LASTNAME, "'%" +map.get(LASTNAME) + "%'");
-            logger.info("query: "  + query.get(LASTNAME));
+        if (!baseValidation.isEmpty(map.get(LASTNAME))) {
+            query.put(LASTNAME, "'%" + map.get(LASTNAME) + "%'");
+            logger.info("query: " + query.get(LASTNAME));
         }
-        if (!baseValidation.isEmpty(map.get(USERNAME))){
-            query.put(USERNAME, "'%" +map.get(USERNAME) + "%'");
-            logger.info("query: "  + query.get(USERNAME));
+        if (!baseValidation.isEmpty(map.get(USERNAME))) {
+            query.put(USERNAME, "'%" + map.get(USERNAME) + "%'");
+            logger.info("query: " + query.get(USERNAME));
         }
-        if (!baseValidation.isEmpty(map.get(EMAIL))){
-            query.put(EMAIL, "'%" +map.get(EMAIL) + "%'");
-            logger.info("query: "  + query.get(EMAIL));
+        if (!baseValidation.isEmpty(map.get(EMAIL))) {
+            query.put(EMAIL, "'%" + map.get(EMAIL) + "%'");
+            logger.info("query: " + query.get(EMAIL));
         }
-        if (!baseValidation.isEmpty(map.get(PHONE_NUMBER))){
+        if (!baseValidation.isEmpty(map.get(PHONE_NUMBER))) {
             query.put(USER_PHONE_NUMBER_IN_DB, "'%" + map.get(PHONE_NUMBER) + "%'");
-            logger.info("query: "  + query.get(PHONE_NUMBER));
+            logger.info("query: " + query.get(PHONE_NUMBER));
         }
     }
 
