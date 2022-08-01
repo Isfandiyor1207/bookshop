@@ -63,7 +63,9 @@ public enum CommandType {
     FIND_ALL_DELIVERED_ORDERS(new FindAllDeliveredCommand()),
     FIND_ALL_NOT_DELIVERED_ORDERS(new FindAllNotDeliveredCommand()),
     CHANGE_ORDER_DELIVERED_STATUS(new ChangeDeliveredStatusCommand()),
-    SEARCH_ORDER(new FindOrdersBySearchingDetailsCommand());
+    SEARCH_ORDER(new FindOrdersBySearchingDetailsCommand()),
+
+    CHANGE_LANGUAGE(new ChangeLanguageCommand());
 
     final Command command;
 

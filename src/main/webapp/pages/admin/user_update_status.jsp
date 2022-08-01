@@ -5,14 +5,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored="false" %>
 <%@ page session="true" %>
-<fmt:setLocale value="en" scope="session"/>
-<fmt:setBundle basename="prop.message"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale.message"/>
 
 <%
     Role[] roleArray = Role.values();
 
     request.setAttribute("role_array", roleArray);
-
 %>
 
 <html>
@@ -27,6 +26,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/bootstrap.min.css">
     <!----css3---->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/custom.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/profile.dropdown.css">
     <!-- SLIDER REVOLUTION 4.x CSS SETTINGS -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,11 +50,13 @@
     <!-- Sidebar  -->
     <nav id="sidebar">
         <div class="sidebar-header">
-            <h3><img src="${pageContext.request.contextPath}/pages/img/logo.png" class="img-fluid"/><span><%=session.getAttribute("username")%></span></h3>
+            <h3><img src="${pageContext.request.contextPath}/pages/img/logo.png"
+                     class="img-fluid"/><span><fmt:message key="label.admin"/></span></h3>
         </div>
         <ul class="list-unstyled components">
             <li class="active">
-                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message key="label.dashboard"/></span></a>
+                <a href="#" class="dashboard"><i class="material-icons">dashboard</i><span><fmt:message
+                        key="label.dashboard"/></span></a>
             </li>
 
             <div class="small-screen navbar-display">
@@ -92,19 +94,26 @@
 
 
             <li class="dropdown">
-                <form action="${pageContext.request.contextPath}/controller" style="margin-bottom: 0">
-                    <input type="hidden" name="command" value="find_user_information">
-                    <button type="submit" style="padding: 10px;background-color: white; border: none;display: flex; align-items: center; justify-content: left; width: 100%;">
-                        <i class="material-icons" style="margin: 0 10px">aspect_ratio</i><span><fmt:message key="label.user.information"/></span></button>
-                </form>
+                <a href="${pageContext.request.contextPath}/pages/admin/book.jsp">
+                    <i class="material-icons">aspect_ratio</i><span><fmt:message key="label.books"/></span>
+                </a>
             </li>
 
             <li class="dropdown">
-                <form action="${pageContext.request.contextPath}/controller" style="margin-bottom: 0">
-                    <input type="hidden" name="command" value="find_user_orders">
-                    <button type="submit" style="padding: 10px;background-color: white; border: none;display: flex; align-items: center; justify-content: left; width: 100%;">
-                        <i class="material-icons" style="margin: 0 10px">aspect_ratio</i><span><fmt:message key="label.user.orders"/></span></button>
-                </form>
+                <a href="${pageContext.request.contextPath}/pages/admin/author.jsp">
+                    <i class="material-icons">apps</i><span><fmt:message key="label.author"/></span>
+                </a>
+            </li>
+
+            <li class="dropdown">
+                <a href="${pageContext.request.contextPath}/pages/admin/genre.jsp">
+                    <i class="material-icons">equalizer</i><span><fmt:message key="label.genre"/></span>
+                </a>
+            </li>
+            <li class="dropdown">
+                <a href="${pageContext.request.contextPath}/pages/admin/user.jsp">
+                    <i class="material-icons">extension</i><span><fmt:message key="label.users"/></span>
+                </a>
             </li>
             <li class="dropdown">
                 <form action="${pageContext.request.contextPath}/controller" style="margin-bottom: 0">
@@ -134,17 +143,39 @@
             <nav class="navbar navbar-expand-lg">
                 <div class="container-fluid">
 
-                    <button type="button" id="sidebarCollapse" class="d-xl-block d-lg-block d-md-mone d-none">
-                        <span class="material-icons">arrow_back_ios</span>
-                    </button>
-
-                    <a class="navbar-brand" href="#"><fmt:message key="label.dashboard"/></a>
-
                     <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="material-icons">more_vert</span>
                     </button>
+
+                    <div class="profile_page">
+                        <ul>
+                            <li>
+                                <a href="#"><fmt:message key="label.language"/></a>
+                                <ul class="language">
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="en">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="ru">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="uz">
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
 
                     <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
@@ -171,10 +202,10 @@
                 <form method="post" autocomplete="on" action="${pageContext.request.contextPath}/controller">
                     <input type="hidden" name="command" value="update_user_status">
 
-                    <h1 style="text-align: center">Please choose role to user!</h1>
+                    <h1 style="text-align: center"><fmt:message key="label.msg.change.role"/></h1>
 
                     <div class="container">
-                        <label style="width: 30% !important;">Author:</label>
+                        <label style="width: 30% !important;"><fmt:message key="label.update_role"/>:</label>
                         <select id="user_role" name="user_role"
                                 style="width: 250px; padding: 5px 5px; text-transform: capitalize">
                             <option value="0"></option>

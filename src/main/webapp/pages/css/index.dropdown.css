@@ -1,0 +1,57 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+ul{
+    list-style: none;
+    background-color: #27ae60;
+}
+ul li{
+    display: inline-block;
+    position: relative;
+}
+ul li a{
+    display: block;
+    padding: 20px 25px;
+    color: #FFF;
+    text-decoration: none;
+    text-align: center;
+    font-size: 20px;
+}
+ul li ul.dropdown li {
+    display: block;
+}
+ul li ul.dropdown {
+    width: 100%;
+    background: #27ae60;
+    position: absolute;
+    z-index: 999;
+    display: none;
+}
+ul li a:hover{
+    background: #23854b;
+    color: #FFF;
+}
+ul li:hover ul.dropdown{
+    display: block;
+}
+
+li form{
+    display: block;
+}
+li form input{
+    width: 100%;
+    background: #FFF;
+    color: black;
+    padding: 5px 0;
+    font-family: 'Times New Roman', Times, serif;
+    outline: none;
+    border: none;
+    font-size: 12px;
+}
+li form input:hover{
+    background: #27ae60;
+    color: #FFF;
+    cursor: pointer;
+}

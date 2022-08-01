@@ -12,6 +12,8 @@ public final class ParameterName {
     public static final String DELETE_ID = "delete_by_id";
     public static final String UPDATE_BY_ID = "update_by_id";
     public static final String COMMAND = "command";
+    public static final String CURRENT_LOCALE = "locale";
+    public static final String CURRENT_PAGE = "current_page";
 
     /* User parameters */
     public static final String USER_ID = "user_id";

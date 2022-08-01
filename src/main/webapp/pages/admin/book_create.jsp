@@ -13,8 +13,8 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="en"/>
-<fmt:setBundle basename="prop.message"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale.message"/>
 
 <%
     AuthorService authorService = AuthorServiceImpl.getInstance();
@@ -46,6 +46,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/profile.dropdown.css">
     <%--    <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/bootstrap-select.css">--%>
 
     <!----css3---->
@@ -163,17 +164,39 @@
             <nav class="navbar navbar-expand-lg">
                 <div class="container-fluid">
 
-                    <button type="button" id="sidebarCollapse" class="d-xl-block d-lg-block d-md-mone d-none">
-                        <span class="material-icons">arrow_back_ios</span>
-                    </button>
-
-                    <a class="navbar-brand" href="#"> <fmt:message key="label.dashboard"/> </a>
-
                     <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="material-icons">more_vert</span>
                     </button>
+
+                    <div class="profile_page">
+                        <ul>
+                            <li>
+                                <a href="#"><fmt:message key="label.language"/></a>
+                                <ul class="language">
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="en">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="ru">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="uz">
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
 
                     <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none"
                          id="navbarSupportedContent">
@@ -201,47 +224,47 @@
                     <input type="hidden" name="command" value="add_book">
 
                     <div class="container">
-                        <label style="width: 30% !important;">Book name: </label>
+                        <label style="width: 30% !important;"><fmt:message key="label.book.name"/>: </label>
                         <input type="text" name="name" style="width: 50% !important; text-transform: capitalize"
                                placeholder="Book name">
                     </div>
                     <small style="color: red">${book_name_error}</small>
 
                     <div class="container">
-                        <label style="width: 30% !important;">ISBN: </label>
+                        <label style="width: 30% !important;"><fmt:message key="label.book_isbn"/>: </label>
                         <input type="text" name="isbn" style="width: 50% !important;" placeholder="ISBN">
                     </div>
                     <small style="color: red">${book_isbn_error}</small>
                     <small style="color: red">${book_isbn_exists_error}</small>
 
                     <div class="container">
-                        <label style="width: 30% !important;">Publisher: </label>
+                        <label style="width: 30% !important;"><fmt:message key="label.book_publisher"/>: </label>
                         <input type="text" name="publisher" style="width: 50% !important; text-transform: capitalize"
                                placeholder="Publisher">
                     </div>
                     <small style="color: red">${book_publisher_name_error}</small>
 
                     <div class="container">
-                        <label style="width: 30% !important;">Publishing Year: </label>
+                        <label style="width: 30% !important;"><fmt:message key="label.book_publishingYear"/>: </label>
                         <input type="text" name="publishing_year" style="width: 50% !important;"
                                placeholder="Publishing year">
                     </div>
                     <small style="color: red">${book_publishing_year_error}</small>
 
                     <div class="container">
-                        <label style="width: 30% !important;">Price: </label>
+                        <label style="width: 30% !important;"><fmt:message key="label.book_price"/>: </label>
                         <input type="text" name="price" style="width: 50% !important;" placeholder="Book price">
                     </div>
                     <small style="color: red">${book_price_error}</small>
 
                     <div class="container">
-                        <label style="width: 30% !important;">Total book: </label>
+                        <label style="width: 30% !important;"><fmt:message key="label.book_numberOfBooks"/>: </label>
                         <input type="text" name="total" style="width: 50% !important;" placeholder="Total of books">
                     </div>
                     <small style="color: red">${book_total_error}</small>
 
                     <div class="container">
-                        <label style="width: 30% !important;">Author:</label>
+                        <label style="width: 30% !important;"><fmt:message key="label.author"/>:</label>
                         <select id="author_id" name="author_id" class="selectpicker"
                                 style="width: 250px; padding: 5px 5px; text-transform: capitalize" multiple>
                             <option value="0"></option>
@@ -253,7 +276,7 @@
                     </div>
 
                     <div class="container">
-                        <label style="width: 30% !important;">Genre:</label>
+                        <label style="width: 30% !important;"><fmt:message key="label.genre"/>:</label>
                         <select id="genre_id" name="genre_id"
                                 style="width: 250px; padding: 5px 5px; text-transform: capitalize" multiple>
                             <option value="0"></option>
@@ -265,7 +288,7 @@
                     </div>
 
                     <div class="container">
-                        <label style="width: 30% !important;">Choose file:</label>
+                        <label style="width: 30% !important;"><fmt:message key="label.choose.file"/>:</label>
                         <input type="file" name="file" value="Choose file" placeholder="Choose file"
                                style="width: 50% !important;">
                         <div>
@@ -275,7 +298,7 @@
                     </div>
 
                     <div class="container">
-                        <label style="width: 30% !important;">Total book: </label>
+                        <label style="width: 30% !important;"><fmt:message key="label.description"/>: </label>
                         <textarea rows="7" cols="50" class="form-control" name="description"
                                   placeholder="Description"></textarea>
                     </div>

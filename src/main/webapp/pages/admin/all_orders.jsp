@@ -3,8 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored="false" %>
 <%@ page session="true" %>
-<fmt:setLocale value="en" scope="session"/>
-<fmt:setBundle basename="prop.message"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale.message"/>
 <html>
 <head>
     <!-- Required meta tags -->
@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/bootstrap.min.css">
     <!----css3---->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/custom.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/profile.dropdown.css">
     <!-- SLIDER REVOLUTION 4.x CSS SETTINGS -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -132,18 +133,39 @@
         <div class="top-navbar">
             <nav class="navbar navbar-expand-lg">
                 <div class="container-fluid">
-
-                    <button type="button" id="sidebarCollapse" class="d-xl-block d-lg-block d-md-mone d-none">
-                        <span class="material-icons">arrow_back_ios</span>
-                    </button>
-
-                    <a class="navbar-brand" href="#"><fmt:message key="label.dashboard"/></a>
-
                     <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="material-icons">more_vert</span>
                     </button>
+
+                    <div class="profile_page">
+                        <ul>
+                            <li>
+                                <a href="#"><fmt:message key="label.language"/></a>
+                                <ul class="language">
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="en">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="ru">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="uz">
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
 
                     <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none"
                          id="navbarSupportedContent">
@@ -166,26 +188,26 @@
         <div class="main-content">
 
             <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo"
-                    style="margin-bottom: 10px">Filter
+                    style="margin-bottom: 10px"><fmt:message key="label.filter"/>
             </button>
             <div id="demo" class="collapse">
                 <form action="${pageContext.request.contextPath}/controller">
                     <input type="hidden" name="command" value="search_order">
                     <div style="display: flex; justify-content: left;">
                         <div style="width: 50%">
-                            <label style="width: 35%">Book name: </label>
+                            <label style="width: 35%"><fmt:message key="label.book_name"/>: </label>
                             <div style="width: 65%; display: inline">
                                 <input type="text" name="name" value="">
                             </div>
                         </div>
                         <div style="width: 50%">
-                            <label style="width: 35%">Username</label>
+                            <label style="width: 35%"><fmt:message key="label.username"/></label>
                             <div style="display: inline; width: 65%">
                                 <input type="text" name="username" value="">
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary"><fmt:message key="label.search"/></button>
                 </form>
             </div>
 

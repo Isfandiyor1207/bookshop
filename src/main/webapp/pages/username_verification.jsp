@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="en" scope="session" />
-<fmt:setBundle basename="prop.message"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale.message"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,7 +33,7 @@
 
                 <div class="signin-form">
                     <h2 class="form-title"><fmt:message key="label.forgot.password"/></h2>
-                    <p style="font-size: 12px !important; margin-bottom: 10px !important;">Please enter your username to change your password.</p>
+                    <p style="font-size: 12px !important; margin-bottom: 10px !important;"><fmt:message key="label.msg.username"/></p>
                     <form action="${pageContext.request.contextPath}/controller" class="register-form" id="login-form">
                         <input type="hidden" name="command" value="send_password_email">
                         <div class="form-group">

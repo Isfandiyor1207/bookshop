@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="en" scope="session" />
-<fmt:setBundle basename="prop.message"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale.message"/>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,10 +17,17 @@
 
     <!-- Main css -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js" integrity="sha512-6PM0qYu5KExuNcKt5bURAoT6KCThUmHRewN3zUFNaoI6Di7XJPTMoT6K0nsagZKk2OB4L7E3q1uQKHNHd4stIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 </head>
 <body>
 
 <div class="main">
+
     <!-- Sing in  Form -->
     <section class="sign-in">
         <div class="container">
@@ -37,7 +45,7 @@
                         <input type="hidden" name="command" value="login">
                         <div class="form-group">
                             <label for="username"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                            <input type="text" name="username" id="username" placeholder="Your Name" required="required"/>
+                            <input type="text" name="username" id="username" placeholder="Username" required="required"/>
                         </div>
                         <div class="form-group">
                             <label for="password"><i class="zmdi zmdi-lock"></i></label>
@@ -47,7 +55,7 @@
                         <b><small style="color: red">${user_error}</small></b>
                         <div><b><small style="color: #1abc9c">${verification_success}</small></b></div>
                         <a href="${pageContext.request.contextPath}/pages/username_verification.jsp" style="text-decoration: none">
-                            <span style="color: #0d6efd;">Forget your password.</span>
+                            <span style="color: #0d6efd;"><fmt:message key="label.msg.forget.password"/></span>
                         </a>
                         <div class="form-group form-button">
                             <input type="submit" name="signin" id="signin" class="form-submit" value="<fmt:message key="label.login"/>" />

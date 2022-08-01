@@ -2,8 +2,8 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 <%@ page session="true" %>
-<fmt:setLocale value="en" scope="session"/>
-<fmt:setBundle basename="prop.message"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale.message"/>
 
 <html>
 <head>
@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/bootstrap.min.css">
     <!----css3---->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/custom.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/profile.dropdown.css">
     <!-- SLIDER REVOLUTION 4.x CSS SETTINGS -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -132,17 +133,39 @@
             <nav class="navbar navbar-expand-lg">
                 <div class="container-fluid">
 
-                    <button type="button" id="sidebarCollapse" class="d-xl-block d-lg-block d-md-mone d-none">
-                        <span class="material-icons">arrow_back_ios</span>
-                    </button>
-
-                    <a class="navbar-brand" href="#"><fmt:message key="label.dashboard"/></a>
-
                     <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="material-icons">more_vert</span>
                     </button>
+
+                    <div class="profile_page">
+                        <ul>
+                            <li>
+                                <a href="#"><fmt:message key="label.language"/></a>
+                                <ul class="language">
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="en">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="ru">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="uz">
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
 
                     <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none"
                          id="navbarSupportedContent">

@@ -3,8 +3,8 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="en"/>
-<fmt:setBundle basename="prop.message"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale.message"/>
 <jsp:useBean id="book_info" scope="request" type="epam.project.bookshop.dto.BookDto"></jsp:useBean>
 <!DOCTYPE html>
 <html>
@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/index.dropdown.css"/>
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/main.css"/>
@@ -57,15 +58,37 @@
     </div>
 
     <div class="header-2">
-        <nav class="navbar">
+        <nav class="navbar" style="display: flex; justify-content: center; align-items: center;">
             <a href="#home">home</a>
             <form action="${pageContext.request.contextPath}/controller" style="display: inline !important;">
                 <input type="hidden" name="command" value="find_all_books_page">
-                <button type="submit" class="btn btn-success">Books</button>
+                <button type="submit" class="btn btn-success" style="margin-top: 0!important;">Books</button>
             </form>
-            <a href="#arrivals">arrivals</a>
-            <a href="#reviews">reviews</a>
-            <a href="#blogs">blogs</a>
+            <ul>
+                <li>
+                    <a href="#">Language</a>
+                    <ul class="dropdown">
+                        <li>
+                            <form action="${pageContext.request.contextPath}/controller">
+                                <input type="hidden" name = "command" value="change_language">
+                                <input type="submit" name="locale" value="en">
+                            </form>
+                        </li>
+                        <li>
+                            <form action="${pageContext.request.contextPath}/controller">
+                                <input type="hidden" name = "command" value="change_language">
+                                <input type="submit" name="locale" value="ru">
+                            </form>
+                        </li>
+                        <li>
+                            <form action="${pageContext.request.contextPath}/controller">
+                                <input type="hidden" name = "command" value="change_language">
+                                <input type="submit" name="locale" value="uz">
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </nav>
     </div>
 </header>

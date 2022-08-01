@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="ftm" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="uz"/>
-<fmt:setBundle basename="prop.message"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale.message"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +21,7 @@
 
 	<!-- custom css file link  -->
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/main.css"/>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/index.dropdown.css"/>
 </head>
 <body>
 <!-- header section starts  -->
@@ -38,29 +40,47 @@
 
 		<div class="icons">
 			<div id="search-btn" class="fas fa-search"></div>
-			<a href="#" class="fas fa-heart"></a>
-<%--			<a href="#" class="fas fa-shopping-cart"></a>--%>
-			<%--            <div id="login-btn" class="fas fa-user"></div>--%>
 			<a href="${pageContext.request.contextPath}/pages/login.jsp"><span class="fas fa-user"></span></a>
 			<form action="${pageContext.request.contextPath}/controller" style="display: inline !important;">
 				<input type="hidden" name="command" value="get_access_to_user_profile">
 				<button type="submit" style="background-color: white" class=""><i class="fa fa-home" style="margin-left: 1.5rem;font-size: 2.5rem"></i></button>
 			</form>
-<%--			<a href="${pageContext.request.contextPath}/pages/login.jsp"><i class="fas fa-user"></i></a>--%>
 		</div>
 
 	</div>
 
 	<div class="header-2">
-		<nav class="navbar">
-			<a href="#home">home</a>
+		<nav class="navbar"  style="display: flex; justify-content: center; align-items: center;">
+			<a href="${pageContext.request.contextPath}/index.jsp"><fmt:message key="label.home"/></a>
 			<form action="${pageContext.request.contextPath}/controller" style="display: inline !important;">
 				<input type="hidden" name="command" value="find_all_books_page">
-				<button type="submit" class="btn btn-success">Books</button>
+				<button type="submit" class="btn btn-success" style="margin-top: 0!important;"><fmt:message key="label.books"/></button>
 			</form>
-			<a href="#arrivals">arrivals</a>
-			<a href="#reviews">reviews</a>
-			<a href="#blogs">blogs</a>
+			<ul>
+				<li>
+					<a href="#"><fmt:message key="label.language"/></a>
+					<ul class="dropdown">
+						<li>
+							<form action="${pageContext.request.contextPath}/controller">
+								<input type="hidden" name = "command" value="change_language">
+								<input type="submit" name="locale" value="en">
+							</form>
+						</li>
+						<li>
+							<form action="${pageContext.request.contextPath}/controller">
+								<input type="hidden" name = "command" value="change_language">
+								<input type="submit" name="locale" value="ru">
+							</form>
+						</li>
+						<li>
+							<form action="${pageContext.request.contextPath}/controller">
+								<input type="hidden" name = "command" value="change_language">
+								<input type="submit" name="locale" value="uz">
+							</form>
+						</li>
+					</ul>
+				</li>
+			</ul>
 		</nav>
 	</div>
 </header>
@@ -116,7 +136,7 @@
 				deserunt nostrum accusamus. Nam alias sit necessitatibus, aliquid ex
 				minima at!
 			</p>
-			<a href="#" class="btn">shop now</a>
+			<a href="#" class="btn"><ftm:message key="label.shop.btn"/></a>
 		</div>
 
 		<div class="swiper books-slider">
@@ -153,7 +173,7 @@
 	<div class="icons">
 		<i class="fas fa-shipping-fast"></i>
 		<div class="content">
-			<h3>free shipping</h3>
+			<h3><fmt:message key="label.msg.free.delivery"/></h3>
 			<p>order over $100</p>
 		</div>
 	</div>
@@ -161,7 +181,7 @@
 	<div class="icons">
 		<i class="fas fa-lock"></i>
 		<div class="content">
-			<h3>secure payment</h3>
+			<h3><fmt:message key="label.msg.security.payment"/></h3>
 			<p>100 secure payment</p>
 		</div>
 	</div>
@@ -169,7 +189,7 @@
 	<div class="icons">
 		<i class="fas fa-redo-alt"></i>
 		<div class="content">
-			<h3>easy returns</h3>
+			<h3><fmt:message key="label.msg.return"/></h3>
 			<p>10 days returns</p>
 		</div>
 	</div>
@@ -177,7 +197,7 @@
 	<div class="icons">
 		<i class="fas fa-headset"></i>
 		<div class="content">
-			<h3>24/7 support</h3>
+			<h3>24/7 <ftm:message key="label.msg.support"/></h3>
 			<p>call us anytime</p>
 		</div>
 	</div>
@@ -188,7 +208,7 @@
 <!-- featured section starts  -->
 
 <section class="featured" id="featured">
-	<h1 class="heading"><span>featured books</span></h1>
+	<h1 class="heading"><span><ftm:message key="label.featured.book"/></span></h1>
 
 	<div class="swiper featured-slider">
 		<div class="swiper-wrapper">
@@ -204,7 +224,7 @@
 				<div class="content">
 					<h3>featured books</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
-					<a href="#" class="btn">add to cart</a>
+					<a href="#" class="btn"><ftm:message key="label.add.cart"/></a>
 				</div>
 			</div>
 
@@ -220,7 +240,7 @@
 				<div class="content">
 					<h3>featured books</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
-					<a href="#" class="btn">add to cart</a>
+					<a href="#" class="btn"><ftm:message key="label.add.cart"/></a>
 				</div>
 			</div>
 
@@ -236,7 +256,7 @@
 				<div class="content">
 					<h3>featured books</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
-					<a href="#" class="btn">add to cart</a>
+					<a href="#" class="btn"><ftm:message key="label.add.cart"/></a>
 				</div>
 			</div>
 
@@ -252,7 +272,7 @@
 				<div class="content">
 					<h3>featured books</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
-					<a href="#" class="btn">add to cart</a>
+					<a href="#" class="btn"><ftm:message key="label.add.cart"/></a>
 				</div>
 			</div>
 
@@ -268,7 +288,7 @@
 				<div class="content">
 					<h3>featured books</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
-					<a href="#" class="btn">add to cart</a>
+					<a href="#" class="btn"><ftm:message key="label.add.cart"/></a>
 				</div>
 			</div>
 
@@ -284,7 +304,7 @@
 				<div class="content">
 					<h3>featured books</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
-					<a href="#" class="btn">add to cart</a>
+					<a href="#" class="btn"><ftm:message key="label.add.cart"/></a>
 				</div>
 			</div>
 
@@ -300,7 +320,7 @@
 				<div class="content">
 					<h3>featured books</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
-					<a href="#" class="btn">add to cart</a>
+					<a href="#" class="btn"><ftm:message key="label.add.cart"/></a>
 				</div>
 			</div>
 
@@ -316,7 +336,7 @@
 				<div class="content">
 					<h3>featured books</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
-					<a href="#" class="btn">add to cart</a>
+					<a href="#" class="btn"><ftm:message key="label.add.cart"/></a>
 				</div>
 			</div>
 
@@ -332,7 +352,7 @@
 				<div class="content">
 					<h3>featured books</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
-					<a href="#" class="btn">add to cart</a>
+					<a href="#" class="btn"><ftm:message key="label.add.cart"/></a>
 				</div>
 			</div>
 
@@ -348,7 +368,7 @@
 				<div class="content">
 					<h3>featured books</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
-					<a href="#" class="btn">add to cart</a>
+					<a href="#" class="btn"><ftm:message key="label.add.cart"/></a>
 				</div>
 			</div>
 		</div>
@@ -381,7 +401,7 @@
 <!-- arrivals section starts  -->
 
 <section class="arrivals" id="arrivals">
-	<h1 class="heading"><span>new arrivals</span></h1>
+	<h1 class="heading"><span><ftm:message key="label.msg.new.arrivals"/></span></h1>
 
 	<div class="swiper arrivals-slider">
 		<div class="swiper-wrapper">
@@ -390,7 +410,7 @@
 					<img src="${pageContext.request.contextPath}/pages/img/book_img/book-1.png" alt=""/>
 				</div>
 				<div class="content">
-					<h3>new arrivals</h3>
+					<h3><ftm:message key="label.msg.new.arrivals"/>	</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
 					<div class="stars">
 						<i class="fas fa-star"></i>
@@ -407,7 +427,7 @@
 					<img src="${pageContext.request.contextPath}/pages/img/book_img/book-2.png" alt=""/>
 				</div>
 				<div class="content">
-					<h3>new arrivals</h3>
+					<h3><ftm:message key="label.msg.new.arrivals"/>	</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
 					<div class="stars">
 						<i class="fas fa-star"></i>
@@ -424,7 +444,7 @@
 					<img src="${pageContext.request.contextPath}/pages/img/book_img/book-3.png" alt=""/>
 				</div>
 				<div class="content">
-					<h3>new arrivals</h3>
+					<h3><ftm:message key="label.msg.new.arrivals"/>	</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
 					<div class="stars">
 						<i class="fas fa-star"></i>
@@ -441,7 +461,7 @@
 					<img src="${pageContext.request.contextPath}/pages/img/book_img/book-4.png" alt=""/>
 				</div>
 				<div class="content">
-					<h3>new arrivals</h3>
+					<h3><ftm:message key="label.msg.new.arrivals"/>	</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
 					<div class="stars">
 						<i class="fas fa-star"></i>
@@ -458,7 +478,7 @@
 					<img src="${pageContext.request.contextPath}/pages/img/book_img/book-5.png" alt=""/>
 				</div>
 				<div class="content">
-					<h3>new arrivals</h3>
+					<h3><ftm:message key="label.msg.new.arrivals"/>	</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
 					<div class="stars">
 						<i class="fas fa-star"></i>
@@ -479,7 +499,7 @@
 					<img src="${pageContext.request.contextPath}/pages/img/book_img/book-6.png" alt=""/>
 				</div>
 				<div class="content">
-					<h3>new arrivals</h3>
+					<h3><ftm:message key="label.msg.new.arrivals"/>	</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
 					<div class="stars">
 						<i class="fas fa-star"></i>
@@ -496,7 +516,7 @@
 					<img src="${pageContext.request.contextPath}/pages/img/book_img/book-7.png" alt=""/>
 				</div>
 				<div class="content">
-					<h3>new arrivals</h3>
+					<h3><ftm:message key="label.msg.new.arrivals"/>	</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
 					<div class="stars">
 						<i class="fas fa-star"></i>
@@ -513,7 +533,7 @@
 					<img src="${pageContext.request.contextPath}/pages/img/book_img/book-8.png" alt=""/>
 				</div>
 				<div class="content">
-					<h3>new arrivals</h3>
+					<h3><ftm:message key="label.msg.new.arrivals"/>	</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
 					<div class="stars">
 						<i class="fas fa-star"></i>
@@ -530,7 +550,7 @@
 					<img src="${pageContext.request.contextPath}/pages/img/book_img/book-9.png" alt=""/>
 				</div>
 				<div class="content">
-					<h3>new arrivals</h3>
+					<h3><ftm:message key="label.msg.new.arrivals"/>	</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
 					<div class="stars">
 						<i class="fas fa-star"></i>
@@ -547,7 +567,7 @@
 					<img src="${pageContext.request.contextPath}/pages/img/book_img/book-10.png" alt=""/>
 				</div>
 				<div class="content">
-					<h3>new arrivals</h3>
+					<h3><ftm:message key="label.msg.new.arrivals"/>	</h3>
 					<div class="price">$15.99 <span>$20.99</span></div>
 					<div class="stars">
 						<i class="fas fa-star"></i>
@@ -575,7 +595,7 @@
 			perspiciatis in atque dolore tempora quaerat at fuga dolorum natus
 			velit.
 		</p>
-		<a href="#" class="btn">shop now</a>
+		<a href="#" class="btn"><fmt:message key="label.shop.btn"/></a>
 	</div>
 
 	<div class="image">
@@ -588,7 +608,7 @@
 <!-- reviews section starts  -->
 
 <section class="reviews" id="reviews">
-	<h1 class="heading"><span>client's reviews</span></h1>
+	<h1 class="heading"><span><fmt:message key="label.msg.review"/></span></h1>
 
 	<div class="swiper reviews-slider">
 		<div class="swiper-wrapper">
@@ -701,7 +721,7 @@
 <!-- blogs section starts  -->
 
 <section class="blogs" id="blogs">
-	<h1 class="heading"><span>our blogs</span></h1>
+	<h1 class="heading"><span><fmt:message key="label.msg.blogs"/></span></h1>
 
 	<div class="swiper blogs-slider">
 		<div class="swiper-wrapper">
@@ -715,7 +735,7 @@
 						Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio,
 						odio.
 					</p>
-					<a href="#" class="btn">read more</a>
+					<a href="#" class="btn"><fmt:message key="label.read.more"/></a>
 				</div>
 			</div>
 
@@ -729,7 +749,7 @@
 						Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio,
 						odio.
 					</p>
-					<a href="#" class="btn">read more</a>
+					<a href="#" class="btn"><fmt:message key="label.read.more"/></a>
 				</div>
 			</div>
 
@@ -743,7 +763,7 @@
 						Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio,
 						odio.
 					</p>
-					<a href="#" class="btn">read more</a>
+					<a href="#" class="btn"><fmt:message key="label.read.more"/></a>
 				</div>
 			</div>
 
@@ -757,7 +777,7 @@
 						Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio,
 						odio.
 					</p>
-					<a href="#" class="btn">read more</a>
+					<a href="#" class="btn"><fmt:message key="label.read.more"/></a>
 				</div>
 			</div>
 
@@ -771,7 +791,7 @@
 						Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio,
 						odio.
 					</p>
-					<a href="#" class="btn">read more</a>
+					<a href="#" class="btn"><fmt:message key="label.read.more"/></a>
 				</div>
 			</div>
 		</div>
@@ -785,7 +805,7 @@
 <section class="footer">
 	<div class="box-container">
 		<div class="box">
-			<h3>our locations</h3>
+			<h3><fmt:message key="label.msg.location"/></h3>
 			<a href="#"> <i class="fas fa-map-marker-alt"></i> india </a>
 			<a href="#"> <i class="fas fa-map-marker-alt"></i> USA </a>
 			<a href="#"> <i class="fas fa-map-marker-alt"></i> russia </a>
@@ -795,7 +815,7 @@
 		</div>
 
 		<div class="box">
-			<h3>quick links</h3>
+			<h3><fmt:message key="label.msg.link"/></h3>
 			<a href="#"> <i class="fas fa-arrow-right"></i> home </a>
 			<a href="#"> <i class="fas fa-arrow-right"></i> featured </a>
 			<a href="#"> <i class="fas fa-arrow-right"></i> arrivals </a>
@@ -804,7 +824,7 @@
 		</div>
 
 		<div class="box">
-			<h3>extra links</h3>
+			<h3><fmt:message key="label.msg.extra.link"/></h3>
 			<a href="#"> <i class="fas fa-arrow-right"></i> account info </a>
 			<a href="#"> <i class="fas fa-arrow-right"></i> ordered items </a>
 			<a href="#"> <i class="fas fa-arrow-right"></i> privacy policy </a>
@@ -813,7 +833,7 @@
 		</div>
 
 		<div class="box">
-			<h3>contact info</h3>
+			<h3><fmt:message key="label.msg.contact"/></h3>
 			<a href="#"> <i class="fas fa-phone"></i> +123-456-7890 </a>
 			<a href="#"> <i class="fas fa-phone"></i> +111-222-3333 </a>
 			<a href="#"> <i class="fas fa-envelope"></i> shaikhanas@gmail.com </a>
@@ -830,7 +850,7 @@
 	</div>
 
 	<div class="credit">
-		created by <span>mr. web designer</span> | all rights reserved!
+		created by <span>mr. Sultonov Isfandiyor</span> | all rights reserved!
 	</div>
 </section>
 

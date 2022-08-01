@@ -8,8 +8,8 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="uz"/>
-<fmt:setBundle basename="prop.message"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale.message"/>
 
 
 <%
@@ -40,6 +40,7 @@
 
     <!-- font awesome cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/index.dropdown.css"/>
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/main.css"/>
@@ -61,9 +62,6 @@
 
         <div class="icons">
             <div id="search-btn" class="fas fa-search"></div>
-            <a href="#" class="fas fa-heart"></a>
-            <%--            <a href="#" class="fas fa-shopping-cart"></a>--%>
-            <%--            <div id="login-btn" class="fas fa-user"></div>--%>
             <a href="${pageContext.request.contextPath}/pages/login.jsp"><span class="fas fa-user"></span></a>
             <form action="${pageContext.request.contextPath}/controller" style="display: inline !important;">
                 <input type="hidden" name="command" value="get_access_to_user_profile">
@@ -76,15 +74,37 @@
     </div>
 
     <div class="header-2">
-        <nav class="navbar">
-            <a href="#home">home</a>
+        <nav class="navbar"  style="display: flex; justify-content: center; align-items: center;">
+            <a href="${pageContext.request.contextPath}/index.jsp"><fmt:message key="label.home"/></a>
             <form action="${pageContext.request.contextPath}/controller" style="display: inline !important;">
                 <input type="hidden" name="command" value="find_all_books_page">
-                <button type="submit" class="btn btn-success">Books</button>
+                <button type="submit" class="btn btn-success" style="margin-top: 0!important;"><fmt:message key="label.books"/></button>
             </form>
-            <a href="#arrivals">arrivals</a>
-            <a href="#reviews">reviews</a>
-            <a href="#blogs">blogs</a>
+            <ul>
+                <li>
+                    <a href="#"><fmt:message key="label.language"/></a>
+                    <ul class="dropdown">
+                        <li>
+                            <form action="${pageContext.request.contextPath}/controller">
+                                <input type="hidden" name = "command" value="change_language">
+                                <input type="submit" name="locale" value="en">
+                            </form>
+                        </li>
+                        <li>
+                            <form action="${pageContext.request.contextPath}/controller">
+                                <input type="hidden" name = "command" value="change_language">
+                                <input type="submit" name="locale" value="ru">
+                            </form>
+                        </li>
+                        <li>
+                            <form action="${pageContext.request.contextPath}/controller">
+                                <input type="hidden" name = "command" value="change_language">
+                                <input type="submit" name="locale" value="uz">
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </nav>
     </div>
 </header>
@@ -95,19 +115,19 @@
         <form action="${pageContext.request.contextPath}/controller" style="width: 480px; padding: 15px; font-size: 15px">
             <input type="hidden" name="command" value="search_to_main_book_page">
             <div style="display: flex; justify-content: flex-start; align-items: center" class="search">
-                <label style="width: 40%">Book name</label>
+                <label style="width: 40%"><fmt:message key="label.book.name"/></label>
                 <div style="width: 60%; display: inline">
                     <input type="text" name="name" value="" style="border: groove !important;">
                 </div>
             </div>
             <div style="display: flex; justify-content: flex-start; align-items: center" class="search">
-                <label style="width: 40%">Author name</label>
+                <label style="width: 40%"><fmt:message key="label.author"/></label>
                 <div style="display: inline; width: 60%">
                     <input type="text" name="fio" value="" style="border: groove !important;">
                 </div>
             </div>
             <div style="display: flex; justify-content: flex-start; align-items: center">
-                <label style="width: 40% !important;">Genre:</label>
+                <label style="width: 40% !important;"><fmt:message key="label.genre"/>:</label>
                 <select id="genre_id" name="genre_id" style="padding: 5px 5px; text-transform: capitalize; border: groove">
                     <option value="0"></option>
                     <c:forEach var="item" items="${genreList}">
@@ -116,7 +136,7 @@
                 </select>
                 <small style="color: red">${genre_id_error}</small>
             </div>
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn btn-primary"><fmt:message key="label.search"/></button>
         </form>
     </div>
 </div>
@@ -138,7 +158,7 @@
                 <p>$${bookItem.price}</p>
                 <form action="${pageContext.request.contextPath}/controller">
                     <input type="hidden" name="command" value="find_one_book_information">
-                    <button type="submit" class="btn" name="book_id" value="${bookItem.id}">Buy</button>
+                    <button type="submit" class="btn" name="book_id" value="${bookItem.id}"><fmt:message key="label.shop.btn"/></button>
                 </form>
             </div>
         </div>
@@ -149,7 +169,7 @@
 <section class="footer">
     <div class="box-container">
         <div class="box">
-            <h3>our locations</h3>
+            <h3>><fmt:message key="label.msg.location"/></h3>
             <a href="#"> <i class="fas fa-map-marker-alt"></i> india </a>
             <a href="#"> <i class="fas fa-map-marker-alt"></i> USA </a>
             <a href="#"> <i class="fas fa-map-marker-alt"></i> russia </a>
@@ -159,7 +179,7 @@
         </div>
 
         <div class="box">
-            <h3>quick links</h3>
+            <h3><fmt:message key="label.msg.link"/></h3>
             <a href="#"> <i class="fas fa-arrow-right"></i> home </a>
             <a href="#"> <i class="fas fa-arrow-right"></i> featured </a>
             <a href="#"> <i class="fas fa-arrow-right"></i> arrivals </a>
@@ -168,7 +188,7 @@
         </div>
 
         <div class="box">
-            <h3>extra links</h3>
+            <h3><fmt:message key="label.msg.extra.link"/></h3>
             <a href="#"> <i class="fas fa-arrow-right"></i> account info </a>
             <a href="#"> <i class="fas fa-arrow-right"></i> ordered items </a>
             <a href="#"> <i class="fas fa-arrow-right"></i> privacy policy </a>
@@ -177,7 +197,7 @@
         </div>
 
         <div class="box">
-            <h3>contact info</h3>
+            <h3><fmt:message key="label.msg.contact"/></h3>
             <a href="#"> <i class="fas fa-phone"></i> +123-456-7890 </a>
             <a href="#"> <i class="fas fa-phone"></i> +111-222-3333 </a>
             <a href="#"> <i class="fas fa-envelope"></i> shaikhanas@gmail.com </a>
@@ -194,7 +214,7 @@
     </div>
 
     <div class="credit">
-        created by <span>mr. web designer</span> | all rights reserved!
+        created by <span>mr. Sultonov Isfandiyor</span> | all rights reserved!
     </div>
 </section>
 

@@ -11,8 +11,8 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="en"/>
-<fmt:setBundle basename="prop.message"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale.message"/>
 
 <%
     GenreService genreService = GenreServiceImpl.getInstance();
@@ -42,6 +42,7 @@
     <!----css3---->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/custom.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/item.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/profile.dropdown.css">
     <!-- SLIDER REVOLUTION 4.x CSS SETTINGS -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -154,17 +155,39 @@
             <nav class="navbar navbar-expand-lg">
                 <div class="container-fluid">
 
-                    <button type="button" id="sidebarCollapse" class="d-xl-block d-lg-block d-md-mone d-none">
-                        <span class="material-icons">arrow_back_ios</span>
-                    </button>
-
-                    <a class="navbar-brand" href="#"> <fmt:message key="label.dashboard"/> </a>
-
                     <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="material-icons">more_vert</span>
                     </button>
+
+                    <div class="profile_page">
+                        <ul>
+                            <li>
+                                <a href="#"><fmt:message key="label.language"/></a>
+                                <ul class="language">
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="en">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="ru">
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="${pageContext.request.contextPath}/controller">
+                                            <input type="hidden" name = "command" value="change_language">
+                                            <input type="submit" name="locale" value="uz">
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
 
                     <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none"
                          id="navbarSupportedContent">
@@ -188,25 +211,25 @@
 
             <%--      Collapse      --%>
             <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo"
-                    style="margin-bottom: 10px">Filter
+                    style="margin-bottom: 10px"><fmt:message key="label.filter"/>
             </button>
             <div id="demo" class="collapse">
                 <form action="${pageContext.request.contextPath}/controller">
                     <input type="hidden" name="command" value="search_book">
                     <div style="width: 100%">
-                        <label style="width: 20%">Book name</label>
+                        <label style="width: 20%"><fmt:message key="label.book.name"/></label>
                         <div style="width: 80%; display: inline">
                             <input type="text" name="name" value="">
                         </div>
                     </div>
                     <div style="width: 100%">
-                        <label style="width: 20%">Author name</label>
+                        <label style="width: 20%"><fmt:message key="label.author"/></label>
                         <div style="display: inline; width: 80%">
                             <input type="text" name="fio" value="">
                         </div>
                     </div>
                     <div style="width: 100%;">
-                        <label style="width: 20% !important;">Genre:</label>
+                        <label style="width: 20% !important;"><fmt:message key="label.genre"/>:</label>
                         <select id="genre_id" name="genre_id" style="padding: 5px 5px; text-transform: capitalize">
                             <option value="0"></option>
                             <c:forEach var="item" items="${genreList}">
@@ -215,7 +238,7 @@
                         </select>
                         <small style="color: red">${genre_id_error}</small>
                     </div>
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary"><fmt:message key="label.search"/></button>
                 </form>
             </div>
 
@@ -266,9 +289,9 @@
                     <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
                             key="label.book_image_path"/></th>
                     <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.delete_btn"/></th>
+                            key="label.update_role"/></th>
                     <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.update_btn"/></th>
+                            key="label.delete_btn"/></th>
                 </tr>
                 </thead>
 

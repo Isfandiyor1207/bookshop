@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="ftm" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="en"/>
-<fmt:setBundle basename="prop.message"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale.message"/>
 <jsp:useBean id="book_info" scope="request" type="epam.project.bookshop.dto.BookDto"></jsp:useBean>
 <!DOCTYPE html>
 <html>
@@ -19,6 +20,7 @@
 
     <!-- font awesome cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/index.dropdown.css"/>
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/pages/css/main.css"/>
@@ -42,9 +44,6 @@
 
         <div class="icons">
             <div id="search-btn" class="fas fa-search"></div>
-            <a href="#" class="fas fa-heart"></a>
-            <%--            <a href="#" class="fas fa-shopping-cart"></a>--%>
-<%--            <div id="login-btn" class="fas fa-user"></div>--%>
             <a href="${pageContext.request.contextPath}/pages/login.jsp"><span class="fas fa-user"></span></a>
             <form action="${pageContext.request.contextPath}/controller" style="display: inline !important;">
                 <input type="hidden" name="command" value="get_access_to_user_profile">
@@ -57,15 +56,37 @@
     </div>
 
     <div class="header-2">
-        <nav class="navbar">
-            <a href="#home">home</a>
+        <nav class="navbar"  style="display: flex; justify-content: center; align-items: center;">
+            <a href="${pageContext.request.contextPath}/index.jsp"><fmt:message key="label.home"/></a>
             <form action="${pageContext.request.contextPath}/controller" style="display: inline !important;">
                 <input type="hidden" name="command" value="find_all_books_page">
-                <button type="submit" class="btn btn-success">Books</button>
+                <button type="submit" class="btn btn-success" style="margin-top: 0!important;"><fmt:message key="label.books"/></button>
             </form>
-            <a href="#arrivals">arrivals</a>
-            <a href="#reviews">reviews</a>
-            <a href="#blogs">blogs</a>
+            <ul>
+                <li>
+                    <a href="#"><fmt:message key="label.language"/></a>
+                    <ul class="dropdown">
+                        <li>
+                            <form action="${pageContext.request.contextPath}/controller">
+                                <input type="hidden" name = "command" value="change_language">
+                                <input type="submit" name="locale" value="en">
+                            </form>
+                        </li>
+                        <li>
+                            <form action="${pageContext.request.contextPath}/controller">
+                                <input type="hidden" name = "command" value="change_language">
+                                <input type="submit" name="locale" value="ru">
+                            </form>
+                        </li>
+                        <li>
+                            <form action="${pageContext.request.contextPath}/controller">
+                                <input type="hidden" name = "command" value="change_language">
+                                <input type="submit" name="locale" value="uz">
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </nav>
     </div>
 </header>
@@ -92,9 +113,9 @@
             <jsp:getProperty name="book_info" property="description"/>
         </p>
         <h2>
-            Rate:
+            <fmt:message key="label.rate"/>:
             <jsp:getProperty name="book_info" property="averageRate"/>
-            Voted:
+            <fmt:message key="label.voted"/>:
             <jsp:getProperty name="book_info" property="numberOfVotedUser"/>
         </h2>
         <h1 class="price">$
@@ -115,7 +136,7 @@
                     <input type="radio" id="star1" name="rate" value="1"/>
                     <label for="star1" title="text"></label>
                 </div>
-                <button type="submit" name="book_id" value="${book_info.id}" class="btn btn-primary">Rate</button>
+                <button type="submit" name="book_id" value="${book_info.id}" class="btn btn-primary"><fmt:message key="label.rate"/></button>
             </form>
         </div>
 
@@ -123,13 +144,13 @@
             <div class="order">
                 <form action="${pageContext.request.contextPath}/controller">
                     <div class="order-quantity">
-                        <label>Quantity: </label>
+                        <label><fmt:message key="label.msg.quantity"/>: </label>
                         <input type="number" name="quantity" value="1">
                         <small style="color: red;">${book_quantity_error}</small>
                     </div>
                     <div class="order-btn">
                         <input type="hidden" name="command" value="check_user_to_authorization">
-                        <button class="btn btn-success" type="submit" name="book_id" value="${book_info.id}">Buy
+                        <button class="btn btn-success" type="submit" name="book_id" value="${book_info.id}"><ftm:message key="label.buy"/>
                         </button>
                     </div>
                 </form>
@@ -141,7 +162,7 @@
 <section class="footer">
     <div class="box-container">
         <div class="box">
-            <h3>our locations</h3>
+            <h3><fmt:message key="label.msg.location"/></h3>
             <a href="#"> <i class="fas fa-map-marker-alt"></i> india </a>
             <a href="#"> <i class="fas fa-map-marker-alt"></i> USA </a>
             <a href="#"> <i class="fas fa-map-marker-alt"></i> russia </a>
@@ -151,7 +172,7 @@
         </div>
 
         <div class="box">
-            <h3>quick links</h3>
+            <h3><fmt:message key="label.msg.link"/></h3>
             <a href="#"> <i class="fas fa-arrow-right"></i> home </a>
             <a href="#"> <i class="fas fa-arrow-right"></i> featured </a>
             <a href="#"> <i class="fas fa-arrow-right"></i> arrivals </a>
@@ -160,7 +181,7 @@
         </div>
 
         <div class="box">
-            <h3>extra links</h3>
+            <h3><fmt:message key="label.msg.extra.link"/></h3>
             <a href="#"> <i class="fas fa-arrow-right"></i> account info </a>
             <a href="#"> <i class="fas fa-arrow-right"></i> ordered items </a>
             <a href="#"> <i class="fas fa-arrow-right"></i> privacy policy </a>
@@ -169,7 +190,7 @@
         </div>
 
         <div class="box">
-            <h3>contact info</h3>
+            <h3><fmt:message key="label.msg.contact"/></h3>
             <a href="#"> <i class="fas fa-phone"></i> +123-456-7890 </a>
             <a href="#"> <i class="fas fa-phone"></i> +111-222-3333 </a>
             <a href="#"> <i class="fas fa-envelope"></i> shaikhanas@gmail.com </a>
@@ -186,7 +207,7 @@
     </div>
 
     <div class="credit">
-        created by <span>mr. web designer</span> | all rights reserved!
+        created by <span>mr. Sultonov Isfandiyor</span> | all rights reserved!
     </div>
 </section>
 
