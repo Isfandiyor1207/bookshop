@@ -12,13 +12,13 @@ import epam.project.bookshop.exception.ServiceException;
 import epam.project.bookshop.service.AttachmentService;
 import epam.project.bookshop.service.BookService;
 import epam.project.bookshop.service.GenreService;
-import epam.project.bookshop.util.Utils;
 import epam.project.bookshop.validation.BaseValidation;
 import epam.project.bookshop.validation.BookValidation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static epam.project.bookshop.command.ParameterName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.*;
@@ -33,7 +33,6 @@ public class BookServiceImpl implements BookService {
     private static final BookValidation bookValidation = BookValidation.getInstance();
     private static final BaseValidation baseValidation = BaseValidation.getInstance();
     private static final AttachmentService attachmentService = AttachmentServiceImpl.getInstance();
-    private static final Utils utils = new Utils();
 
     private BookServiceImpl() {
     }
@@ -106,7 +105,7 @@ public class BookServiceImpl implements BookService {
 
             if (!(genreStringArray != null && genreStringArray.equals("null"))) {
 
-                List<Long> updateGenre = utils.convertStringArrayToList(genreStringArray);
+                List<Long> updateGenre = convertGenreStringArrayToList(genreStringArray);
 
                 for (Long genreId : updateGenre) {
                     genreService.attachBookToGenre(bookId, genreId, true);
@@ -118,7 +117,7 @@ public class BookServiceImpl implements BookService {
 
             if (!(authorStringArray != null && authorStringArray.equals("null"))) {
 
-                List<Long> updateAuthor = utils.convertStringArrayToList(update.get(AUTHOR_ID));
+                List<Long> updateAuthor = convertGenreStringArrayToList(update.get(AUTHOR_ID));
 
                 for (Long authorId : updateAuthor) {
                     authorService.attachBookToAuthor(bookId, authorId, true);
@@ -223,13 +222,13 @@ public class BookServiceImpl implements BookService {
             Long bookId = bookDao.save(book);
             if (bookId != null) {
 
-                List<Long> genreIdList = utils.convertStringArrayToList(bookMap.get(GENRE_ID));
+                List<Long> genreIdList = convertGenreStringArrayToList(bookMap.get(GENRE_ID));
 
                 for (Long genreId : genreIdList) {
                     genreService.attachBookToGenre(bookId, genreId, false);
                 }
 
-                List<Long> authorIdList = utils.convertStringArrayToList(bookMap.get(AUTHOR_ID));
+                List<Long> authorIdList = convertGenreStringArrayToList(bookMap.get(AUTHOR_ID));
 
                 for (Long authorId : authorIdList) {
                     authorService.attachBookToAuthor(bookId, authorId, false);
@@ -447,5 +446,16 @@ public class BookServiceImpl implements BookService {
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+    }
+
+    public List<Long> convertGenreStringArrayToList(String array) {
+
+        List<Long> list;
+
+        array = array.substring(1, array.length()-1);
+
+        list = Arrays.stream(array.split(", ")).map(Long::valueOf).collect(Collectors.toList());
+
+        return list;
     }
 }

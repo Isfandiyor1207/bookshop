@@ -55,14 +55,13 @@ public class Controller extends HttpServlet {
             HttpSession session = req.getSession();
 
             if (parameterCommand.equals("logout")) {
-                session.setAttribute(ParameterName.CURRENT_PAGE, WebPageName.INDEX_PAGE);
+                session.setAttribute(CURRENT_PAGE, WebPageName.INDEX_PAGE);
                 page = command.execute(req);
             } else {
                 page = command.execute(req);
-                session.setAttribute(ParameterName.CURRENT_PAGE, page);
+                session.setAttribute(CURRENT_PAGE, page);
             }
 
-            logger.log(Level.INFO,"moving to " + page);
             req.getRequestDispatcher(page).forward(req, resp);
 
         } catch (CommandException e) {
