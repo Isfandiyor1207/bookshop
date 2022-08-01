@@ -54,7 +54,7 @@ public class Controller extends HttpServlet {
 
             HttpSession session = req.getSession();
 
-            if (parameterCommand.equals("logout")) {
+            if (parameterCommand.equals(LOGOUT)) {
                 session.setAttribute(CURRENT_PAGE, WebPageName.INDEX_PAGE);
                 page = command.execute(req);
             } else {

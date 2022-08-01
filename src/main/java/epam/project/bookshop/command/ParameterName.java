@@ -14,6 +14,7 @@ public final class ParameterName {
     public static final String COMMAND = "command";
     public static final String CURRENT_LOCALE = "locale";
     public static final String CURRENT_PAGE = "current_page";
+    public static final String LOGOUT = "logout";
 
     /* User parameters */
     public static final String USER_ID = "user_id";
