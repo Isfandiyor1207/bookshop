@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.ID;
+import static epam.project.bookshop.dao.SQLFragments.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookDaoImpl implements BookDao {
@@ -166,7 +167,6 @@ public class BookDaoImpl implements BookDao {
             }
 
             if (book.getName() != null) {
-                logger.info("Book name: " + book.getName());
                 return Optional.of(book);
             } else return Optional.empty();
 
@@ -231,7 +231,7 @@ public class BookDaoImpl implements BookDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BOOK_BY_NAME)) {
 
-            statement.setString(1, "%" + bookName.toLowerCase() + "%");
+            statement.setString(1, PERCENTAGE + bookName.toLowerCase() + PERCENTAGE);
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -258,6 +258,7 @@ public class BookDaoImpl implements BookDao {
             statement.executeUpdate();
 
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }

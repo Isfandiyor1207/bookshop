@@ -45,7 +45,7 @@ public class AuthorValidation {
             isValid = false;
         }
 
-        return isValid;
+        return !isValid;
     }
 
 

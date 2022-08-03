@@ -1,7 +1,5 @@
 package epam.project.bookshop.mapper;
 
-import com.oracle.wls.shaded.org.apache.regexp.RE;
-import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.dto.RateDto;
 import epam.project.bookshop.exception.DaoException;
 import org.apache.logging.log4j.LogManager;
@@ -15,9 +13,10 @@ import static epam.project.bookshop.command.ParameterName.*;
 public class RateMapper implements BaseMapper<RateDto> {
 
     private static final Logger logger = LogManager.getLogger();
-    private static final RateMapper instance=new RateMapper();
+    private static final RateMapper instance = new RateMapper();
 
-    private RateMapper(){}
+    private RateMapper() {
+    }
 
     public static RateMapper getInstance() {
         return instance;
@@ -25,7 +24,7 @@ public class RateMapper implements BaseMapper<RateDto> {
 
     @Override
     public RateDto resultSetToDto(ResultSet resultSet) throws DaoException {
-        RateDto rateDto=new RateDto();
+        RateDto rateDto = new RateDto();
 
         try {
             rateDto.setId(resultSet.getLong(ID));

@@ -30,11 +30,9 @@ public class AddGenreCommand implements Command {
             if (genreService.add(genreMap)) {
                 page = WebPageName.GENRE_PAGE;
             } else {
-
                 for (Map.Entry<String, String> entry : genreMap.entrySet()) {
                     request.setAttribute(entry.getKey(), entry.getValue());
                 }
-
                 page = WebPageName.GENRE_CREATE_PAGE;
             }
 

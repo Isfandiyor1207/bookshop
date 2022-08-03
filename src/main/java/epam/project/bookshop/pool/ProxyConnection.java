@@ -1,5 +1,8 @@
 package epam.project.bookshop.pool;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
@@ -7,23 +10,24 @@ import java.util.concurrent.Executor;
 
 public class ProxyConnection implements Connection {
 
-    private Connection connection;
+    private static final Logger logger = LogManager.getLogger();
+    private final Connection connection;
 
     ProxyConnection(Connection connection) {
         this.connection = connection;
-    }
-
-    @Override
-    public void close() throws SQLException {
-        ConnectionPool.getInstance().releaseConnection(this);
     }
 
     void reallyClose() {
         try {
             connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("error in closing connection ", e);
         }
+    }
+
+    @Override
+    public void close() throws SQLException {
+        ConnectionPool.getInstance().releaseConnection(this);
     }
 
     @Override

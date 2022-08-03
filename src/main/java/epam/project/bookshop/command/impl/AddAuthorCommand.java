@@ -26,17 +26,15 @@ public class AddAuthorCommand implements Command {
 
         Map<String, String> authorMap = new HashMap<>();
         authorMap.put(AUTHOR_FIO, request.getParameter(AUTHOR_FIO));
-        logger.info("author full name: " + request.getParameter(AUTHOR_FIO));
+
         String page;
         try {
             if (authorService.add(authorMap)) {
                 page = WebPageName.AUTHOR_PAGE;
             } else {
-
                 for (Map.Entry<String, String> entry : authorMap.entrySet()) {
                     request.setAttribute(entry.getKey(), entry.getValue());
                 }
-
                 page = WebPageName.AUTHOR_CREATE_PAGE;
             }
 

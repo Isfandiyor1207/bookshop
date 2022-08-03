@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.command.WebPageName.*;
 
 public class LoginCommand implements Command {
 
@@ -40,7 +41,7 @@ public class LoginCommand implements Command {
         }
 
         if (login) {
-            Long roleId = 2L;
+            Long roleId = 1L;
             Optional<UserDto> optionalUserDto = Optional.empty();
             try {
                 optionalUserDto = userService.findUserByUsername(username);
@@ -49,24 +50,23 @@ public class LoginCommand implements Command {
                 e.printStackTrace();
             }
 
-            request.setAttribute("user", username);
+            request.setAttribute(USER, username);
             session.setAttribute(USERNAME, username);
             session.setAttribute(USER_ROLE_ID, roleId);
             session.setAttribute(USER_ID, optionalUserDto.get().getId());
 
             if (roleId == 0) {
-                page = WebPageName.ADMIN_PAGE;
+                page = ADMIN_PAGE;
             } else {
-                page = WebPageName.INDEX_PAGE;
+                page = INDEX_PAGE;
             }
 
         } else {
             for (Map.Entry<String, String> entry : userLogin.entrySet()) {
                 request.setAttribute(entry.getKey(), entry.getValue());
             }
-            page = WebPageName.LOGIN_PAGE;
+            page = LOGIN_PAGE;
         }
-//        session.setAttribute("currentPage", page);
         return page;
     }
 

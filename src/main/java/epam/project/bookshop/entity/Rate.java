@@ -11,11 +11,7 @@ public class Rate extends BaseDomain{
 
     private Long rate;
 
-    public Rate(){
-
-    }
-
-    public Long getUserId() {
+   public Long getUserId() {
         return userId;
     }
 

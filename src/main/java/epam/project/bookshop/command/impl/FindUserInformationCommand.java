@@ -22,14 +22,11 @@ public class FindUserInformationCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-
         String userId = String.valueOf(request.getSession().getAttribute(USER_ID));
-
         UserService userService= UserServiceImpl.getInstance();
 
         try {
             Optional<UserDto> userDto = userService.findById(Long.valueOf(userId));
-            logger.info("UserDto: " + userDto.get());
             request.setAttribute(USER_INFO, userDto.get());
         } catch (ServiceException e) {
             logger.error(e);

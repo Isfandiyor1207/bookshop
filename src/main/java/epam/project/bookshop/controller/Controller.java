@@ -4,6 +4,7 @@ import epam.project.bookshop.command.Command;
 import epam.project.bookshop.command.CommandType;
 import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.command.WebPageName;
+import epam.project.bookshop.command.impl.LogoutCommand;
 import epam.project.bookshop.exception.CommandException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -20,7 +21,7 @@ import java.io.IOException;
 
 import static epam.project.bookshop.command.ParameterName.*;
 
-@WebServlet(name = "helloServlet", value = {"/controller", "*.do"})
+@WebServlet(name = "helloServlet", value = {"/controller"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
                  maxFileSize = 1024 * 1024 * 5,
                  maxRequestSize = 1024 * 1024 * 5 * 5)
@@ -57,15 +58,17 @@ public class Controller extends HttpServlet {
             if (parameterCommand.equals(LOGOUT)) {
                 session.setAttribute(CURRENT_PAGE, WebPageName.INDEX_PAGE);
                 page = command.execute(req);
+                resp.sendRedirect(page);
             } else {
                 page = command.execute(req);
                 session.setAttribute(CURRENT_PAGE, page);
+                req.getRequestDispatcher(page).forward(req, resp);
             }
 
-            req.getRequestDispatcher(page).forward(req, resp);
 
         } catch (CommandException e) {
-            throw new ServletException(e); // 2
+            logger.error(e);
+            throw new ServletException(e);
         }
     }
 

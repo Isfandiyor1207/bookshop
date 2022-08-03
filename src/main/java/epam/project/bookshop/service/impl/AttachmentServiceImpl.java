@@ -20,14 +20,26 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
+
+import static epam.project.bookshop.command.ParameterName.ATTACHMENT_UPLOAD_DIRECTORY;
+import static epam.project.bookshop.command.ParameterName.PROPERTY_CONFIG;
 
 public class AttachmentServiceImpl implements AttachmentService {
     private static final Logger logger = LogManager.getLogger();
     private static final AttachmentServiceImpl instance = new AttachmentServiceImpl();
-    private static final String UPLOAD_DIRECTORY = "C:/Users/User/Desktop/bookshop/src/main/webapp/pages/img/uploads/";
     private static final AttachmentDao attachmentDao = AttachmentDaoImpl.getInstance();
+    private static String UPLOAD_DIRECTORY;
 
-    private AttachmentServiceImpl(){}
+    private AttachmentServiceImpl(){
+        try (InputStream input = SendEmailService.class.getClassLoader().getResourceAsStream(PROPERTY_CONFIG)) {
+            Properties prop = new Properties();
+            prop.load(input);
+            UPLOAD_DIRECTORY = prop.getProperty("upload.url");
+        }catch (IOException ex) {
+            logger.error(ex);
+        }
+    }
 
     public static AttachmentServiceImpl getInstance() {
         return instance;
@@ -42,17 +54,11 @@ public class AttachmentServiceImpl implements AttachmentService {
     public void deleteByBookId(Long bookId) throws ServiceException {
 
         try {
-
-            logger.info("Book id: " + bookId);
-
             List<Long> allByBookId = attachmentDao.findAllAttachmentIdByBookId(bookId);
-
-            logger.info("Attachment book: " + allByBookId);
 
             for (Long attachmentId : allByBookId) {
                 attachmentDao.deleteById(attachmentId);
             }
-
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e);
@@ -89,7 +95,7 @@ public class AttachmentServiceImpl implements AttachmentService {
             attachment.setAbsoluteName(part.getSubmittedFileName());
             attachment.setExtension(submittedFileName.substring(submittedFileName.lastIndexOf(".")));
             attachment.setFileSize(part.getSize());
-            attachment.setUploadPath(UPLOAD_DIRECTORY.substring(UPLOAD_DIRECTORY.indexOf("/pages")));
+            attachment.setUploadPath(UPLOAD_DIRECTORY.substring(UPLOAD_DIRECTORY.indexOf(ATTACHMENT_UPLOAD_DIRECTORY)));
 
             Path imagePath = new File(UPLOAD_DIRECTORY + submittedFileName).toPath();
 

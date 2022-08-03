@@ -1,6 +1,7 @@
 package epam.project.bookshop.command.impl;
 
 import epam.project.bookshop.command.Command;
+import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.dao.impl.BookDaoImpl;
 import epam.project.bookshop.dto.BookDto;
 import epam.project.bookshop.entity.Book;
@@ -51,8 +52,6 @@ public class AddBookCommand implements Command {
             throw new CommandException(e);
         }
 
-        System.out.println(bookMap);
-
         BookServiceImpl bookService = BookServiceImpl.getInstance();
 
         try {
@@ -60,7 +59,7 @@ public class AddBookCommand implements Command {
 
                 try {
                     AttachmentServiceImpl attachmentService = AttachmentServiceImpl.getInstance();
-                    Long fileId = attachmentService.addFile(request.getPart("file"));
+                    Long fileId = attachmentService.addFile(request.getPart(ATTACHMENT));
 
                     Optional<BookDto>  optionalBook = bookService.findByName(bookMap.get(BOOK_NAME));
 

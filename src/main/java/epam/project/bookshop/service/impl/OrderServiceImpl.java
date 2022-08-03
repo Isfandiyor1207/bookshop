@@ -90,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
         boolean orderedValidation = orderValidation.validateOrderedBookInformation(orderedBookMap);
 
         if (!orderedValidation) {
-            logger.error("Book order is not valid.");
+            logger.info("Book order is not valid.");
             return false;
         }
 
@@ -141,7 +141,6 @@ public class OrderServiceImpl implements OrderService {
         try {
             List<OrderDto> orderDtoList = orderDao.findAllOrderByUserId(userId);
 
-            //todo change delivered status
             List<OrderDto> dtoList = new ArrayList<>();
 
             for (OrderDto orderDto : orderDtoList) {
@@ -252,7 +251,6 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        // todo not done by the end
         if (bookName.isEmpty() && !username.isEmpty()) {
             Optional<UserDto> optionalUserDto = userService.findUserByUsername(username);
             orderDto = findOrderByUserId(optionalUserDto.get().getId());

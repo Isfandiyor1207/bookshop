@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static epam.project.bookshop.command.ParameterName.USER_ROLE_ID_IN_DB;
+import static epam.project.bookshop.command.ParameterName.*;
 
 public class UserDaoImpl implements UserDao {
 
@@ -58,7 +58,7 @@ public class UserDaoImpl implements UserDao {
             Long id = null;
 
             while (resultSet.next()) {
-                id = resultSet.getLong("id");
+                id = resultSet.getLong(ID);
             }
 
             return id;
@@ -97,6 +97,7 @@ public class UserDaoImpl implements UserDao {
             return resultSet > 0;
 
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -119,6 +120,7 @@ public class UserDaoImpl implements UserDao {
             } else return Optional.of(user);
 
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -137,6 +139,7 @@ public class UserDaoImpl implements UserDao {
             }
 
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return userList;
@@ -161,6 +164,7 @@ public class UserDaoImpl implements UserDao {
             } else return Optional.of(user);
 
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -181,6 +185,7 @@ public class UserDaoImpl implements UserDao {
 
             return Optional.ofNullable(role);
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -203,6 +208,7 @@ public class UserDaoImpl implements UserDao {
             } else return Optional.of(user);
 
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -225,6 +231,7 @@ public class UserDaoImpl implements UserDao {
             } else return Optional.of(user);
 
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }

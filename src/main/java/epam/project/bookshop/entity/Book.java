@@ -13,15 +13,7 @@ public class Book extends BaseDomain {
 
     private int publishingYear;
 
-    private Long genreId;
-
-    private Long authorId;
-
-    private Long attachmentId;
-
     private Long price;
-
-    // todo I don`t know write or not number of voted users
 
     private Long numberOfBooks;
 
@@ -67,30 +59,6 @@ public class Book extends BaseDomain {
         this.publishingYear = publishingYear;
     }
 
-    public Long getGenreId() {
-        return genreId;
-    }
-
-    public void setGenreId(Long genreId) {
-        this.genreId = genreId;
-    }
-
-    public Long getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
-    }
-
-    public Long getAttachmentId() {
-        return attachmentId;
-    }
-
-    public void setAttachmentId(Long attachmentId) {
-        this.attachmentId = attachmentId;
-    }
-
     public Long getPrice() {
         return price;
     }
@@ -113,12 +81,12 @@ public class Book extends BaseDomain {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Book book = (Book) o;
-        return publishingYear == book.publishingYear && Objects.equals(name, book.name) && Objects.equals(isbn, book.isbn) && Objects.equals(publisher, book.publisher) && Objects.equals(genreId, book.genreId) && Objects.equals(authorId, book.authorId) && Objects.equals(attachmentId, book.attachmentId) && Objects.equals(price, book.price) && Objects.equals(numberOfBooks, book.numberOfBooks);
+        return publishingYear == book.publishingYear && Objects.equals(name, book.name) && Objects.equals(isbn, book.isbn) && Objects.equals(publisher, book.publisher) && Objects.equals(price, book.price) && Objects.equals(numberOfBooks, book.numberOfBooks) && Objects.equals(description, book.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, isbn, publisher, publishingYear, genreId, authorId, attachmentId, price, numberOfBooks);
+        return Objects.hash(super.hashCode(), name, isbn, publisher, publishingYear, price, numberOfBooks, description);
     }
 
     @Override
@@ -128,11 +96,9 @@ public class Book extends BaseDomain {
                 .add("isbn='" + isbn + "'")
                 .add("publisher='" + publisher + "'")
                 .add("publishingYear=" + publishingYear)
-                .add("genreId=" + genreId)
-                .add("authorId=" + authorId)
-                .add("attachmentId=" + attachmentId)
                 .add("price=" + price)
                 .add("numberOfBooks=" + numberOfBooks)
+                .add("description='" + description + "'")
                 .toString();
     }
 }

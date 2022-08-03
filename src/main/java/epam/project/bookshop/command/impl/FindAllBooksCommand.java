@@ -15,6 +15,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
+import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.command.WebPageName.*;
+
 public class FindAllBooksCommand implements Command {
 
     private static final Logger logger = LogManager.getLogger();
@@ -26,12 +29,12 @@ public class FindAllBooksCommand implements Command {
         try {
             List<BookDto> bookList = bookService.findAll();
 
-            request.setAttribute(ParameterName.BOOK_LIST, bookList);
+            request.setAttribute(BOOK_LIST, bookList);
         } catch (ServiceException e) {
             logger.error(e);
             throw new CommandException(e);
         }
 
-        return WebPageName.BOOK_PAGE;
+        return BOOK_PAGE;
     }
 }

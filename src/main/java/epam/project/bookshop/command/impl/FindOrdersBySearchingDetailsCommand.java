@@ -35,7 +35,6 @@ public class FindOrdersBySearchingDetailsCommand implements Command {
 
         try {
             List<OrderDto> orderByUser = orderService.findAllOrdersBySearchingField(orderMap);
-
             request.setAttribute(ALL_ORDERS, orderByUser);
 
             return WebPageName.ALL_ORDERS;

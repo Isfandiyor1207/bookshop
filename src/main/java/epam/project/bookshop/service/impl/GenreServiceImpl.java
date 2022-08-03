@@ -38,7 +38,7 @@ public class GenreServiceImpl implements GenreService {
         try {
             return genreDao.deleteById(id);
         } catch (DaoException e) {
-            logger.error("Genre does not deleted by this name!");
+            logger.error("Genre does not deleted by this name!" + e);
             throw new ServiceException(e);
         }
     }
@@ -50,14 +50,10 @@ public class GenreServiceImpl implements GenreService {
             logger.info("Genre information is not valid!");
             return false;
         }
-        logger.info("GENRE name: " + genreMapper.get(GENRE_NAME));
-        logger.info("GENRE id: " + genreMapper.get(ID));
-
         boolean isUpdated = true;
 
         try {
             Optional<GenreDto> genreOptional = genreDao.findByName(genreMapper.get(GENRE_NAME));
-
             if (genreOptional.isPresent()) {
                 genreMapper.put(WORN_GENRE_NAME, ERROR_GENRE_NAME_EXIST);
                 isUpdated = false;
@@ -69,8 +65,7 @@ public class GenreServiceImpl implements GenreService {
         }
 
         try {
-            // todo change id
-            Optional<GenreDto> optionalGenre = genreDao.findById(Long.valueOf(genreMapper.get(ID))); // Long.valueOf(genreMapper.get(ID))
+            Optional<GenreDto> optionalGenre = genreDao.findById(Long.valueOf(genreMapper.get(ID)));
             if (optionalGenre.isPresent()) {
                 isUpdated = genreDao.updated(genreMapper.get(GENRE_NAME), Long.valueOf(genreMapper.get(ID)));
             } else {
@@ -90,7 +85,7 @@ public class GenreServiceImpl implements GenreService {
         try {
             return genreDao.findAll();
         } catch (DaoException e) {
-            logger.error("Genre find all method is failed!");
+            logger.error("Genre find all method is failed!" + e);
             throw new ServiceException(e);
         }
     }
@@ -138,12 +133,10 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public void attachBookToGenre(Long bookId, Long genreId, boolean isToUpdate) throws ServiceException {
         try {
-
             if (isToUpdate) {
                 genreDao.deleteAttachedGenre(bookId, genreId);
             }
             genreDao.attachBookToGenre(bookId, genreId);
-
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e);
@@ -178,4 +171,14 @@ public class GenreServiceImpl implements GenreService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public void deleteGenreListByBookId(Long bookId) throws ServiceException {
+        try {
+            genreDao.deleteGenreListByBookId(bookId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
 }

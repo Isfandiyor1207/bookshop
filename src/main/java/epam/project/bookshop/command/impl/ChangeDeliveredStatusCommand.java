@@ -1,6 +1,7 @@
 package epam.project.bookshop.command.impl;
 
 import epam.project.bookshop.command.Command;
+import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.command.WebPageName;
 import epam.project.bookshop.exception.CommandException;
 import epam.project.bookshop.exception.ServiceException;
@@ -9,17 +10,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static epam.project.bookshop.command.ParameterName.*;
+
 public class ChangeDeliveredStatusCommand implements Command {
 
     private static final Logger logger= LogManager.getLogger();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-        String orderId = request.getParameter("order_id");
-        String isDelivered = request.getParameter("order_delivered");
-
-        logger.info("Order id: " + orderId);
-        logger.info("Order delivered: " + isDelivered);
+        String orderId = request.getParameter(ORDER_ID);
+        String isDelivered = request.getParameter(ORDER_DELIVER);
 
         OrderServiceImpl orderService=OrderServiceImpl.getInstance();
 

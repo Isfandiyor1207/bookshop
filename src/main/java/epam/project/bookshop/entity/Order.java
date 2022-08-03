@@ -15,9 +15,6 @@ public class Order extends BaseDomain {
 
     private boolean delivered;
 
-    public Order() {
-    }
-
     public Long getBookId() {
         return bookId;
     }

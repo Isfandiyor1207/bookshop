@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.ID;
+import static epam.project.bookshop.dao.SQLFragments.*;
 
 public class RateDaoImpl implements RateDao {
 
@@ -27,13 +28,11 @@ public class RateDaoImpl implements RateDao {
     private static final String INSERT_RATE = "INSERT INTO rate_book(book_id, user_id, rate) VALUES (?, ?, ?) RETURNING id;";
     private static final String AVERAGE_RATE_BY_BOOK_ID = "SELECT avg(rate) FROM rate_book WHERE book_id =? and deleted=false";
     private static final String SUM_OF_VOTED_USERS = "SELECT count(user_id) FROM rate_book WHERE book_id = ? and deleted=false";
-    //todo change delete method()
     private static final String DELETE_RATES_BY_BOOK_ID = "UPDATE rate_book SET deleted = true WHERE book_id = ? and deleted=false";
     private static final String RATE_BY_BOOK_AND_USER_ID = "SELECT id, book_id, user_id, rate FROM rate_book WHERE book_id=? and user_id=? and deleted=false";
     private static final String UPDATE_RATE = "UPDATE rate_book SET rate = ? WHERE id = ? and deleted=false";
     private static final String SELECT_ALL_RATE = "SELECT id, book_id, user_id, rate FROM rate_book WHERE deleted=false";
     private static final String SELECT_RATE_BY_ID = "SELECT id, book_id, user_id, rate FROM rate_book WHERE id = ? and deleted=false";
-    // todo change
     private static final String DELETE_RATE_BY_ID = "UPDATE rate_book SET deleted=true WHERE id = ? and deleted=false";
 
     public static RateDaoImpl getInstance() {
@@ -157,7 +156,7 @@ public class RateDaoImpl implements RateDao {
             double average_rate = 0.0;
 
             while (resultSet.next()) {
-                average_rate = resultSet.getDouble("avg");
+                average_rate = resultSet.getDouble(AVERAGE);
             }
 
             return Optional.of(average_rate);
@@ -180,7 +179,7 @@ public class RateDaoImpl implements RateDao {
             long numberOfUsers = 0L;
 
             while (resultSet.next()) {
-                numberOfUsers = resultSet.getLong("count");
+                numberOfUsers = resultSet.getLong(COUNT);
             }
 
             return Optional.of(numberOfUsers);

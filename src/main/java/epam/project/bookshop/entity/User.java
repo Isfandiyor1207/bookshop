@@ -19,9 +19,6 @@ public class User extends BaseDomain {
 
     private Long roleId;
 
-    public User() {
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -89,19 +86,7 @@ public class User extends BaseDomain {
 
     @Override
     public int hashCode() {
-
-        int result = 1;
-
-        result = 31 * result + (firstName == null ? 0 : firstName.hashCode());
-        result = 31 * result + (lastName == null ? 0 : lastName.hashCode());
-        result = 31 * result + (username == null ? 0 : username.hashCode());
-        result = 31 * result + (email == null ? 0 : email.hashCode());
-        result = 31 * result + (phoneNumber == null ? 0 : phoneNumber.hashCode());
-        result = 31 * result + (password == null ? 0 : password.hashCode());
-        result = 31 * result + (roleId == null ? 0 : roleId.hashCode());
-        result = 31 * super.hashCode();
-
-        return result;
+        return Objects.hash(super.hashCode(), firstName, lastName, username, password, email, phoneNumber, roleId);
     }
 
     @Override

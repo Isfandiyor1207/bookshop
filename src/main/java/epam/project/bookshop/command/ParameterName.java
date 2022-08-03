@@ -15,6 +15,7 @@ public final class ParameterName {
     public static final String CURRENT_LOCALE = "locale";
     public static final String CURRENT_PAGE = "current_page";
     public static final String LOGOUT = "logout";
+    public static final String USER = "user";
 
     /* User parameters */
     public static final String USER_ID = "user_id";
@@ -26,9 +27,11 @@ public final class ParameterName {
     public static final String PSW_REPEAT = "psw_repeat";
     public static final String PHONE_NUMBER = "contact";
     public static final String USER_ROLE_ID = "roleId";
+    public static final String ROLE_ID = "role_id";
     public static final String USER_ROLE_ID_IN_DB = "roleid";
     public static final String USER_PHONE_NUMBER_IN_DB = "phonenumber";
     public static final String USER_LIST = "user_list";
+    public static final String USER_ROLE = "user_role";
     public static final String USER_INFO = "user_info";
     public static final String AUTH_USER = "auth_user";
     public static final String VERIFICATION_CODE = "verification_code";
@@ -59,17 +62,22 @@ public final class ParameterName {
 
     /* Attachment parameters */
     public static final String ATTACHMENT = "file";
+    public static final String ATTACHMENT_ID = "attachment_id";
     public static final String ATTACHMENT_CONTENT_TYPE = "file_content_type";
     public static final String ATTACHMENT_NAME = "attachment_name";
     public static final String ATTACHMENT_HASH_NAME = "hash_name";
     public static final String ATTACHMENT_ABSOLUTE_NAME = "absolute_name";
     public static final String ATTACHMENT_UPLOAD_PATH = "upload_path";
     public static final String ATTACHMENT_EXTENSION = "extension";
+    public static final String ATTACHMENT_UPLOAD_DIRECTORY = "/pages";
+
 
     /* Rate parameters */
     public static final String RATE_QUANTITY = "rate";
 
     /* Order parameters */
+    public static final String ORDER_ID = "order_id";
+    public static final String ORDER_DELIVER = "order_delivered";
     public static final String BOOK_ORDER_QUANTITY = "quantity";
     public static final String BOOK_DELIVERED = "delivered";
     public static final String ORDERS_BY_USER_ID = "user_order";
@@ -78,6 +86,7 @@ public final class ParameterName {
     public static final String ALL_ORDERS_BY_STATUS = "all_orders_by_status";
     public static final String DELIVERED_STATUS = "order_delivered_status";
 
+    public static final String PROPERTY_CONFIG = "/prop/config.properties";
 
     private ParameterName() {
     }

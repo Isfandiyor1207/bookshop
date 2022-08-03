@@ -16,22 +16,24 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
+import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.command.WebPageName.*;
+
 public class FindAllAuthorsCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-
         AuthorService authorService = AuthorServiceImpl.getInstance();
 
         try {
             List<AuthorDto> authorDtoList = authorService.findAll();
-            request.setAttribute(ParameterName.AUTHOR_LIST, authorDtoList);
+            request.setAttribute(AUTHOR_LIST, authorDtoList);
         } catch (ServiceException e) {
             logger.error("Authors not found. " + e);
             throw new CommandException(e);
         }
 
-        return WebPageName.AUTHOR_PAGE;
+        return AUTHOR_PAGE;
     }
 }

@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.dao.SQLFragments.*;
 import static epam.project.bookshop.validation.ValidationParameterName.*;
 
 public class BookServiceImpl implements BookService {
@@ -43,8 +44,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public boolean deleteById(Long id) throws ServiceException {
-        // todo delete genre_list and author_list by book_id
         try {
+            authorService.deleteAuthorListByBookId(id);
+            genreService.deleteGenreListByBookId(id);
             rateService.deleteByBookId(id);
             attachmentService.deleteByBookId(id);
             return bookDao.deleteById(id);
@@ -85,13 +87,11 @@ public class BookServiceImpl implements BookService {
         StringBuilder stringBuilder = new StringBuilder();
 
         query.forEach((key, value) -> stringBuilder.append(key)
-                .append("='")
+                .append(EQUAL_WITH_SINGLE_QUOTE)
                 .append(value)
-                .append("', "));
-
+                .append(SINGLE_QUOTE_WITH_COMMA));
 
         String queryString = stringBuilder.toString();
-
 
         try {
             if (!queryString.isEmpty()) {
@@ -104,25 +104,19 @@ public class BookServiceImpl implements BookService {
             String genreStringArray = update.get(GENRE_ID);
 
             if (!(genreStringArray != null && genreStringArray.equals("null"))) {
-
                 List<Long> updateGenre = convertGenreStringArrayToList(genreStringArray);
-
                 for (Long genreId : updateGenre) {
                     genreService.attachBookToGenre(bookId, genreId, true);
                 }
-
             }
 
             String authorStringArray = update.get(AUTHOR_ID);
 
             if (!(authorStringArray != null && authorStringArray.equals("null"))) {
-
                 List<Long> updateAuthor = convertGenreStringArrayToList(update.get(AUTHOR_ID));
-
                 for (Long authorId : updateAuthor) {
                     authorService.attachBookToAuthor(bookId, authorId, true);
                 }
-
             }
 
         } catch (DaoException e) {
@@ -206,7 +200,6 @@ public class BookServiceImpl implements BookService {
             book.setNumberOfBooks(Long.valueOf(bookMap.get(BOOK_TOTAL)));
             book.setDescription(bookMap.get(BOOK_DESCRIPTION));
 
-
             boolean isAdded = false;
 
             Optional<BookDto> daoByName = bookDao.findByName(bookMap.get(BOOK_NAME));
@@ -221,15 +214,12 @@ public class BookServiceImpl implements BookService {
 
             Long bookId = bookDao.save(book);
             if (bookId != null) {
-
                 List<Long> genreIdList = convertGenreStringArrayToList(bookMap.get(GENRE_ID));
-
                 for (Long genreId : genreIdList) {
                     genreService.attachBookToGenre(bookId, genreId, false);
                 }
 
                 List<Long> authorIdList = convertGenreStringArrayToList(bookMap.get(AUTHOR_ID));
-
                 for (Long authorId : authorIdList) {
                     authorService.attachBookToAuthor(bookId, authorId, false);
                 }
@@ -280,12 +270,9 @@ public class BookServiceImpl implements BookService {
         String genreId = searchMap.get(GENRE_ID);
 
         if (!bookName.isEmpty() && !authorName.isEmpty() && !genreId.equals("0")) {
-            logger.info("!bookName.isEmpty() && !authorName.isEmpty() !genreId.equals(\"0\")");
             List<Long> bookIdList = genreService.findAllBookIdByGenreId(Long.valueOf(genreId));
             if (!bookIdList.isEmpty()) {
-
                 List<Long> authorIdList = authorService.findAuthorIdByName(authorName);
-
                 List<Long> bookIdListByAuthorId = new ArrayList<>();
 
                 for (Long authorId : authorIdList) {
@@ -316,7 +303,6 @@ public class BookServiceImpl implements BookService {
         }
 
         if (bookName.isEmpty() && !authorName.isEmpty() && !genreId.equals("0")) {
-            logger.info("bookName.isEmpty() && !authorName.isEmpty() && !genreId.equals(\"0\")");
             List<Long> bookIdList = genreService.findAllBookIdByGenreId(Long.valueOf(genreId));
             if (!bookIdList.isEmpty()) {
                 List<Long> authorIdList = authorService.findAuthorIdByName(authorName);
@@ -346,7 +332,6 @@ public class BookServiceImpl implements BookService {
         }
 
         if (!bookName.isEmpty() && authorName.isEmpty() && !genreId.equals("0")) {
-            logger.info("!bookName.isEmpty() && authorName.isEmpty() && !genreId.equals(\"0\")");
             List<Long> bookIdByGenreList = genreService.findAllBookIdByGenreId(Long.valueOf(genreId));
             if (!bookIdByGenreList.isEmpty()) {
                 List<BookDto> allBookByBookName = findAllBookByBookName(bookName);
@@ -362,18 +347,13 @@ public class BookServiceImpl implements BookService {
         }
 
         if (!bookName.isEmpty() && !authorName.isEmpty() && genreId.equals("0")) {
-            logger.info("!bookName.isEmpty() && !authorName.isEmpty() && genreId.equals(\"0\")");
-
             List<Long> authorIdByName = authorService.findAuthorIdByName(authorName);
-
             List<Long> bookIdByAuthor = new ArrayList<>();
-
             for (Long authorId : authorIdByName) {
                 bookIdByAuthor.addAll(authorService.findAllBookIdByAuthorId(authorId));
             }
 
             List<BookDto> bookDtoList = findAllBookByBookName(bookName);
-
             for (Long bookId : bookIdByAuthor) {
                 for (BookDto bookDto : bookDtoList) {
                     if (Objects.equals(bookId, bookDto.getId())) {
@@ -381,11 +361,9 @@ public class BookServiceImpl implements BookService {
                     }
                 }
             }
-
         }
 
         if (bookName.isEmpty() && authorName.isEmpty() && !genreId.equals("0")) {
-            logger.info("bookName.isEmpty() && authorName.isEmpty() && !genreId.equals(\"0\")");
             List<Long> bookListByGenre = genreService.findAllBookIdByGenreId(Long.valueOf(genreId));
             for (Long bookId : bookListByGenre) {
                 dtoList.add(findById(bookId).get());
@@ -393,9 +371,6 @@ public class BookServiceImpl implements BookService {
         }
 
         if (bookName.isEmpty() && !authorName.isEmpty() && genreId.equals("0")) {
-
-            logger.info("bookName.isEmpty() && !authorName.isEmpty() && genreId.equals(\"0\")");
-
             List<Long> authorIdByName = authorService.findAuthorIdByName(authorName);
             List<Long> bookIdList = new ArrayList<>();
             for (Long authorId : authorIdByName) {
@@ -408,7 +383,6 @@ public class BookServiceImpl implements BookService {
         }
 
         if (!bookName.isEmpty() && authorName.isEmpty() && genreId.equals("0")) {
-            logger.info("!bookName.isEmpty() && authorName.isEmpty() && genreId.equals(\"0\")");
             dtoList.addAll(findAllBookByBookName(bookName.trim()));
         }
 
@@ -449,13 +423,9 @@ public class BookServiceImpl implements BookService {
     }
 
     public List<Long> convertGenreStringArrayToList(String array) {
-
         List<Long> list;
-
         array = array.substring(1, array.length()-1);
-
         list = Arrays.stream(array.split(", ")).map(Long::valueOf).collect(Collectors.toList());
-
         return list;
     }
 }

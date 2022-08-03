@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.GENRE_ID;
+import static epam.project.bookshop.command.WebPageName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.ERROR_GENRE_IS_NOT_FOUND;
 import static epam.project.bookshop.validation.ValidationParameterName.WARN_GENRE_UPDATE;
 
@@ -26,15 +27,12 @@ public class FindGenreByIdCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         String id = request.getParameter(GENRE_ID);
-
-        logger.info("genre id: " + id);
         GenreService genericService = GenreServiceImpl.getInstance();
 
         try {
             Optional<GenreDto> optionalGenre = genericService.findById(Long.valueOf(id));
 
             if (optionalGenre.isPresent()) {
-                logger.info("set session:" + id);
                 HttpSession session = request.getSession();
                 session.setAttribute(GENRE_ID, id);
             } else {
@@ -46,6 +44,6 @@ public class FindGenreByIdCommand implements Command {
             throw new CommandException(e);
         }
 
-        return WebPageName.GENRE_UPDATE_PAGE;
+        return GENRE_UPDATE_PAGE;
     }
 }

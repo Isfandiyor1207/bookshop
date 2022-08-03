@@ -16,12 +16,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
+import static epam.project.bookshop.command.WebPageName.*;
+
 public class FindAllGenresCommand implements Command {
    private static final Logger logger= LogManager.getLogger();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-
         GenreService genreService= GenreServiceImpl.getInstance();
 
         try {
@@ -32,6 +33,6 @@ public class FindAllGenresCommand implements Command {
             throw new CommandException(e);
         }
 
-        return WebPageName.GENRE_PAGE;
+        return GENRE_PAGE;
     }
 }

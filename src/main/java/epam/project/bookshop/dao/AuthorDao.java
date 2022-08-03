@@ -25,4 +25,6 @@ public interface AuthorDao extends BaseDao<AuthorDto, Author> {
     List<Long> findAllBookIdByAuthorId(Long authorId) throws DaoException;
 
     List<AuthorDto> findBySearchingFio(String fio) throws DaoException;
+
+    void deleteAuthorListByBookId(Long bookId) throws DaoException;
 }

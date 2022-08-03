@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.AUTHOR_ID;
+import static epam.project.bookshop.command.WebPageName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.ERROR_AUTHOR_IS_NOT_FOUND;
 import static epam.project.bookshop.validation.ValidationParameterName.WORN_AUTHOR_UPDATE;
 
@@ -26,15 +27,12 @@ public class FindAuthorByIdCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         String id = request.getParameter(AUTHOR_ID);
-
-        logger.info("author id: " + id);
         AuthorService authorService = AuthorServiceImpl.getInstance();
 
         try {
             Optional<AuthorDto> optionalAuthor = authorService.findById(Long.valueOf(id));
 
             if (optionalAuthor.isPresent()) {
-                logger.info("set session: " +  id);
                 HttpSession session = request.getSession();
                 session.setAttribute(AUTHOR_ID, id);
             } else {
@@ -46,6 +44,6 @@ public class FindAuthorByIdCommand implements Command {
             throw new CommandException(e);
         }
 
-        return WebPageName.AUTHOR_UPDATE_PAGE;
+        return AUTHOR_UPDATE_PAGE;
     }
 }

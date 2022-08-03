@@ -18,14 +18,11 @@ public class ChangeLanguageCommand implements Command {
     public String execute(HttpServletRequest request) throws CommandException {
 
         String locale = request.getParameter(CURRENT_LOCALE);
-        logger.info("locale: " + locale);
         HttpSession session = request.getSession();
         if (locale != null && !locale.isEmpty()) {
             session.setAttribute(CURRENT_LOCALE, locale);
             logger.info("Locale is saved: " + locale);
         }
-        logger.info("session: " + session.getAttribute(CURRENT_PAGE));
         return (String) session.getAttribute(CURRENT_PAGE);
     }
-
 }

@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static epam.project.bookshop.command.ParameterName.DELETE_ID;
+import static epam.project.bookshop.command.WebPageName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.ERROR_BOOK_IS_NOT_DELETED;
 import static epam.project.bookshop.validation.ValidationParameterName.WORN_DELETED;
 
@@ -22,13 +23,11 @@ public class DeleteBookCommand implements Command {
         String id = request.getParameter(DELETE_ID);
         BookService bookService = BookServiceImpl.getInstance();
 
-        logger.info("book id: " + id);
-
         try {
             if (!bookService.deleteById(Long.valueOf(id))) {
                 request.setAttribute(WORN_DELETED, ERROR_BOOK_IS_NOT_DELETED);
             }
-            return WebPageName.BOOK_PAGE;
+            return BOOK_PAGE;
 
         } catch (ServiceException e) {
             logger.error(e);

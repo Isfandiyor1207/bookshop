@@ -15,18 +15,16 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.command.WebPageName.*;
 
 public class FindGenreBySearchingDetails implements Command {
     private static final Logger logger = LogManager.getLogger();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-
         String genreName = request.getParameter(GENRE_NAME);
-
         GenreService genreService = GenreServiceImpl.getInstance();
 
-        logger.info("Genre info: "+ genreName);
         try {
             List<GenreDto> genreList = genreService.findGenreBySearchingDetail(genreName);
             request.setAttribute(GENRE_LIST, genreList);
@@ -35,6 +33,6 @@ public class FindGenreBySearchingDetails implements Command {
             throw new CommandException(e);
         }
 
-        return WebPageName.GENRE_PAGE;
+        return GENRE_PAGE;
     }
 }

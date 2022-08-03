@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.dao.SQLFragments.*;
 import static epam.project.bookshop.validation.ValidationParameterName.*;
 
 public class UserServiceImpl implements UserService {
@@ -65,7 +66,6 @@ public class UserServiceImpl implements UserService {
                 return isAuthenticated;
             } else {
                 userLogin.put(WORN_USER, ERROR_USER_NOT_EXIST_MSG);
-                System.out.println("service false");
                 return false;
             }
         } catch (DaoException e) {
@@ -112,21 +112,17 @@ public class UserServiceImpl implements UserService {
         StringBuilder stringBuilder = new StringBuilder();
 
         queryMap.forEach((key, value) -> stringBuilder.append(key)
-                .append(" like ")
+                .append(LIKE)
                 .append(value)
-                .append(" and "));
-
-        logger.info("Query: " + queryMap);
+                .append(AND));
 
         if (!userFieldMap.get(USER_ROLE_ID_IN_DB).isEmpty()){
-            stringBuilder.append(USER_ROLE_ID_IN_DB).append(" = ").append(userFieldMap.get(USER_ROLE_ID_IN_DB)).append(" and ");
+            stringBuilder.append(USER_ROLE_ID_IN_DB).append(EQUAL).append(userFieldMap.get(USER_ROLE_ID_IN_DB)).append(AND);
         }
 
-        stringBuilder.append(" deleted = ").append("false");
+        stringBuilder.append(DELETED+EQUAL).append("false");
 
         String queryString = stringBuilder.toString();
-
-        logger.info("query : " + queryString);
 
         try {
             return userDao.findAllByUserFields(queryString);
@@ -166,7 +162,7 @@ public class UserServiceImpl implements UserService {
         try {
             return userDao.save(user) != null;
         } catch (DaoException e) {
-            logger.error("User is not added to database.");
+            logger.error(e);
             throw new ServiceException(e);
         }
     }
@@ -245,16 +241,16 @@ public class UserServiceImpl implements UserService {
         StringBuilder stringBuilder = new StringBuilder();
 
         query.forEach((key, value) -> stringBuilder.append(key)
-                .append("='")
+                .append(EQUAL_WITH_SINGLE_QUOTE)
                 .append(value)
-                .append("', "));
+                .append(SINGLE_QUOTE_WITH_COMMA));
 
         String queryString = stringBuilder.toString();
 
         try {
             return userDao.updated(queryString, Long.valueOf(update.get(ID)));
         } catch (DaoException e) {
-            logger.error(e.getMessage());
+            logger.error(e);
             throw new ServiceException(e);
         }
     }

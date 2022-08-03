@@ -20,9 +20,6 @@ public class SessionAttributeListenerImpl implements HttpSessionAttributeListene
             logger.info("locale is empty ");
             session.setAttribute(ParameterName.CURRENT_LOCALE, "en");
         }
-
-        logger.info(" ----------> attributeAdded: " + sbe.getSession().getAttribute(ParameterName.USERNAME));
-        logger.info(" ----------> attributeAdded: " + sbe.getSession().getAttribute(ParameterName.PASSWORD));
     }
 
     @Override

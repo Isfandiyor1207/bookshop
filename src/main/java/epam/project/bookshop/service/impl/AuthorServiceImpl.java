@@ -37,18 +37,17 @@ public class AuthorServiceImpl implements AuthorService {
         try {
             return authorDao.deleteById(id);
         } catch (DaoException e) {
-            logger.error("Author not deleted by this id: " + id);
+            logger.error(e);
             throw new ServiceException(e);
         }
     }
 
     @Override
     public boolean update(Map<String, String> authorUpdateMap) throws ServiceException {
-        if (!authorValidation.authorCreateValidation(authorUpdateMap)) {
+        if (authorValidation.authorCreateValidation(authorUpdateMap)) {
             logger.info("Author information is not valid!");
             return false;
         }
-        logger.info("Author name: " + authorUpdateMap.get(AUTHOR_FIO));
 
         boolean isUpdated = true;
 
@@ -104,7 +103,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public boolean add(Map<String, String> authorMap) throws ServiceException {
 
-        if (!authorValidation.authorCreateValidation(authorMap)) {
+        if (authorValidation.authorCreateValidation(authorMap)) {
             logger.info("Author information is nor valid!");
             return false;
         }
@@ -181,6 +180,15 @@ public class AuthorServiceImpl implements AuthorService {
             return authorDao.findBySearchingFio(fio);
         } catch (DaoException e) {
             logger.error(e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void deleteAuthorListByBookId(Long bookId) throws ServiceException {
+        try {
+            authorDao.deleteAuthorListByBookId(bookId);
+        } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }

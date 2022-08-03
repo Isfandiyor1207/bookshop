@@ -19,12 +19,13 @@ import static epam.project.bookshop.command.WebPageName.USERS_UPDATE_PAGE;
 import static epam.project.bookshop.command.WebPageName.USER_INFORMATION_PAGE;
 
 public class UpdateUserCommand implements Command {
+
     private static final Logger logger = LogManager.getLogger();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
 
-        String userId = (String) request.getSession().getAttribute("user_id");
+        String userId = (String) request.getSession().getAttribute(USER_ID);
 
         Map<String, String> userMap = new HashMap<>();
         userMap.put(ID, userId);
@@ -41,9 +42,6 @@ public class UpdateUserCommand implements Command {
             boolean update = userService.update(userMap);
 
             if (update) {
-
-                // todo update admin user update
-
                 Optional<UserDto> optionalUserDto = userService.findById(Long.valueOf(userId));
                 request.setAttribute(USER_INFO, optionalUserDto.get());
                 return USER_INFORMATION_PAGE;
@@ -55,6 +53,7 @@ public class UpdateUserCommand implements Command {
             }
 
         } catch (ServiceException e) {
+            logger.error(e);
             throw new CommandException(e);
         }
     }

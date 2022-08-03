@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.command.WebPageName.*;
 
 public class OrderBookCommand implements Command {
 
@@ -46,12 +47,11 @@ public class OrderBookCommand implements Command {
             request.setAttribute(BOOK_INFORMATION, optionalBookDto.get());
 
             if (!isAdded) {
-
                 for (Map.Entry<String, String> entry : orderedMap.entrySet()) {
                     request.setAttribute(entry.getKey(), entry.getValue());
                 }
             }
-            return WebPageName.BOOK_ONE_INFO_PAGE;
+            return BOOK_ONE_INFO_PAGE;
 
         } catch (ServiceException e) {
             logger.error(e);

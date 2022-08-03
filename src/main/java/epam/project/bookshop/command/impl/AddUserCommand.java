@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.command.WebPageName.*;
 
 public class AddUserCommand implements Command {
     public static final Logger logger= LogManager.getLogger();
@@ -39,22 +40,19 @@ public class AddUserCommand implements Command {
 
             try {
                 if (userService.add(addUser)){
-                    page = WebPageName.INDEX_PAGE; // fixme redirect is not working
+                    page = INDEX_PAGE;
                 }else {
-                    logger.info("user info is incorrect");
-
                     for (Map.Entry<String, String> entry : addUser.entrySet()) {
                         request.setAttribute(entry.getKey(), entry.getValue());
                     }
-
-                    page = WebPageName.SIGNUP_PAGE;
+                    page = SIGNUP_PAGE;
                 }
             } catch (ServiceException e) {
                 throw new CommandException(e);
             }
         } else {
             request.setAttribute(PSW_REPEAT, "Password is not the same.");
-            page = WebPageName.SIGNUP_PAGE;
+            page = SIGNUP_PAGE;
         }
         return page;
     }

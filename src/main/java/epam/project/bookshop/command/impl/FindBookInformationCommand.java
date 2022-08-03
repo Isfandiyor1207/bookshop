@@ -17,6 +17,7 @@ import java.text.DecimalFormat;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.command.WebPageName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.*;
 
 public class FindBookInformationCommand implements Command {
@@ -25,16 +26,13 @@ public class FindBookInformationCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-
         String bookId = request.getParameter(BOOK_ID);
-
         BookService bookService= BookServiceImpl.getInstance();
 
         try {
             Optional<BookDto> optionalBookDto = bookService.findById(Long.valueOf(bookId));
 
             if (optionalBookDto.isPresent()){
-
                 Double rate = optionalBookDto.get().getAverageRate();
                 optionalBookDto.get().setAverageRate(Math.round(rate * 10D) / 10D);
 
@@ -48,6 +46,6 @@ public class FindBookInformationCommand implements Command {
             throw new CommandException(e);
         }
 
-        return WebPageName.BOOK_ONE_INFO_PAGE;
+        return BOOK_ONE_INFO_PAGE;
     }
 }

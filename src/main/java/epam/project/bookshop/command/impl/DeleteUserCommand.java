@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static epam.project.bookshop.command.WebPageName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.*;
 
 public class DeleteUserCommand implements Command {
@@ -21,14 +22,13 @@ public class DeleteUserCommand implements Command {
         String id = request.getParameter(ParameterName.DELETE_ID);
         UserService userService = UserServiceImpl.getInstance();
 
-        logger.info("user id: " + id);
-
         try {
             if (!userService.deleteById(Long.valueOf(id))) {
                 request.setAttribute(WORN_DELETED, ERROR_USER_NOT_DELETED_MSG);
             }
-            return WebPageName.USERS_PAGE;
+            return USERS_PAGE;
         } catch (ServiceException e) {
+            logger.error(e);
             throw new CommandException(e);
         }
     }

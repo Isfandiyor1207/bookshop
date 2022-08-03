@@ -25,9 +25,7 @@ public class FindUserOrdersCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-
         String userId = String.valueOf(request.getSession().getAttribute(USER_ID));
-
         OrderServiceImpl orderService=OrderServiceImpl.getInstance();
 
         try {

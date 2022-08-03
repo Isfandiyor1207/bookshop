@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static epam.project.bookshop.command.ParameterName.BOOK_ID;
+import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.dao.SQLFragments.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GenreDaoImpl implements GenreDao {
@@ -59,7 +60,7 @@ public class GenreDaoImpl implements GenreDao {
             Long id = null;
 
             while (resultSet.next()) {
-                id = resultSet.getLong("id");
+                id = resultSet.getLong(ID);
             }
 
             return id;
@@ -83,7 +84,7 @@ public class GenreDaoImpl implements GenreDao {
             return resultSet > 0;
 
         } catch (SQLException e) {
-            logger.error("Genre does not updated by this id: " + id);
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -100,7 +101,7 @@ public class GenreDaoImpl implements GenreDao {
             return resultSet > 0;
 
         } catch (SQLException e) {
-            logger.error("Genre does not deleted bi this id: " + id);
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -124,7 +125,7 @@ public class GenreDaoImpl implements GenreDao {
             } else return Optional.empty();
 
         } catch (SQLException e) {
-            logger.info("Genre not found!");
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -143,6 +144,7 @@ public class GenreDaoImpl implements GenreDao {
             }
 
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return genreList;
@@ -169,7 +171,7 @@ public class GenreDaoImpl implements GenreDao {
             } else return Optional.empty();
 
         } catch (SQLException e) {
-            logger.info("Genre not found!");
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -230,11 +232,12 @@ public class GenreDaoImpl implements GenreDao {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                genreIdList.add(resultSet.getLong("genre_id"));
+                genreIdList.add(resultSet.getLong(GENRE_ID));
             }
 
             return genreIdList;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -284,7 +287,7 @@ public class GenreDaoImpl implements GenreDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_GENRE_NAME_USING_LIKE)) {
 
-            statement.setString(1, "%" + genreName.toLowerCase() + "%");
+            statement.setString(1, PERCENTAGE + genreName.toLowerCase() + PERCENTAGE);
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -294,7 +297,21 @@ public class GenreDaoImpl implements GenreDao {
 
             return genreDtoList;
         } catch (SQLException e) {
-            logger.info("Genre not found!");
+            logger.error(e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void deleteGenreListByBookId(Long bookId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_LIST_OF_BOOK_GENRE)) {
+
+            statement.setLong(1, bookId);
+
+            statement.execute();
+        } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }

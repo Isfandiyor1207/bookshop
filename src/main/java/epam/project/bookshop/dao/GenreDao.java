@@ -3,6 +3,7 @@ package epam.project.bookshop.dao;
 import epam.project.bookshop.dto.GenreDto;
 import epam.project.bookshop.entity.Genre;
 import epam.project.bookshop.exception.DaoException;
+import epam.project.bookshop.exception.ServiceException;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +22,6 @@ public interface GenreDao extends BaseDao<GenreDto, Genre>{
     List<Long> findAllBookIdByGenreId(Long genreId) throws DaoException;
 
     List<GenreDto> findGenreBySearchingDetail(String genreName) throws DaoException;
+
+    void deleteGenreListByBookId(Long bookId) throws DaoException;
 }

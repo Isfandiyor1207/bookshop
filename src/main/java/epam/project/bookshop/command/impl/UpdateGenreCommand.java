@@ -17,6 +17,7 @@ import java.util.Map;
 import static epam.project.bookshop.command.ParameterName.*;
 import static epam.project.bookshop.command.ParameterName.GENRE_NAME;
 import static epam.project.bookshop.command.ParameterName.ID;
+import static epam.project.bookshop.command.WebPageName.*;
 
 public class UpdateGenreCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -24,25 +25,21 @@ public class UpdateGenreCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         GenreService genreService = GenreServiceImpl.getInstance();
-
         String genreId = (String) request.getSession().getAttribute(GENRE_ID);
-
-        logger.info("Genre :" + genreId);
 
         Map<String, String> genreMap = new HashMap<>();
         genreMap.put(GENRE_NAME, request.getParameter(GENRE_NAME));
         genreMap.put(ID, genreId);
         String page;
+
         try {
             if (genreService.update(genreMap)){
-                page = WebPageName.GENRE_PAGE;
+                page = GENRE_PAGE;
             }   else {
-
                 for (Map.Entry<String, String> entry : genreMap.entrySet()) {
                     request.setAttribute(entry.getKey(), entry.getValue());
                 }
-
-                page = WebPageName.GENRE_UPDATE_PAGE;
+                page = GENRE_UPDATE_PAGE;
             }
 
         } catch (ServiceException e) {

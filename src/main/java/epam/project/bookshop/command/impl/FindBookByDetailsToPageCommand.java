@@ -29,11 +29,6 @@ public class FindBookByDetailsToPageCommand implements Command {
         String authorName = request.getParameter(AUTHOR_FIO);
         String genreId = request.getParameter(GENRE_ID);
 
-        logger.info("book name: " + bookName);
-        logger.info("author name: " + authorName);
-        logger.info("genre id: " + genreId);
-
-
         Map<String, String> searchingMap = new HashMap<>();
 
         searchingMap.put(BOOK_NAME, bookName);
@@ -44,8 +39,8 @@ public class FindBookByDetailsToPageCommand implements Command {
 
         try {
             List<BookDto> bookDtoList = bookService.findBySearchingDetail(searchingMap);
-//
-            request.setAttribute(ParameterName.BOOK_LIST, bookDtoList);
+            request.setAttribute(BOOK_LIST, bookDtoList);
+
             return WebPageName.BOOK_INFO_PAGE;
         } catch (ServiceException e) {
             logger.error(e);

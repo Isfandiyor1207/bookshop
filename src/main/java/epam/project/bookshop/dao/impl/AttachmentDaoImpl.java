@@ -1,5 +1,6 @@
 package epam.project.bookshop.dao.impl;
 
+import epam.project.bookshop.command.ParameterName;
 import epam.project.bookshop.dao.AttachmentDao;
 import epam.project.bookshop.dto.AttachmentDto;
 import epam.project.bookshop.entity.Attachment;
@@ -16,6 +17,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static epam.project.bookshop.command.ParameterName.*;
 
 public class AttachmentDaoImpl implements AttachmentDao {
 
@@ -52,7 +55,7 @@ public class AttachmentDaoImpl implements AttachmentDao {
 
             Long id = null;
             while (resultSet.next()) {
-                id = resultSet.getLong("id");
+                id = resultSet.getLong(ID);
             }
 
             return id;
@@ -122,8 +125,7 @@ public class AttachmentDaoImpl implements AttachmentDao {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                Long id = resultSet.getLong("attachment_id");
-
+                Long id = resultSet.getLong(ATTACHMENT_ID);
                 listOfFile.add(id);
             }
             return listOfFile;
@@ -142,7 +144,6 @@ public class AttachmentDaoImpl implements AttachmentDao {
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BY_ID)) {
 
             for (Long attachmentId : attachmentIdList) {
-
                 statement.setLong(1, attachmentId);
 
                 ResultSet resultSet = statement.executeQuery();

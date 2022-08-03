@@ -12,21 +12,22 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Random;
 
+import static epam.project.bookshop.command.ParameterName.PROPERTY_CONFIG;
+
 public class SendEmailService {
 
-    private static final Logger logger= LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     private static final SendEmailService instance = new SendEmailService();
     private static String fromEmail;
     private static String password;
     private static String host;
     private static String smtpAuth;
     private static String smtpPort;
-    private static String starttlsEnable;
-    private static String connectionTimeout;
-    private static String timeout;
+    private static String socketFactoryPort;
+    private static String socketFactoryClass;
 
     static {
-        try (InputStream input = SendEmailService.class.getClassLoader().getResourceAsStream("/prop/config.properties")) {
+        try (InputStream input = SendEmailService.class.getClassLoader().getResourceAsStream(PROPERTY_CONFIG)) {
 
             Properties prop = new Properties();
 
@@ -37,12 +38,11 @@ public class SendEmailService {
             host = prop.getProperty("mail.smtp.host");
             smtpAuth = prop.getProperty("mail.smtp.auth");
             smtpPort = prop.getProperty("mail.smtp.port");
-            starttlsEnable = prop.getProperty("mail.smtp.starttls.enable");
-            connectionTimeout = prop.getProperty("mail.smtp.connectiontimeout");
-            timeout = prop.getProperty("mail.smtp.timeout");
+            socketFactoryPort = prop.getProperty("mail.smtp.socketFactory.port");
+            socketFactoryClass = prop.getProperty("mail.smtp.socketFactory.class");
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -73,9 +73,8 @@ public class SendEmailService {
             props.put("mail.smtp.host", host);
             props.put("mail.smtp.auth", smtpAuth);
             props.put("mail.smtp.port", smtpPort);
-            props.put("mail.smtp.starttls.enable", starttlsEnable);
-            props.put("mail.smtp.connectiontimeout", connectionTimeout); // 60 seconds
-            props.put("mail.smtp.timeout", timeout);
+            props.put("mail.smtp.socketFactory.port", socketFactoryPort);
+            props.put("mail.smtp.socketFactory.class", socketFactoryClass);
 
             //get session to authenticate the host email address and password
             Session session = Session.getInstance(props, new Authenticator() {

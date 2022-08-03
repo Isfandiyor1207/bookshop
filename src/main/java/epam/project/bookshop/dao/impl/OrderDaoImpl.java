@@ -68,9 +68,6 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public boolean updated(String query, Long id) throws DaoException {
-
-        // todo do the update method();
-
         return false;
     }
 

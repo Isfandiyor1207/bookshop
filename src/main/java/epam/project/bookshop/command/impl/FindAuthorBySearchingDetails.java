@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 import static epam.project.bookshop.command.ParameterName.AUTHOR_FIO;
+import static epam.project.bookshop.command.WebPageName.*;
 
 public class FindAuthorBySearchingDetails implements Command {
 
@@ -22,22 +23,17 @@ public class FindAuthorBySearchingDetails implements Command {
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-
         String fio = request.getParameter(AUTHOR_FIO);
-
-        logger.info("Author fio:" + fio);
         AuthorService authorService= AuthorServiceImpl.getInstance();
-
 
         try {
             List<AuthorDto> authorDtoList = authorService.findBySearchingFio(fio);
-            logger.info("Author list: " + authorDtoList);
             request.setAttribute(ParameterName.AUTHOR_LIST, authorDtoList);
         } catch (ServiceException e) {
             logger.error("Authors not found. " + e);
             throw new CommandException(e);
         }
 
-        return WebPageName.AUTHOR_PAGE;
+        return AUTHOR_PAGE;
     }
 }

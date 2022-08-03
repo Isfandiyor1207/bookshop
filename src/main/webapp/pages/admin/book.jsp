@@ -268,30 +268,18 @@
                    style="font-size: small; vertical-align: center; text-align:  center;">
                 <thead class="table-primary">
                 <tr>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.id"/></th>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.book_name"/></th>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.book_isbn"/></th>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.book_publisher"/></th>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.book_publishingYear"/></th>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.book_price"/></th>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.book_numberOfBooks"/></th>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.book_genre"/></th>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.book_author"/></th>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.book_image_path"/></th>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.update_role"/></th>
-                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message
-                            key="label.delete_btn"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.id"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_name"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_isbn"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_publisher"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_publishingYear"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_price"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_numberOfBooks"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_genre"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_author"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.book_image_path"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.update_role"/></th>
+                    <th style="font-size: small; text-align: center; vertical-align: center" scope="col"><fmt:message key="label.delete_btn"/></th>
                 </tr>
                 </thead>
 

@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.command.WebPageName.*;
 import static epam.project.bookshop.command.WebPageName.LOGIN_PAGE;
 
 public class RateBookCommand implements Command {
@@ -46,7 +47,7 @@ public class RateBookCommand implements Command {
                     request.setAttribute(BOOK_INFORMATION, optionalBookDto.get());
                 }
 
-                return WebPageName.BOOK_ONE_INFO_PAGE;
+                return BOOK_ONE_INFO_PAGE;
 
             } catch (ServiceException e) {
                 logger.error(e);

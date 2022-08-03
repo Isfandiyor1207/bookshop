@@ -14,6 +14,7 @@ import java.util.List;
 
 import static epam.project.bookshop.command.ParameterName.ALL_ORDERS;
 import static epam.project.bookshop.command.ParameterName.USER_ID;
+import static epam.project.bookshop.command.WebPageName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.ERROR_USER_IS_NOT_ORDERED;
 import static epam.project.bookshop.validation.ValidationParameterName.WARN_USER_IS_NOT_ORDERED;
 

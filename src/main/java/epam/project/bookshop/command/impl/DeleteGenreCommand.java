@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static epam.project.bookshop.command.ParameterName.DELETE_ID;
+import static epam.project.bookshop.command.WebPageName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.*;
 
 public class DeleteGenreCommand implements Command {
@@ -23,14 +24,13 @@ public class DeleteGenreCommand implements Command {
         String id = request.getParameter(DELETE_ID);
         GenreService genreService = GenreServiceImpl.getInstance();
 
-        logger.info("genre id: " + id);
-
         try {
             if (!genreService.deleteById(Long.valueOf(id))) {
                 request.setAttribute(WORN_DELETED, ERROR_GENRE_NOT_DELETED_MSG);
             }
-            return WebPageName.GENRE_PAGE;
+            return GENRE_PAGE;
         } catch (ServiceException e) {
+            logger.error(e);
             throw new CommandException(e);
         }
     }

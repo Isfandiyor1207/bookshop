@@ -17,9 +17,6 @@ public class Attachment extends BaseDomain {
 
     private String contentType;
 
-    public Attachment() {
-    }
-
     public String getAbsoluteName() {
         return absoluteName;
     }

@@ -29,7 +29,7 @@ public class UpdateBookCommand implements Command {
     public String execute(HttpServletRequest request) throws CommandException {
         try {
 
-            String bookId = String.valueOf(request.getSession().getAttribute("book_id"));
+            String bookId = String.valueOf(request.getSession().getAttribute(BOOK_ID));
 
             Map<String, String> bookMap = new HashMap<>();
             bookMap.put(ID, bookId);
@@ -60,7 +60,7 @@ public class UpdateBookCommand implements Command {
 
                 if (!fileName.isEmpty()) {
                     AttachmentServiceImpl attachmentService = AttachmentServiceImpl.getInstance();
-                    Long fileId = attachmentService.addFile(request.getPart("file"));
+                    Long fileId = attachmentService.addFile(request.getPart(ATTACHMENT));
 
                     attachmentService.attachFileToBook(Long.valueOf(bookId), fileId, true);
                 }

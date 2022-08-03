@@ -25,14 +25,11 @@ public class UserPasswordUpdateCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-
         String password = request.getParameter(PASSWORD);
         UserDto userDto = (UserDto) request.getSession().getAttribute(AUTH_USER);
-
         UserService userService= UserServiceImpl.getInstance();
 
         Map<String, String> userMap=new HashMap<>();
-
         userMap.put(PASSWORD, password);
         userMap.put(ID, String.valueOf(userDto.getId()));
 
@@ -50,6 +47,7 @@ public class UserPasswordUpdateCommand implements Command {
             }
             return page;
         } catch (ServiceException e) {
+            logger.error(e);
             throw new CommandException(e);
         }
     }

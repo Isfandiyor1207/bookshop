@@ -3,9 +3,12 @@ package epam.project.bookshop.command.impl;
 import epam.project.bookshop.command.Command;
 import epam.project.bookshop.command.WebPageName;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import static epam.project.bookshop.command.WebPageName.*;
 
 public class LogoutCommand implements Command {
 
@@ -14,11 +17,10 @@ public class LogoutCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
-
         if (!session.isNew()) {
             logger.info("Session is destroyed.");
             session.invalidate();
         }
-        return WebPageName.INDEX_PAGE;
+        return INDEX_PAGE;
     }
 }

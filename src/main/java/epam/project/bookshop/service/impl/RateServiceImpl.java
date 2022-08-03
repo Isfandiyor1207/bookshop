@@ -100,10 +100,7 @@ public class RateServiceImpl implements RateService {
         rate.setRate(rateQuantity);
 
         try {
-
             Optional<RateDto> optionalRateDto = rateDao.findRateByBookIdAndUserId(bookId, userId);
-
-            logger.info("RateDto from add(): " + optionalRateDto);
 
             boolean isAdded;
             if (optionalRateDto.isPresent()) {

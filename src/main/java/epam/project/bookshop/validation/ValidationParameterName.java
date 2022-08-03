@@ -1,7 +1,5 @@
 package epam.project.bookshop.validation;
 
-import com.oracle.wls.shaded.org.apache.bcel.generic.PUSH;
-
 public final class ValidationParameterName {
 
     /* User WORN */
@@ -33,6 +31,7 @@ public final class ValidationParameterName {
     public static final String ERROR_USER_UPDATE_STATUS = "Please enter user role to update!";
     public static final String ERROR_USER_PASSWORD_CHANGING = "Verification code does not sent. Please check your username.";
     public static final String SUCCESS_VERIFICATION = "Password changed successfully.";
+    public static final String ERROR_VERIFICATION_CODE = "Verification code is invalid.";
 
     /* GENRE WORN */
     public static final String WORN_GENRE_NAME = "genre_name_error";
@@ -110,5 +109,13 @@ public final class ValidationParameterName {
 
     /* Rate ERROR */
     public static final String ERROR_RATE_IS_NOT_AVAILABLE = "Rate not found";
+
+    /* Default WARN */
+    public static final String WARN_DEFAULT = "default_error";
+
+    /* Default WARN */
+    public static final String ERROR_MSG_DEFAULT = "Something went wrong!";
+
+
 
 }

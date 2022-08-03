@@ -1,8 +1,11 @@
 package epam.project.bookshop.pool;
 
+import epam.project.bookshop.service.impl.SendEmailService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -12,20 +15,26 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static epam.project.bookshop.command.ParameterName.*;
+
 public class ConnectionPool {
-    private static Logger logger= LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
+    private static int CAPACITY_OF_QUEUE;
+    private static String DATABASE_URL;
+    private static String DRIVER;
+    private static String PASSWORD_DB;
+    private static String USERNAME_DB;
+    private static final ReentrantLock lock = new ReentrantLock();
+    private static final AtomicBoolean isCreated = new AtomicBoolean(false);
     private static ConnectionPool instance;
-    private static final int CAPACITY_OF_QUEUE = 8;
-    private static final String DATABASE_URL="jdbc:postgresql://localhost:5432/mvcProject";
-    private BlockingQueue<ProxyConnection> free = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
-    private BlockingQueue<ProxyConnection> used = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
-    private static ReentrantLock lock = new ReentrantLock();
-    private static AtomicBoolean isCreated = new AtomicBoolean();
+    private BlockingQueue<ProxyConnection> freeConnection = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
+    private BlockingQueue<ProxyConnection> usedConnection = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
 
 
     static {
         try {
-            Class.forName("org.postgresql.Driver");
+            init();
+            Class.forName(DRIVER);
         } catch (ClassNotFoundException e) {
             logger.fatal("Driver not registered: " + e);
             throw new ExceptionInInitializerError(e);
@@ -33,18 +42,33 @@ public class ConnectionPool {
     }
 
     private ConnectionPool() {
-
         Properties properties = new Properties();
-        properties.put("password", "mvcProject");
-        properties.put("user", "mvcProject");
+        properties.put(PASSWORD, PASSWORD_DB);
+        properties.put(USER, USERNAME_DB);
         for (int i = 0; i < CAPACITY_OF_QUEUE; i++) {
             try {
                 ProxyConnection connection = new ProxyConnection(DriverManager.getConnection(DATABASE_URL, properties));
-                free.add(connection);
+                freeConnection.add(connection);
             } catch (SQLException e) {
-                logger.error("Connection with database is failed: " + e);
+                logger.fatal("Connection with database is failed: " + e);
                 throw new ExceptionInInitializerError(e);
             }
+        }
+    }
+
+    private static void init(){
+        try (InputStream input = SendEmailService.class.getClassLoader().getResourceAsStream(PROPERTY_CONFIG)) {
+            Properties prop = new Properties();
+            prop.load(input);
+
+            DATABASE_URL = prop.getProperty("datasource.url");
+            USERNAME_DB = prop.getProperty("datasource.username");
+            PASSWORD_DB = prop.getProperty("datasource.password");
+            DRIVER = prop.getProperty("datasource.driver-class-name");
+            CAPACITY_OF_QUEUE = Integer.parseInt(prop.getProperty("connection.capacity"));
+
+        }catch (IOException ex) {
+            logger.error(ex);
         }
     }
 
@@ -63,11 +87,11 @@ public class ConnectionPool {
         return instance;
     }
 
-    public ProxyConnection getConnection() {
+    public Connection getConnection() {
         ProxyConnection connection = null;
         try {
-            connection = free.take();
-            used.put(connection);
+            connection = freeConnection.take();
+            usedConnection.put(connection);
         } catch (InterruptedException e) {
             logger.fatal("Get Connection is failed: " + e);
             Thread.currentThread().interrupt();
@@ -75,22 +99,17 @@ public class ConnectionPool {
         return connection;
     }
 
-    // todo deregisterDriver
-    private void deregisterDriver(){
-        DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {
-            try{
-                DriverManager.deregisterDriver(driver);
-            }catch (SQLException e){
-                logger.fatal("Can't access database to deregister driver: ",e);
-            }
-        });
-    }
-
-    public void releaseConnection(ProxyConnection connection) {
+    public void releaseConnection(Connection connection) {
+        if (connection == null) {
+            return;
+        }
         try {
-            used.remove(connection);
-            free.put(connection);
+            if (connection instanceof ProxyConnection){
+                usedConnection.remove(connection);
+                freeConnection.put((ProxyConnection) connection);
+            }
         } catch (InterruptedException e) {
+            logger.error(e);
             Thread.currentThread().interrupt();
         }
     }
@@ -98,10 +117,22 @@ public class ConnectionPool {
     public void destroyPool() {
         for (int i = 0; i < CAPACITY_OF_QUEUE; i++) {
             try {
-                free.take().close();
-            } catch (InterruptedException | SQLException e) {
-                logger.fatal("Connection is not destroyed: " + e);
+                freeConnection.take().reallyClose();
+            } catch (InterruptedException e) {
+                logger.error("Connection is not destroyed: " + e);
             }
         }
+        deregisterDriver();
     }
+
+    private void deregisterDriver() {
+        DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {
+            try {
+                DriverManager.deregisterDriver(driver);
+            } catch (SQLException e) {
+                logger.error("Can't access database to deregister driver: ", e);
+            }
+        });
+    }
+
 }

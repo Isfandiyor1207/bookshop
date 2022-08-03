@@ -17,9 +17,6 @@ public abstract class BaseDomain implements Serializable {
 
     protected LocalDate updatedTime;
 
-    public BaseDomain() {
-    }
-
     public Long getId() {
         return id;
     }

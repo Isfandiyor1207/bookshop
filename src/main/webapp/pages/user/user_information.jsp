@@ -181,35 +181,35 @@
                         <label style="width: 30% !important; position: initial"> <fmt:message key="label.firstname_table"/>: </label>
                         <input type="text" name="firstname" class="textBox" autofocus="autofocus"
                                value="<jsp:getProperty name="user_info" property="firstname"/>"
-                               style="width: 50% !important;">
+                               style="width: 50% !important; padding: 5px 5px !important;">
                     </div>
 
                     <div class="container-fluid">
                         <label style="width: 30% !important; position: initial"> <fmt:message key="label.lastname_table"/>: </label>
                         <input type="text" name="lastname" class="textBox" autofocus="autofocus"
                                value="<jsp:getProperty name="user_info" property="lastname"/>"
-                               style="width: 50% !important;">
+                               style="width: 50% !important; padding: 5px 5px !important;">
                     </div>
 
                     <div class="container-fluid">
                         <label style="width: 30% !important; position: initial"> <fmt:message key="label.username"/>: </label>
                         <input type="text" name="username" class="textBox" autofocus="autofocus"
                                value="<jsp:getProperty name="user_info" property="username"/>"
-                               style="width: 50% !important;">
+                               style="width: 50% !important; padding: 5px 5px !important;">
                     </div>
 
                     <div class="container-fluid">
                         <label style="width: 30% !important; position: initial"> <fmt:message key="label.contact_table"/>: </label>
                         <input type="text" name="contact" class="textBox" autofocus="autofocus"
                                value="<jsp:getProperty name="user_info" property="phoneNumber"/>"
-                               style="width: 50% !important;">
+                               style="width: 50% !important; padding: 5px 5px !important;">
                     </div>
 
                     <div class="container-fluid">
                         <label style="width: 30% !important; position: initial"> <fmt:message key="label.email_table"/>: </label>
                         <input type="text" name="email" class="textBox"
                                autofocus="autofocus" value="<jsp:getProperty name="user_info" property="email"/>"
-                               style="width: 50% !important;">
+                               style="width: 50% !important; padding: 5px 5px !important;">
                     </div>
 
                     <form>

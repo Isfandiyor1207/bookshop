@@ -29,17 +29,17 @@ public class FindUserBySearchingDetailCommand implements Command {
         userMap.put(USERNAME, request.getParameter(USERNAME));
         userMap.put(EMAIL, request.getParameter(EMAIL));
         userMap.put(PHONE_NUMBER, request.getParameter(PHONE_NUMBER));
-        userMap.put(USER_ROLE_ID_IN_DB, request.getParameter("role_id"));
+        userMap.put(USER_ROLE_ID_IN_DB, request.getParameter(ROLE_ID));
 
         UserService userService = UserServiceImpl.getInstance();
 
         try {
-
             List<UserDto> userDtoList = userService.findAllByUserFields(userMap);
             request.setAttribute(USER_LIST, userDtoList);
 
             return USERS_PAGE;
         } catch (ServiceException e) {
+            logger.error(e);
             throw new CommandException(e);
         }
     }

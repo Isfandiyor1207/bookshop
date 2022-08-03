@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.command.WebPageName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.ERROR_USER_IS_NOT_ORDERED;
 import static epam.project.bookshop.validation.ValidationParameterName.WARN_USER_IS_NOT_ORDERED;
 
@@ -34,7 +35,7 @@ public class FindAllDeliveredCommand implements Command {
                 request.setAttribute(ALL_ORDERS_BY_STATUS, orderByUser);
             }
 
-            return WebPageName.ALL_DELIVERED_ORDERS;
+            return ALL_DELIVERED_ORDERS;
         } catch (ServiceException e) {
             logger.error(e);
             throw new CommandException(e);

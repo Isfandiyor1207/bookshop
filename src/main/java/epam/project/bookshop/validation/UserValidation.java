@@ -58,7 +58,6 @@ public class UserValidation {
     public boolean checkUpdateUser(Map<String, String> user, Map<String, String> query) {
         boolean isValid = false;
 
-        logger.info("user info in validation: " + user);
         if (!baseValidation.isEmpty(user.get(FIRSTNAME))) {
             logger.info("User firstname is written to update: " + user.get(FIRSTNAME));
             query.put(FIRSTNAME, user.get(FIRSTNAME));

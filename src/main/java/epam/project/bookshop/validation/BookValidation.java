@@ -1,6 +1,5 @@
 package epam.project.bookshop.validation;
 
-import com.oracle.wls.shaded.org.apache.bcel.generic.IF_ACMPEQ;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,8 +11,6 @@ import static epam.project.bookshop.validation.ValidationParameterName.*;
 public class BookValidation {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String BOOK_NAME_REGEX = "[a-zA-Z0-9_.-]+";
-    private static final String BOOK_STRING_REGEX = "[a-zA-Z]+";
     private static final String BOOK_NUMBER_REGEX = "^[0-9]+$";
     private static final BaseValidation baseValidation = BaseValidation.getInstance();
     private static final BookValidation instance = new BookValidation();
@@ -39,8 +36,6 @@ public class BookValidation {
 
     public boolean validateBookInformation(Map<String, String> bookMap) {
         boolean isValid = true;
-
-        logger.info("Book is in information method()");
 
         if (!checkBookInformationToString(bookMap.get(BOOK_NAME).trim())) {
             logger.info("book name is not valid ");
@@ -78,10 +73,10 @@ public class BookValidation {
             isValid = false;
         }
 
-        if (!checkBookInformationToString(bookMap.get(BOOK_DESCRIPTION).trim())){
+        if (!checkBookInformationToString(bookMap.get(BOOK_DESCRIPTION).trim())) {
             logger.info("book description is empty!");
             bookMap.put(WARN_BOOK_DESCRIPTION, ERROR_BOOK_DESCRIPTION);
-            isValid=false;
+            isValid = false;
         }
 
         if (!checkBookInformationToString(bookMap.get(ATTACHMENT_NAME).trim())) {
@@ -112,8 +107,6 @@ public class BookValidation {
     public boolean validationBookToUpdate(Map<String, String> bookMap, Map<String, String> query) {
         boolean isValid = false;
 
-        logger.info("Book is in update method()");
-
         if (checkBookInformationToString(bookMap.get(BOOK_NAME).trim())) {
             logger.info("book name is given to update ");
             query.put(BOOK_NAME, bookMap.get(BOOK_NAME));
@@ -140,7 +133,7 @@ public class BookValidation {
             query.put(BOOK_PRICE, bookMap.get(BOOK_PRICE));
             isValid = true;
         }
-        if (checkBookInformationToString(bookMap.get(BOOK_DESCRIPTION).trim())){
+        if (checkBookInformationToString(bookMap.get(BOOK_DESCRIPTION).trim())) {
             logger.info("book description is to update");
             query.put(BOOK_DESCRIPTION, bookMap.get(BOOK_DESCRIPTION));
             isValid = true;

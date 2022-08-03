@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.AUTH_USER;
 import static epam.project.bookshop.command.ParameterName.USERNAME;
+import static epam.project.bookshop.command.WebPageName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.*;
 
 public class EmailSenderCommand implements Command {
@@ -27,9 +28,6 @@ public class EmailSenderCommand implements Command {
     public String execute(HttpServletRequest request) throws CommandException {
         try {
             String username = request.getParameter(USERNAME);
-
-            logger.info("Username for verification: " + username);
-
             UserService userService = UserServiceImpl.getInstance();
 
             Optional<UserDto> optionalUserDto = userService.findUserByUsername(username);
@@ -52,17 +50,18 @@ public class EmailSenderCommand implements Command {
                 if (isSend) {
                     HttpSession session = request.getSession();
                     session.setAttribute(AUTH_USER, userDto);
-                    page = WebPageName.VERIFICATION_PAGE;
+                    page = VERIFICATION_PAGE;
                 } else {
                     request.setAttribute(WARN_USER_PASSWORD_CHANGING, ERROR_USER_PASSWORD_CHANGING);
-                    page = WebPageName.PASSWORD_CHANGING_PAGE;
+                    page = PASSWORD_CHANGING_PAGE;
                 }
             } else {
                 request.setAttribute(WORN_USER, ERROR_USER_NOT_EXIST_MSG);
-                page = WebPageName.PASSWORD_CHANGING_PAGE;
+                page = PASSWORD_CHANGING_PAGE;
             }
             return page;
         } catch (ServiceException e) {
+            logger.error(e);
             throw new CommandException(e);
         }
     }

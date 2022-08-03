@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.USER_ID;
+import static epam.project.bookshop.command.WebPageName.*;
 import static epam.project.bookshop.validation.ValidationParameterName.ERROR_USER_NOT_EXIST_MSG;
 import static epam.project.bookshop.validation.ValidationParameterName.WORN_USER_UPDATE;
 
@@ -25,8 +26,6 @@ public class FindUserToUpdateStatus implements Command {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         String id= request.getParameter(USER_ID);
-
-        logger.info("user id to change status: " + id);
         UserService userService= UserServiceImpl.getInstance();
 
         try {
@@ -42,6 +41,6 @@ public class FindUserToUpdateStatus implements Command {
             throw new CommandException(e);
         }
 
-        return WebPageName.USER_UPDATE_STATUS;
+        return USER_UPDATE_STATUS;
     }
 }

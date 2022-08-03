@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static epam.project.bookshop.command.ParameterName.*;
+import static epam.project.bookshop.dao.SQLFragments.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthorDaoImpl implements AuthorDao {
@@ -253,7 +254,7 @@ public class AuthorDaoImpl implements AuthorDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_ID_BY_FIO)) {
 
-            statement.setString(1, "%" + authorName.toLowerCase() + "%");
+            statement.setString(1, PERCENTAGE + authorName.toLowerCase() + PERCENTAGE);
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -296,7 +297,7 @@ public class AuthorDaoImpl implements AuthorDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_AUTHOR_NAME_USING_LIKE)) {
 
-            statement.setString(1,  "%" + fio.toLowerCase() + "%");
+            statement.setString(1,  PERCENTAGE + fio.toLowerCase() + PERCENTAGE);
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -305,6 +306,21 @@ public class AuthorDaoImpl implements AuthorDao {
             }
 
             return authorDtoList;
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void deleteAuthorListByBookId(Long bookId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_LIST_OF_BOOK_AUTHOR)) {
+
+            statement.setLong(1, bookId);
+
+            statement.execute();
+
         } catch (SQLException e) {
             logger.error(e);
             throw new DaoException(e);
