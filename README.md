@@ -44,6 +44,6 @@ Components used for the project:
     Server / Servlet container: Tomcat 9
     Database: PostgreSql
     JDBC
-    HTML, CSS, JS, Bootstrap
+    JSP, CSS, SCSS JS, Bootstrap
     Logger: Log4J
     Tests: JUnit 4
