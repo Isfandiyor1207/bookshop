@@ -30,7 +30,6 @@ public class ConnectionPool {
     private BlockingQueue<ProxyConnection> freeConnection = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
     private BlockingQueue<ProxyConnection> usedConnection = new LinkedBlockingQueue<>(CAPACITY_OF_QUEUE);
 
-
     static {
         try {
             init();

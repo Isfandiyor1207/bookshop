@@ -12,6 +12,6 @@ public class DefaultCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         request.setAttribute(WARN_DEFAULT, ERROR_MSG_DEFAULT);
-        return WebPageName.DEFAULT_PAGE;
+        return WebPageName.INDEX_PAGE;
     }
 }

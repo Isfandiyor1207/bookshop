@@ -19,9 +19,6 @@ public class CurrentPageFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
     }
 
-    public void destroy() {
-    }
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
@@ -30,4 +27,8 @@ public class CurrentPageFilter implements Filter {
         session.setAttribute(ParameterName.CURRENT_PAGE, httpServletRequest.getServletPath());
         chain.doFilter(httpServletRequest, httpServletResponse);
     }
+
+    public void destroy() {
+    }
+
 }

@@ -29,7 +29,5 @@ public class SessionAttributeListenerImpl implements HttpSessionAttributeListene
 
     @Override
     public void attributeReplaced(HttpSessionBindingEvent sbe) {
-        logger.info(" ----------> attributeReplaced: " + sbe.getSession().getAttribute(ParameterName.USERNAME));
-        logger.info(" ----------> attributeReplaced: " + sbe.getSession().getAttribute(ParameterName.PASSWORD));
     }
 }

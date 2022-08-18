@@ -59,13 +59,7 @@ public abstract class BaseDomain implements Serializable {
 
     @Override
     public int hashCode() {
-
-        int result = 1;
-
-        result = 31 * result + (id == null ? 0 : id.hashCode());
-        result = 31 * result + (deleted ? 1 : 0);
-
-        return result;
+        return Objects.hash(id, deleted, createdTime, updatedTime);
     }
 
     @Override
